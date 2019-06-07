@@ -51,10 +51,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
+        public List<int> DescriptionIds { get; set; }
+        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Pages), Description = "Page", IsRequired = false)]
@@ -99,26 +103,12 @@ namespace Services.Dto
 
     public partial class App : AppBase, IReturn<App>, IDto, ICloneable
     {
-        public App()
-        {
-            _Constructor();
-        }
+        public App() => _Constructor();
 
         public App(int? id) : base(DocConvert.ToInt(id)) {}
         public App(int id) : base(id) {}
-        public App(int? pId, string pDescription, string pName, List<Reference> pPages, int? pPagesCount, List<Reference> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount) : 
+        public App(int? pId, string pDescription, string pName, List<Reference> pPages, int? pPagesCount, List<Reference> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount) :
             base(pId, pDescription, pName, pPages, pPagesCount, pRoles, pRolesCount, pScopes, pScopesCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<App>();
 
@@ -156,7 +146,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Pages), nameof(PagesCount), nameof(Roles), nameof(RolesCount), nameof(Scopes), nameof(ScopesCount)
+            nameof(Pages), nameof(PagesCount), nameof(PagesIds), nameof(Roles), nameof(RolesCount), nameof(RolesIds), nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds)
         };
         private List<string> collections { get { return _collections; } }
 

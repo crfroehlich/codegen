@@ -37,7 +37,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.RuleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.RuleId))))
                 .ForMember(dest => dest.Workflows, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.Workflows))))
                 .ForMember(dest => dest.WorkflowsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.WorkflowsCount))))
-                .ForMember(dest => dest.WorkflowsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.WorkflowsIds))))
+                .ForMember(dest => dest.WorkflowsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.WorkflowsIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<VariableInstance,DocEntityVariableInstance>()
                 .MaxDepth(2);

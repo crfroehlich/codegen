@@ -42,7 +42,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.OutcomesReported, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.OutcomesReported))))
                 .ForMember(dest => dest.Records, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.Records))))
                 .ForMember(dest => dest.RecordsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.RecordsCount))))
-                .ForMember(dest => dest.RecordsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.RecordsIds))))
+                .ForMember(dest => dest.RecordsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.RecordsIds))))
                 .ForMember(dest => dest.Stat, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.Stat))))
                 .ForMember(dest => dest.StatId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.StatId))))
                 .ForMember(dest => dest.Studies, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.Studies))))

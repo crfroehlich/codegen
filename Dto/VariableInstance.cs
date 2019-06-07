@@ -50,6 +50,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         public string Data { get; set; }
+        public List<int> DataIds { get; set; }
+        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = true)]
@@ -94,26 +96,12 @@ namespace Services.Dto
 
     public partial class VariableInstance : VariableInstanceBase, IReturn<VariableInstance>, IDto, ICloneable
     {
-        public VariableInstance()
-        {
-            _Constructor();
-        }
+        public VariableInstance() => _Constructor();
 
         public VariableInstance(int? id) : base(DocConvert.ToInt(id)) {}
         public VariableInstance(int id) : base(id) {}
-        public VariableInstance(int? pId, string pData, Reference pDocument, int? pDocumentId, Reference pRule, int? pRuleId, List<Reference> pWorkflows, int? pWorkflowsCount) : 
+        public VariableInstance(int? pId, string pData, Reference pDocument, int? pDocumentId, Reference pRule, int? pRuleId, List<Reference> pWorkflows, int? pWorkflowsCount) :
             base(pId, pData, pDocument, pDocumentId, pRule, pRuleId, pWorkflows, pWorkflowsCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<VariableInstance>();
 
@@ -151,7 +139,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Workflows), nameof(WorkflowsCount)
+            nameof(Workflows), nameof(WorkflowsCount), nameof(WorkflowsIds)
         };
         private List<string> collections { get { return _collections; } }
 

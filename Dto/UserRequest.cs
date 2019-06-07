@@ -58,6 +58,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Method), Description = "string", IsRequired = false)]
         public string Method { get; set; }
+        public List<int> MethodIds { get; set; }
+        public int? MethodCount { get; set; }
 
 
         [ApiMember(Name = nameof(Page), Description = "Page", IsRequired = false)]
@@ -68,10 +70,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Path), Description = "string", IsRequired = false)]
         public string Path { get; set; }
+        public List<int> PathIds { get; set; }
+        public int? PathCount { get; set; }
 
 
         [ApiMember(Name = nameof(URL), Description = "string", IsRequired = false)]
         public string URL { get; set; }
+        public List<int> URLIds { get; set; }
+        public int? URLCount { get; set; }
 
 
         [ApiMember(Name = nameof(UserSession), Description = "UserSession", IsRequired = true)]
@@ -105,26 +111,12 @@ namespace Services.Dto
 
     public partial class UserRequest : UserRequestBase, IReturn<UserRequest>, IDto, ICloneable
     {
-        public UserRequest()
-        {
-            _Constructor();
-        }
+        public UserRequest() => _Constructor();
 
         public UserRequest(int? id) : base(DocConvert.ToInt(id)) {}
         public UserRequest(int id) : base(id) {}
-        public UserRequest(int? pId, Reference pApp, int? pAppId, string pMethod, Reference pPage, int? pPageId, string pPath, string pURL, Reference pUserSession, int? pUserSessionId) : 
+        public UserRequest(int? pId, Reference pApp, int? pAppId, string pMethod, Reference pPage, int? pPageId, string pPath, string pURL, Reference pUserSession, int? pUserSessionId) :
             base(pId, pApp, pAppId, pMethod, pPage, pPageId, pPath, pURL, pUserSession, pUserSessionId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<UserRequest>();
 

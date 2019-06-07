@@ -56,10 +56,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ClientId), Description = "string", IsRequired = false)]
         public string ClientId { get; set; }
+        public List<int> ClientIdIds { get; set; }
+        public int? ClientIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Hits), Description = "int?", IsRequired = false)]
         public int? Hits { get; set; }
+        public List<int> HitsIds { get; set; }
+        public int? HitsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Impersonations), Description = "Impersonation", IsRequired = false)]
@@ -70,6 +74,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IpAddress), Description = "string", IsRequired = false)]
         public string IpAddress { get; set; }
+        public List<int> IpAddressIds { get; set; }
+        public int? IpAddressCount { get; set; }
 
 
         [ApiMember(Name = nameof(Requests), Description = "UserRequest", IsRequired = false)]
@@ -80,10 +86,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(SessionId), Description = "string", IsRequired = false)]
         public string SessionId { get; set; }
+        public List<int> SessionIdIds { get; set; }
+        public int? SessionIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(TemporarySessionId), Description = "string", IsRequired = false)]
         public string TemporarySessionId { get; set; }
+        public List<int> TemporarySessionIdIds { get; set; }
+        public int? TemporarySessionIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
@@ -127,26 +137,12 @@ namespace Services.Dto
 
     public partial class UserSession : UserSessionBase, IReturn<UserSession>, IDto, ICloneable
     {
-        public UserSession()
-        {
-            _Constructor();
-        }
+        public UserSession() => _Constructor();
 
         public UserSession(int? id) : base(DocConvert.ToInt(id)) {}
         public UserSession(int id) : base(id) {}
-        public UserSession(int? pId, string pClientId, int? pHits, List<Reference> pImpersonations, int? pImpersonationsCount, string pIpAddress, List<Reference> pRequests, int? pRequestsCount, string pSessionId, string pTemporarySessionId, Reference pUser, int? pUserId, List<Reference> pUserHistory, int? pUserHistoryCount) : 
+        public UserSession(int? pId, string pClientId, int? pHits, List<Reference> pImpersonations, int? pImpersonationsCount, string pIpAddress, List<Reference> pRequests, int? pRequestsCount, string pSessionId, string pTemporarySessionId, Reference pUser, int? pUserId, List<Reference> pUserHistory, int? pUserHistoryCount) :
             base(pId, pClientId, pHits, pImpersonations, pImpersonationsCount, pIpAddress, pRequests, pRequestsCount, pSessionId, pTemporarySessionId, pUser, pUserId, pUserHistory, pUserHistoryCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<UserSession>();
 
@@ -184,7 +180,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Impersonations), nameof(ImpersonationsCount), nameof(Requests), nameof(RequestsCount), nameof(UserHistory), nameof(UserHistoryCount)
+            nameof(Impersonations), nameof(ImpersonationsCount), nameof(ImpersonationsIds), nameof(Requests), nameof(RequestsCount), nameof(RequestsIds), nameof(UserHistory), nameof(UserHistoryCount), nameof(UserHistoryIds)
         };
         private List<string> collections { get { return _collections; } }
 

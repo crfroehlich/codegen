@@ -31,13 +31,12 @@ namespace Services.Schema
     {
         private const string BROADCAST_CACHE = "BroadcastCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.BROADCAST;
-        
+
         public DocEntityBroadcast(Session session) : base(session) {}
 
         public DocEntityBroadcast() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Broadcast()));
-
         public static DocEntityBroadcast Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -144,13 +143,10 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
-
         public override ModelNameEnm ClassName => CLASS_NAME;
-
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindBroadcasts";
-
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -238,7 +234,6 @@ namespace Services.Schema
                 return ret;
             }
         }
-
 
         public Broadcast ToDto() => Mapper.Map<DocEntityBroadcast, Broadcast>(this);
 

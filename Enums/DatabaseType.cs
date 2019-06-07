@@ -89,8 +89,7 @@ namespace Services.Enums
         public const string MANUAL_ENTRY = "Manual Entry";
         public const string MEDLINE = "MEDLINE";
         public const string NORTHERN_LIGHT = "Northern Light";
-        
-        
+
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantDatabaseType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -120,8 +119,6 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-
-
         public bool Equals(DocConstantDatabaseType obj) => this == obj;
 
         public static bool operator ==(DocConstantDatabaseType x, DocConstantDatabaseType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -147,6 +144,5 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantDatabaseType obj) => obj?.GetHashCode() ?? -17;
-
     }
 }

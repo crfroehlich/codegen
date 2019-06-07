@@ -38,7 +38,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.TypeId))))
                 .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.Users))))
                 .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.UsersCount))))
-                .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.UsersIds))))
+                .ForMember(dest => dest.UsersIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.UsersIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<UserType,DocEntityUserType>()
                 .MaxDepth(2);

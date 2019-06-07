@@ -50,6 +50,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Category), Description = "string", IsRequired = true)]
         public string Category { get; set; }
+        public List<int> CategoryIds { get; set; }
+        public int? CategoryCount { get; set; }
 
 
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]
@@ -94,26 +96,12 @@ namespace Services.Dto
 
     public partial class LookupCategory : LookupCategoryBase, IReturn<LookupCategory>, IDto, ICloneable
     {
-        public LookupCategory()
-        {
-            _Constructor();
-        }
+        public LookupCategory() => _Constructor();
 
         public LookupCategory(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupCategory(int id) : base(id) {}
-        public LookupCategory(int? pId, string pCategory, Reference pEnum, int? pEnumId, List<Reference> pLookups, int? pLookupsCount, Reference pParentCategory, int? pParentCategoryId) : 
+        public LookupCategory(int? pId, string pCategory, Reference pEnum, int? pEnumId, List<Reference> pLookups, int? pLookupsCount, Reference pParentCategory, int? pParentCategoryId) :
             base(pId, pCategory, pEnum, pEnumId, pLookups, pLookupsCount, pParentCategory, pParentCategoryId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<LookupCategory>();
 
@@ -149,7 +137,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Lookups), nameof(LookupsCount)
+            nameof(Lookups), nameof(LookupsCount), nameof(LookupsIds)
         };
         private List<string> collections { get { return _collections; } }
 

@@ -72,6 +72,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(AdditionalCriteria), Description = "string", IsRequired = false)]
         public string AdditionalCriteria { get; set; }
+        public List<int> AdditionalCriteriaIds { get; set; }
+        public int? AdditionalCriteriaCount { get; set; }
 
 
         [ApiMember(Name = nameof(Characteristics), Description = "Tag", IsRequired = false)]
@@ -88,10 +90,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(GeneralScope), Description = "string", IsRequired = false)]
         public string GeneralScope { get; set; }
+        public List<int> GeneralScopeIds { get; set; }
+        public int? GeneralScopeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Indications), Description = "string", IsRequired = false)]
         public string Indications { get; set; }
+        public List<int> IndicationsIds { get; set; }
+        public int? IndicationsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Interventions), Description = "Tag", IsRequired = false)]
@@ -102,30 +108,44 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(LibraryPackageId), Description = "int?", IsRequired = false)]
         public int? LibraryPackageId { get; set; }
+        public List<int> LibraryPackageIdIds { get; set; }
+        public int? LibraryPackageIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Notes), Description = "string", IsRequired = false)]
         public string Notes { get; set; }
+        public List<int> NotesIds { get; set; }
+        public int? NotesCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalComparators), Description = "string", IsRequired = false)]
         public string OriginalComparators { get; set; }
+        public List<int> OriginalComparatorsIds { get; set; }
+        public int? OriginalComparatorsCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalDesigns), Description = "string", IsRequired = false)]
         public string OriginalDesigns { get; set; }
+        public List<int> OriginalDesignsIds { get; set; }
+        public int? OriginalDesignsCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalInterventions), Description = "string", IsRequired = false)]
         public string OriginalInterventions { get; set; }
+        public List<int> OriginalInterventionsIds { get; set; }
+        public int? OriginalInterventionsCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalOutcomes), Description = "string", IsRequired = false)]
         public string OriginalOutcomes { get; set; }
+        public List<int> OriginalOutcomesIds { get; set; }
+        public int? OriginalOutcomesCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalSearch), Description = "string", IsRequired = false)]
         public string OriginalSearch { get; set; }
+        public List<int> OriginalSearchIds { get; set; }
+        public int? OriginalSearchCount { get; set; }
 
 
         [ApiMember(Name = nameof(Outcomes), Description = "Tag", IsRequired = false)]
@@ -136,6 +156,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Participants), Description = "string", IsRequired = false)]
         public string Participants { get; set; }
+        public List<int> ParticipantsIds { get; set; }
+        public int? ParticipantsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
@@ -146,22 +168,32 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(SearchEnd), Description = "DateTime?", IsRequired = false)]
         public DateTime? SearchEnd { get; set; }
+        public List<int> SearchEndIds { get; set; }
+        public int? SearchEndCount { get; set; }
 
 
         [ApiMember(Name = nameof(SearchStart), Description = "DateTime?", IsRequired = false)]
         public DateTime? SearchStart { get; set; }
+        public List<int> SearchStartIds { get; set; }
+        public int? SearchStartCount { get; set; }
 
 
         [ApiMember(Name = nameof(SearchStrategy), Description = "string", IsRequired = false)]
         public string SearchStrategy { get; set; }
+        public List<int> SearchStrategyIds { get; set; }
+        public int? SearchStrategyCount { get; set; }
 
 
         [ApiMember(Name = nameof(SearchUpdated), Description = "DateTime?", IsRequired = false)]
         public DateTime? SearchUpdated { get; set; }
+        public List<int> SearchUpdatedIds { get; set; }
+        public int? SearchUpdatedCount { get; set; }
 
 
         [ApiMember(Name = nameof(SelectionCriteria), Description = "string", IsRequired = false)]
         public string SelectionCriteria { get; set; }
+        public List<int> SelectionCriteriaIds { get; set; }
+        public int? SelectionCriteriaCount { get; set; }
 
 
         [ApiMember(Name = nameof(StudyDesigns), Description = "StudyDesign", IsRequired = false)]
@@ -172,6 +204,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(UpdateFrequency), Description = "int?", IsRequired = false)]
         public int? UpdateFrequency { get; set; }
+        public List<int> UpdateFrequencyIds { get; set; }
+        public int? UpdateFrequencyCount { get; set; }
 
 
 
@@ -220,26 +254,12 @@ namespace Services.Dto
 
     public partial class LibrarySet : LibrarySetBase, IReturn<LibrarySet>, IDto, ICloneable
     {
-        public LibrarySet()
-        {
-            _Constructor();
-        }
+        public LibrarySet() => _Constructor();
 
         public LibrarySet(int? id) : base(DocConvert.ToInt(id)) {}
         public LibrarySet(int id) : base(id) {}
-        public LibrarySet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pComparators, int? pComparatorsCount, string pGeneralScope, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, int? pLibraryPackageId, string pNotes, string pOriginalComparators, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, string pOriginalSearch, List<Reference> pOutcomes, int? pOutcomesCount, string pParticipants, List<Reference> pProjects, int? pProjectsCount, DateTime? pSearchEnd, DateTime? pSearchStart, string pSearchStrategy, DateTime? pSearchUpdated, string pSelectionCriteria, List<Reference> pStudyDesigns, int? pStudyDesignsCount, int? pUpdateFrequency) : 
+        public LibrarySet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pComparators, int? pComparatorsCount, string pGeneralScope, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, int? pLibraryPackageId, string pNotes, string pOriginalComparators, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, string pOriginalSearch, List<Reference> pOutcomes, int? pOutcomesCount, string pParticipants, List<Reference> pProjects, int? pProjectsCount, DateTime? pSearchEnd, DateTime? pSearchStart, string pSearchStrategy, DateTime? pSearchUpdated, string pSelectionCriteria, List<Reference> pStudyDesigns, int? pStudyDesignsCount, int? pUpdateFrequency) :
             base(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pComparators, pComparatorsCount, pGeneralScope, pIndications, pInterventions, pInterventionsCount, pLibraryPackageId, pNotes, pOriginalComparators, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOriginalSearch, pOutcomes, pOutcomesCount, pParticipants, pProjects, pProjectsCount, pSearchEnd, pSearchStart, pSearchStrategy, pSearchUpdated, pSelectionCriteria, pStudyDesigns, pStudyDesignsCount, pUpdateFrequency) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<LibrarySet>();
 
@@ -277,7 +297,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Characteristics), nameof(CharacteristicsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Interventions), nameof(InterventionsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Projects), nameof(ProjectsCount), nameof(StudyDesigns), nameof(StudyDesignsCount)
+            nameof(Characteristics), nameof(CharacteristicsCount), nameof(CharacteristicsIds), nameof(Comparators), nameof(ComparatorsCount), nameof(ComparatorsIds), nameof(Interventions), nameof(InterventionsCount), nameof(InterventionsIds), nameof(Outcomes), nameof(OutcomesCount), nameof(OutcomesIds), nameof(Projects), nameof(ProjectsCount), nameof(ProjectsIds), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(StudyDesignsIds)
         };
         private List<string> collections { get { return _collections; } }
 

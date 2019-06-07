@@ -33,7 +33,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.BioPortal, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.BioPortal))))
                 .ForMember(dest => dest.Categories, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.Categories))))
                 .ForMember(dest => dest.CategoriesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.CategoriesCount))))
-                .ForMember(dest => dest.CategoriesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.CategoriesIds))))
+                .ForMember(dest => dest.CategoriesIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.CategoriesIds))))
                 .ForMember(dest => dest.CUI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.CUI))))
                 .ForMember(dest => dest.Enum, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.Enum))))
                 .ForMember(dest => dest.EnumId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.EnumId))))
@@ -43,7 +43,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.SNOWMED, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.SNOWMED))))
                 .ForMember(dest => dest.Synonyms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.Synonyms))))
                 .ForMember(dest => dest.SynonymsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.SynonymsCount))))
-                .ForMember(dest => dest.SynonymsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.SynonymsIds))))
+                .ForMember(dest => dest.SynonymsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.SynonymsIds))))
                 .ForMember(dest => dest.TUI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.TUI))))
                 .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.URI))))
                 .MaxDepth(2);

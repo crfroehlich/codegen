@@ -61,26 +61,12 @@ namespace Services.Dto
 
     public partial class DiseaseStateSet : DiseaseStateSetBase, IReturn<DiseaseStateSet>, IDto, ICloneable
     {
-        public DiseaseStateSet()
-        {
-            _Constructor();
-        }
+        public DiseaseStateSet() => _Constructor();
 
         public DiseaseStateSet(int? id) : base(DocConvert.ToInt(id)) {}
         public DiseaseStateSet(int id) : base(id) {}
-        public DiseaseStateSet(int? pId, bool isDummyParam) : 
+        public DiseaseStateSet(int? pId, bool isDummyParam) :
             base(pId, isDummyParam) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<DiseaseStateSet>();
 

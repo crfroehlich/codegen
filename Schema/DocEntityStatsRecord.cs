@@ -31,13 +31,12 @@ namespace Services.Schema
     {
         private const string STATSRECORD_CACHE = "StatsRecordCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.STATSRECORD;
-        
+
         public DocEntityStatsRecord(Session session) : base(session) {}
 
         public DocEntityStatsRecord() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new StatsRecord()));
-
         public static DocEntityStatsRecord Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -120,13 +119,10 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
-
         public override ModelNameEnm ClassName => CLASS_NAME;
-
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindStatsRecords";
-
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -208,7 +204,6 @@ namespace Services.Schema
                 return ret;
             }
         }
-
 
         public StatsRecord ToDto() => Mapper.Map<DocEntityStatsRecord, StatsRecord>(this);
 

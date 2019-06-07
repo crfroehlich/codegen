@@ -38,10 +38,10 @@ namespace Services.Schema
                 .ForMember(dest => dest.ScopeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.ScopeId))))
                 .ForMember(dest => dest.Synonyms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.Synonyms))))
                 .ForMember(dest => dest.SynonymsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.SynonymsCount))))
-                .ForMember(dest => dest.SynonymsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.SynonymsIds))))
+                .ForMember(dest => dest.SynonymsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.SynonymsIds))))
                 .ForMember(dest => dest.Workflows, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.Workflows))))
                 .ForMember(dest => dest.WorkflowsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.WorkflowsCount))))
-                .ForMember(dest => dest.WorkflowsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.WorkflowsIds))))
+                .ForMember(dest => dest.WorkflowsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.WorkflowsIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<LookupTableBinding,DocEntityLookupTableBinding>()
                 .MaxDepth(2);

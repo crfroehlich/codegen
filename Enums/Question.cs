@@ -54,8 +54,7 @@ namespace Services.Enums
     public sealed partial class DocConstantQuestion : IEquatable<DocConstantQuestion>, IEqualityComparer<DocConstantQuestion>
     {
         public const string INCLUDE_MIXED_POPULATIONS = "Include mixed populations?";
-        
-        
+
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantQuestion).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -85,8 +84,6 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-
-
         public bool Equals(DocConstantQuestion obj) => this == obj;
 
         public static bool operator ==(DocConstantQuestion x, DocConstantQuestion y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -112,6 +109,5 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantQuestion obj) => obj?.GetHashCode() ?? -17;
-
     }
 }

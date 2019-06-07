@@ -33,7 +33,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Approved, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermSynonym>(c, nameof(DocEntityTermSynonym.Approved))))
                 .ForMember(dest => dest.Bindings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermSynonym>(c, nameof(DocEntityTermSynonym.Bindings))))
                 .ForMember(dest => dest.BindingsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermSynonym>(c, nameof(DocEntityTermSynonym.BindingsCount))))
-                .ForMember(dest => dest.BindingsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermSynonym>(c, nameof(DocEntityTermSynonym.BindingsIds))))
+                .ForMember(dest => dest.BindingsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermSynonym>(c, nameof(DocEntityTermSynonym.BindingsIds))))
                 .ForMember(dest => dest.Master, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermSynonym>(c, nameof(DocEntityTermSynonym.Master))))
                 .ForMember(dest => dest.MasterId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermSynonym>(c, nameof(DocEntityTermSynonym.MasterId))))
                 .ForMember(dest => dest.Preferred, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermSynonym>(c, nameof(DocEntityTermSynonym.Preferred))))

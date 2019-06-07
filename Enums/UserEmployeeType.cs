@@ -69,8 +69,7 @@ namespace Services.Enums
         public const string CONTRACTOR = "Contractor";
         public const string EMPLOYEE = "Employee";
         public const string VENDOR = "Vendor";
-        
-        
+
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantUserEmployeeType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -100,8 +99,6 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-
-
         public bool Equals(DocConstantUserEmployeeType obj) => this == obj;
 
         public static bool operator ==(DocConstantUserEmployeeType x, DocConstantUserEmployeeType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -127,6 +124,5 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantUserEmployeeType obj) => obj?.GetHashCode() ?? -17;
-
     }
 }

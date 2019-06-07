@@ -73,11 +73,15 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Maybe Relevant",@"Not Rated",@"Not Relevant",@"Relevant"})]
         [ApiMember(Name = nameof(Rating), Description = "RatingEnm?", IsRequired = false)]
         public RatingEnm? Rating { get; set; }
+        public List<int> RatingIds { get; set; }
+        public int? RatingCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Abstract with Insufficient Information",@"Animal study",@"Does not meet protocol",@"Duplicate Publication",@"Erroneous Data",@"In vitro study",@"Missing Characteristic(s)",@"Missing Outcome(s)",@"Not a Clinical Study",@"Not English",@"Not a treatment Study",@"Relevant misclassified reference",@"Study fits protocol, to be possibly added later",@"Wrong Comparison",@"Wrong Intervention",@"Wrong Number of Participants",@"Wrong Outcome Stratification",@"Wrong Outcome(s)",@"Wrong Population",@"Wrong Publication Date Cutoff",@"Wrong Setting",@"Wrong Study Design",@"Wrong Timing"})]
         [ApiMember(Name = nameof(ReasonRejected), Description = "ReasonRejectedEnm?", IsRequired = false)]
         public ReasonRejectedEnm? ReasonRejected { get; set; }
+        public List<int> ReasonRejectedIds { get; set; }
+        public int? ReasonRejectedCount { get; set; }
 
 
 
@@ -101,26 +105,12 @@ namespace Services.Dto
 
     public partial class AdjudicatedRating : AdjudicatedRatingBase, IReturn<AdjudicatedRating>, IDto, ICloneable
     {
-        public AdjudicatedRating()
-        {
-            _Constructor();
-        }
+        public AdjudicatedRating() => _Constructor();
 
         public AdjudicatedRating(int? id) : base(DocConvert.ToInt(id)) {}
         public AdjudicatedRating(int id) : base(id) {}
-        public AdjudicatedRating(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pRating, ReasonRejectedEnm? pReasonRejected) : 
+        public AdjudicatedRating(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pRating, ReasonRejectedEnm? pReasonRejected) :
             base(pId, pDocument, pDocumentId, pRating, pReasonRejected) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<AdjudicatedRating>();
 

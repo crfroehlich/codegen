@@ -31,13 +31,12 @@ namespace Services.Schema
     {
         private const string ROLE_CACHE = "RoleCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.ROLE;
-        
+
         public DocEntityRole(Session session) : base(session) {}
 
         public DocEntityRole() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Role()));
-
         public static DocEntityRole Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -174,13 +173,10 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
-
         public override ModelNameEnm ClassName => CLASS_NAME;
-
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindRoles";
-
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -250,7 +246,6 @@ namespace Services.Schema
                 return ret;
             }
         }
-
 
         public Role ToDto() => Mapper.Map<DocEntityRole, Role>(this);
 

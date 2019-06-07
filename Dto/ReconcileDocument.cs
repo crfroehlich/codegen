@@ -50,10 +50,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ArticleId), Description = "string", IsRequired = false)]
         public string ArticleId { get; set; }
+        public List<int> ArticleIdIds { get; set; }
+        public int? ArticleIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ArticleLink), Description = "string", IsRequired = false)]
         public string ArticleLink { get; set; }
+        public List<int> ArticleLinkIds { get; set; }
+        public int? ArticleLinkCount { get; set; }
 
 
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
@@ -64,15 +68,21 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Matches), Description = "int?", IsRequired = false)]
         public int? Matches { get; set; }
+        public List<int> MatchesIds { get; set; }
+        public int? MatchesCount { get; set; }
 
 
         [ApiMember(Name = nameof(SearchLink), Description = "string", IsRequired = false)]
         public string SearchLink { get; set; }
+        public List<int> SearchLinkIds { get; set; }
+        public int? SearchLinkCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Matched",@"Multiple Matches",@"No Match",@"One Match"})]
         [ApiMember(Name = nameof(Status), Description = "ReconciliationStatusEnm?", IsRequired = false)]
         public ReconciliationStatusEnm? Status { get; set; }
+        public List<int> StatusIds { get; set; }
+        public int? StatusCount { get; set; }
 
 
 
@@ -99,26 +109,12 @@ namespace Services.Dto
 
     public partial class ReconcileDocument : ReconcileDocumentBase, IReturn<ReconcileDocument>, IDto, ICloneable
     {
-        public ReconcileDocument()
-        {
-            _Constructor();
-        }
+        public ReconcileDocument() => _Constructor();
 
         public ReconcileDocument(int? id) : base(DocConvert.ToInt(id)) {}
         public ReconcileDocument(int id) : base(id) {}
-        public ReconcileDocument(int? pId, string pArticleId, string pArticleLink, Reference pDocument, int? pDocumentId, int? pMatches, string pSearchLink, ReconciliationStatusEnm? pStatus) : 
+        public ReconcileDocument(int? pId, string pArticleId, string pArticleLink, Reference pDocument, int? pDocumentId, int? pMatches, string pSearchLink, ReconciliationStatusEnm? pStatus) :
             base(pId, pArticleId, pArticleLink, pDocument, pDocumentId, pMatches, pSearchLink, pStatus) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<ReconcileDocument>();
 

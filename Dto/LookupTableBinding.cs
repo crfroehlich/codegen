@@ -53,10 +53,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Binding), Description = "Bindings", IsRequired = false)]
         public Bindings Binding { get; set; }
+        public List<int> BindingIds { get; set; }
+        public int? BindingCount { get; set; }
 
 
         [ApiMember(Name = nameof(BoundName), Description = "string", IsRequired = false)]
         public string BoundName { get; set; }
+        public List<int> BoundNameIds { get; set; }
+        public int? BoundNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(LookupTable), Description = "LookupTable", IsRequired = true)]
@@ -110,26 +114,12 @@ namespace Services.Dto
 
     public partial class LookupTableBinding : LookupTableBindingBase, IReturn<LookupTableBinding>, IDto, ICloneable
     {
-        public LookupTableBinding()
-        {
-            _Constructor();
-        }
+        public LookupTableBinding() => _Constructor();
 
         public LookupTableBinding(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupTableBinding(int id) : base(id) {}
-        public LookupTableBinding(int? pId, Bindings pBinding, string pBoundName, Reference pLookupTable, int? pLookupTableId, Reference pScope, int? pScopeId, List<Reference> pSynonyms, int? pSynonymsCount, List<Reference> pWorkflows, int? pWorkflowsCount) : 
+        public LookupTableBinding(int? pId, Bindings pBinding, string pBoundName, Reference pLookupTable, int? pLookupTableId, Reference pScope, int? pScopeId, List<Reference> pSynonyms, int? pSynonymsCount, List<Reference> pWorkflows, int? pWorkflowsCount) :
             base(pId, pBinding, pBoundName, pLookupTable, pLookupTableId, pScope, pScopeId, pSynonyms, pSynonymsCount, pWorkflows, pWorkflowsCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<LookupTableBinding>();
 
@@ -167,7 +157,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Synonyms), nameof(SynonymsCount), nameof(Workflows), nameof(WorkflowsCount)
+            nameof(Synonyms), nameof(SynonymsCount), nameof(SynonymsIds), nameof(Workflows), nameof(WorkflowsCount), nameof(WorkflowsIds)
         };
         private List<string> collections { get { return _collections; } }
 

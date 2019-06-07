@@ -74,18 +74,26 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IsCharacteristic), Description = "bool", IsRequired = false)]
         public bool IsCharacteristic { get; set; }
+        public List<int> IsCharacteristicIds { get; set; }
+        public int? IsCharacteristicCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsOutcome), Description = "bool", IsRequired = false)]
         public bool IsOutcome { get; set; }
+        public List<int> IsOutcomeIds { get; set; }
+        public int? IsOutcomeCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsPositive), Description = "bool?", IsRequired = false)]
         public bool? IsPositive { get; set; }
+        public List<int> IsPositiveIds { get; set; }
+        public int? IsPositiveCount { get; set; }
 
 
         [ApiMember(Name = nameof(UniqueKey), Description = "string", IsRequired = false)]
         public string UniqueKey { get; set; }
+        public List<int> UniqueKeyIds { get; set; }
+        public int? UniqueKeyCount { get; set; }
 
 
 
@@ -115,26 +123,12 @@ namespace Services.Dto
 
     public partial class Attribute : AttributeBase, IReturn<Attribute>, IDto, ICloneable
     {
-        public Attribute()
-        {
-            _Constructor();
-        }
+        public Attribute() => _Constructor();
 
         public Attribute(int? id) : base(DocConvert.ToInt(id)) {}
         public Attribute(int id) : base(id) {}
-        public Attribute(int? pId, Reference pAttributeName, int? pAttributeNameId, Reference pAttributeType, int? pAttributeTypeId, AttributeInterval pInterval, int? pIntervalId, bool pIsCharacteristic, bool pIsOutcome, bool? pIsPositive, string pUniqueKey) : 
+        public Attribute(int? pId, Reference pAttributeName, int? pAttributeNameId, Reference pAttributeType, int? pAttributeTypeId, AttributeInterval pInterval, int? pIntervalId, bool pIsCharacteristic, bool pIsOutcome, bool? pIsPositive, string pUniqueKey) :
             base(pId, pAttributeName, pAttributeNameId, pAttributeType, pAttributeTypeId, pInterval, pIntervalId, pIsCharacteristic, pIsOutcome, pIsPositive, pUniqueKey) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Attribute>();
 

@@ -58,9 +58,9 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantValueType.FUNDING), SCDescript(DocConstantValueType.FUNDING), SSDescript(DocConstantValueType.FUNDING), SCDisplay(Name = DocConstantValueType.FUNDING)]
         FUNDING = 4793,
         [EnumMember(Value = DocConstantValueType.IMPORTERROR), SCDescript(DocConstantValueType.IMPORTERROR), SSDescript(DocConstantValueType.IMPORTERROR), SCDisplay(Name = DocConstantValueType.IMPORTERROR)]
-        IMPORTERROR = 4837,
+        IMPORTERROR = 157825540,
         [EnumMember(Value = DocConstantValueType.IMPORTERRORS), SCDescript(DocConstantValueType.IMPORTERRORS), SSDescript(DocConstantValueType.IMPORTERRORS), SCDisplay(Name = DocConstantValueType.IMPORTERRORS)]
-        IMPORTERRORS = 4923,
+        IMPORTERRORS = 157825541,
         [EnumMember(Value = DocConstantValueType.INTEGER), SCDescript(DocConstantValueType.INTEGER), SSDescript(DocConstantValueType.INTEGER), SCDisplay(Name = DocConstantValueType.INTEGER)]
         INTEGER = 4798,
         [EnumMember(Value = DocConstantValueType.INTERVAL), SCDescript(DocConstantValueType.INTERVAL), SSDescript(DocConstantValueType.INTERVAL), SCDisplay(Name = DocConstantValueType.INTERVAL)]
@@ -259,8 +259,7 @@ namespace Services.Enums
         public const string UNITSRANGE = "UnitsRange";
         public const string UNITVALUE = "UnitValue";
         public const string YESNONA = "YesNoNa";
-        
-        
+
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantValueType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -290,8 +289,6 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-
-
         public bool Equals(DocConstantValueType obj) => this == obj;
 
         public static bool operator ==(DocConstantValueType x, DocConstantValueType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -317,6 +314,5 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantValueType obj) => obj?.GetHashCode() ?? -17;
-
     }
 }

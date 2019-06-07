@@ -64,26 +64,12 @@ namespace Services.Dto
 
     public partial class AttributeInterval : AttributeIntervalBase, IReturn<AttributeInterval>, IDto, ICloneable
     {
-        public AttributeInterval()
-        {
-            _Constructor();
-        }
+        public AttributeInterval() => _Constructor();
 
         public AttributeInterval(int? id) : base(DocConvert.ToInt(id)) {}
         public AttributeInterval(int id) : base(id) {}
-        public AttributeInterval(int? pId, TypeInterval pInterval) : 
+        public AttributeInterval(int? pId, TypeInterval pInterval) :
             base(pId, pInterval) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<AttributeInterval>();
 

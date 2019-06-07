@@ -31,13 +31,12 @@ namespace Services.Schema
     {
         private const string WORKFLOW_CACHE = "WorkflowCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.WORKFLOW;
-        
+
         public DocEntityWorkflow(Session session) : base(session) {}
 
         public DocEntityWorkflow() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Workflow()));
-
         public static DocEntityWorkflow Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -196,13 +195,10 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
-
         public override ModelNameEnm ClassName => CLASS_NAME;
-
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindWorkflows";
-
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -279,7 +275,6 @@ namespace Services.Schema
                 return ret;
             }
         }
-
 
         public Workflow ToDto() => Mapper.Map<DocEntityWorkflow, Workflow>(this);
 

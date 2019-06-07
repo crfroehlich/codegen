@@ -55,18 +55,26 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(EvidencePortalID), Description = "int?", IsRequired = false)]
         public int? EvidencePortalID { get; set; }
+        public List<int> EvidencePortalIDIds { get; set; }
+        public int? EvidencePortalIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(FqId), Description = "int?", IsRequired = false)]
         public int? FqId { get; set; }
+        public List<int> FqIdIds { get; set; }
+        public int? FqIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(StudyCount), Description = "int?", IsRequired = false)]
         public int? StudyCount { get; set; }
+        public List<int> StudyCountIds { get; set; }
+        public int? StudyCountCount { get; set; }
 
 
         [ApiMember(Name = nameof(StudyCountFQ), Description = "int?", IsRequired = false)]
         public int? StudyCountFQ { get; set; }
+        public List<int> StudyCountFQIds { get; set; }
+        public int? StudyCountFQCount { get; set; }
 
 
 
@@ -91,26 +99,12 @@ namespace Services.Dto
 
     public partial class DocumentSetHistory : DocumentSetHistoryBase, IReturn<DocumentSetHistory>, IDto, ICloneable
     {
-        public DocumentSetHistory()
-        {
-            _Constructor();
-        }
+        public DocumentSetHistory() => _Constructor();
 
         public DocumentSetHistory(int? id) : base(DocConvert.ToInt(id)) {}
         public DocumentSetHistory(int id) : base(id) {}
-        public DocumentSetHistory(int? pId, Reference pDocumentSet, int? pDocumentSetId, int? pEvidencePortalID, int? pFqId, int? pStudyCount, int? pStudyCountFQ) : 
+        public DocumentSetHistory(int? pId, Reference pDocumentSet, int? pDocumentSetId, int? pEvidencePortalID, int? pFqId, int? pStudyCount, int? pStudyCountFQ) :
             base(pId, pDocumentSet, pDocumentSetId, pEvidencePortalID, pFqId, pStudyCount, pStudyCountFQ) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<DocumentSetHistory>();
 

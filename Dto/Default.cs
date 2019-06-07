@@ -98,26 +98,12 @@ namespace Services.Dto
 
     public partial class Default : DefaultBase, IReturn<Default>, IDto, ICloneable
     {
-        public Default()
-        {
-            _Constructor();
-        }
+        public Default() => _Constructor();
 
         public Default(int? id) : base(DocConvert.ToInt(id)) {}
         public Default(int id) : base(id) {}
-        public Default(int? pId, Reference pDiseaseState, int? pDiseaseStateId, Reference pRole, int? pRoleId, Reference pScope, int? pScopeId, Reference pTherapeuticArea, int? pTherapeuticAreaId) : 
+        public Default(int? pId, Reference pDiseaseState, int? pDiseaseStateId, Reference pRole, int? pRoleId, Reference pScope, int? pScopeId, Reference pTherapeuticArea, int? pTherapeuticAreaId) :
             base(pId, pDiseaseState, pDiseaseStateId, pRole, pRoleId, pScope, pScopeId, pTherapeuticArea, pTherapeuticAreaId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Default>();
 
