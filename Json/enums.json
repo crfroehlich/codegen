@@ -443,6 +443,8 @@
     "CREATE_DOCUMENT_SET_QUEUES": "CreateDocumentSetQueues",
     "EXTRACT_IMPORT": "ExtractImport",
     "EXTRACT_NOTIFICATIONS": "ExtractNotifications",
+    "IMPORT_DOC_SEARCH_IDS": "ImportDocSearchIds",
+    "IMPORT_FRAMED_QUESTIONS": "ImportFramedQuestions",
     "IMPORT_LIBRARY": "ImportLibrary",
     "IMPORT_PACKAGES": "ImportPackages",
     "INVALIDATE_EXPIRED_CACHE": "InvalidateExpiredCache",

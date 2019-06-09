@@ -46,14 +46,20 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Country), Description = "string", IsRequired = true)]
         public string Country { get; set; }
+        public List<int> CountryIds { get; set; }
+        public int? CountryCount { get; set; }
 
 
         [ApiMember(Name = nameof(Language), Description = "string", IsRequired = true)]
         public string Language { get; set; }
+        public List<int> LanguageIds { get; set; }
+        public int? LanguageCount { get; set; }
 
 
         [ApiMember(Name = nameof(TimeZone), Description = "string", IsRequired = true)]
         public string TimeZone { get; set; }
+        public List<int> TimeZoneIds { get; set; }
+        public int? TimeZoneCount { get; set; }
 
 
 
@@ -76,26 +82,12 @@ namespace Services.Dto
 
     public partial class Locale : LocaleBase, IReturn<Locale>, IDto, ICloneable
     {
-        public Locale()
-        {
-            _Constructor();
-        }
+        public Locale() => _Constructor();
 
         public Locale(int? id) : base(DocConvert.ToInt(id)) {}
         public Locale(int id) : base(id) {}
-        public Locale(int? pId, string pCountry, string pLanguage, string pTimeZone) : 
+        public Locale(int? pId, string pCountry, string pLanguage, string pTimeZone) :
             base(pId, pCountry, pLanguage, pTimeZone) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Locale>();
 

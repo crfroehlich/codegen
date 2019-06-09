@@ -35,7 +35,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.EnumId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.EnumId))))
                 .ForMember(dest => dest.Lookups, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.Lookups))))
                 .ForMember(dest => dest.LookupsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.LookupsCount))))
-                .ForMember(dest => dest.LookupsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.LookupsIds))))
+                .ForMember(dest => dest.LookupsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.LookupsIds))))
                 .ForMember(dest => dest.ParentCategory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.ParentCategory))))
                 .ForMember(dest => dest.ParentCategoryId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.ParentCategoryId))))
                 .MaxDepth(2);

@@ -73,6 +73,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Role), Description = "Role", IsRequired = true)]
@@ -83,6 +85,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Settings), Description = "DivisionSettings", IsRequired = false)]
         public DivisionSettings Settings { get; set; }
+        public List<int> SettingsIds { get; set; }
+        public int? SettingsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
@@ -120,26 +124,12 @@ namespace Services.Dto
 
     public partial class Division : DivisionBase, IReturn<Division>, IDto, ICloneable
     {
-        public Division()
-        {
-            _Constructor();
-        }
+        public Division() => _Constructor();
 
         public Division(int? id) : base(DocConvert.ToInt(id)) {}
         public Division(int id) : base(id) {}
-        public Division(int? pId, Reference pClient, int? pClientId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, Reference pRole, int? pRoleId, DivisionSettings pSettings, List<Reference> pUsers, int? pUsersCount) : 
+        public Division(int? pId, Reference pClient, int? pClientId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, Reference pRole, int? pRoleId, DivisionSettings pSettings, List<Reference> pUsers, int? pUsersCount) :
             base(pId, pClient, pClientId, pDefaultLocale, pDefaultLocaleId, pDocumentSets, pDocumentSetsCount, pName, pRole, pRoleId, pSettings, pUsers, pUsersCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Division>();
 
@@ -177,7 +167,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Users), nameof(UsersCount)
+            nameof(DocumentSets), nameof(DocumentSetsCount), nameof(DocumentSetsIds), nameof(Users), nameof(UsersCount), nameof(UsersIds)
         };
         private List<string> collections { get { return _collections; } }
 

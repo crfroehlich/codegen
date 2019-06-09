@@ -52,23 +52,33 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Cost), Description = "decimal?", IsRequired = false)]
         public decimal? Cost { get; set; }
+        public List<int> CostIds { get; set; }
+        public int? CostCount { get; set; }
 
 
         [ApiMember(Name = nameof(FileLabel), Description = "string", IsRequired = true)]
         public string FileLabel { get; set; }
+        public List<int> FileLabelIds { get; set; }
+        public int? FileLabelCount { get; set; }
 
 
         [ApiMember(Name = nameof(FileName), Description = "string", IsRequired = true)]
         public string FileName { get; set; }
+        public List<int> FileNameIds { get; set; }
+        public int? FileNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalFileName), Description = "string", IsRequired = true)]
         public string OriginalFileName { get; set; }
+        public List<int> OriginalFileNameIds { get; set; }
+        public int? OriginalFileNameCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Free",@"Restricted"})]
         [ApiMember(Name = nameof(Rights), Description = "FileRightsEnm?", IsRequired = false)]
         public FileRightsEnm? Rights { get; set; }
+        public List<int> RightsIds { get; set; }
+        public int? RightsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
@@ -80,11 +90,15 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Client Supplied",@"Document Delivery",@"PMC/BMC",@"Publisher",@"Subscription",@"UCLA"})]
         [ApiMember(Name = nameof(Source), Description = "FileSourceEnm?", IsRequired = false)]
         public FileSourceEnm? Source { get; set; }
+        public List<int> SourceIds { get; set; }
+        public int? SourceCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Document Set",@"Errata",@"Full Text",@"Protocol",@"Supplemental"})]
         [ApiMember(Name = nameof(Type), Description = "FileTypeEnm?", IsRequired = false)]
         public FileTypeEnm? Type { get; set; }
+        public List<int> TypeIds { get; set; }
+        public int? TypeCount { get; set; }
 
 
 
@@ -112,26 +126,12 @@ namespace Services.Dto
 
     public partial class File : FileBase, IReturn<File>, IDto, ICloneable
     {
-        public File()
-        {
-            _Constructor();
-        }
+        public File() => _Constructor();
 
         public File(int? id) : base(DocConvert.ToInt(id)) {}
         public File(int id) : base(id) {}
-        public File(int? pId, decimal? pCost, string pFileLabel, string pFileName, string pOriginalFileName, FileRightsEnm? pRights, List<Reference> pScopes, int? pScopesCount, FileSourceEnm? pSource, FileTypeEnm? pType) : 
+        public File(int? pId, decimal? pCost, string pFileLabel, string pFileName, string pOriginalFileName, FileRightsEnm? pRights, List<Reference> pScopes, int? pScopesCount, FileSourceEnm? pSource, FileTypeEnm? pType) :
             base(pId, pCost, pFileLabel, pFileName, pOriginalFileName, pRights, pScopes, pScopesCount, pSource, pType) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<File>();
 
@@ -169,7 +169,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Scopes), nameof(ScopesCount)
+            nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds)
         };
         private List<string> collections { get { return _collections; } }
 

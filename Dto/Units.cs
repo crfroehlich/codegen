@@ -59,26 +59,12 @@ namespace Services.Dto
 
     public partial class UnitsDto : UnitsBase, IReturn<UnitsDto>, IDto, ICloneable
     {
-        public UnitsDto()
-        {
-            _Constructor();
-        }
+        public UnitsDto() => _Constructor();
 
         public UnitsDto(int? id) : base(DocConvert.ToInt(id)) {}
         public UnitsDto(int id) : base(id) {}
-        public UnitsDto(int? pId, bool isDummyParam) : 
+        public UnitsDto(int? pId, bool isDummyParam) :
             base(pId, isDummyParam) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<UnitsDto>();
 
@@ -114,7 +100,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Units), nameof(Units), nameof(UnitsCount)
+            nameof(Units), nameof(Units), nameof(UnitsCount), nameof(UnitsIds)
         };
         private List<string> collections { get { return _collections; } }
 

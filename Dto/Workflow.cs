@@ -70,10 +70,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         public string Data { get; set; }
+        public List<int> DataIds { get; set; }
+        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
+        public List<int> DescriptionIds { get; set; }
+        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Documents), Description = "Document", IsRequired = false)]
@@ -84,6 +88,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owner), Description = "Workflow", IsRequired = false)]
@@ -101,6 +107,8 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
         [ApiMember(Name = nameof(Status), Description = "WorkflowStatusEnm?", IsRequired = false)]
         public WorkflowStatusEnm? Status { get; set; }
+        public List<int> StatusIds { get; set; }
+        public int? StatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(Tasks), Description = "Task", IsRequired = false)]
@@ -112,6 +120,8 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"Default Filter",@"Default Nameset",@"DIA Report",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"FAQ",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Library Ratings",@"Direct Meta Analysis",@"Nameset",@"PICO Rating",@"R Snippet",@"Rapid Review",@"Reconciliation",@"Response Letter",@"Risk of Bias",@"RMD Snippet",@"Systematic Review",@"View"})]
         [ApiMember(Name = nameof(Type), Description = "WorkflowEnm?", IsRequired = false)]
         public WorkflowEnm? Type { get; set; }
+        public List<int> TypeIds { get; set; }
+        public int? TypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
@@ -170,26 +180,12 @@ namespace Services.Dto
 
     public partial class Workflow : WorkflowBase, IReturn<Workflow>, IDto, ICloneable
     {
-        public Workflow()
-        {
-            _Constructor();
-        }
+        public Workflow() => _Constructor();
 
         public Workflow(int? id) : base(DocConvert.ToInt(id)) {}
         public Workflow(int id) : base(id) {}
-        public Workflow(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, WorkflowStatusEnm? pStatus, List<Reference> pTasks, int? pTasksCount, WorkflowEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : 
+        public Workflow(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, WorkflowStatusEnm? pStatus, List<Reference> pTasks, int? pTasksCount, WorkflowEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) :
             base(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pStatus, pTasks, pTasksCount, pType, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Workflow>();
 
@@ -227,7 +223,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Bindings), nameof(BindingsCount), nameof(Documents), nameof(DocumentsCount), nameof(Scopes), nameof(ScopesCount), nameof(Tasks), nameof(TasksCount), nameof(Variables), nameof(VariablesCount), nameof(Workflows), nameof(WorkflowsCount)
+            nameof(Bindings), nameof(BindingsCount), nameof(BindingsIds), nameof(Documents), nameof(DocumentsCount), nameof(DocumentsIds), nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds), nameof(Tasks), nameof(TasksCount), nameof(TasksIds), nameof(Variables), nameof(VariablesCount), nameof(VariablesIds), nameof(Workflows), nameof(WorkflowsCount), nameof(WorkflowsIds)
         };
         private List<string> collections { get { return _collections; } }
 

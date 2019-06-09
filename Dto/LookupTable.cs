@@ -76,6 +76,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
 
@@ -104,26 +106,12 @@ namespace Services.Dto
 
     public partial class LookupTable : LookupTableBase, IReturn<LookupTable>, IDto, ICloneable
     {
-        public LookupTable()
-        {
-            _Constructor();
-        }
+        public LookupTable() => _Constructor();
 
         public LookupTable(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupTable(int id) : base(id) {}
-        public LookupTable(int? pId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pCategories, int? pCategoriesCount, List<Reference> pDocuments, int? pDocumentsCount, Reference pEnum, int? pEnumId, string pName) : 
+        public LookupTable(int? pId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pCategories, int? pCategoriesCount, List<Reference> pDocuments, int? pDocumentsCount, Reference pEnum, int? pEnumId, string pName) :
             base(pId, pBindings, pBindingsCount, pCategories, pCategoriesCount, pDocuments, pDocumentsCount, pEnum, pEnumId, pName) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<LookupTable>();
 
@@ -159,7 +147,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Bindings), nameof(BindingsCount), nameof(Categories), nameof(CategoriesCount), nameof(Documents), nameof(DocumentsCount)
+            nameof(Bindings), nameof(BindingsCount), nameof(BindingsIds), nameof(Categories), nameof(CategoriesCount), nameof(CategoriesIds), nameof(Documents), nameof(DocumentsCount), nameof(DocumentsIds)
         };
         private List<string> collections { get { return _collections; } }
 

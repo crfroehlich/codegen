@@ -33,7 +33,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.CompletedOn, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.CompletedOn))))
                 .ForMember(dest => dest.DataSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.DataSets))))
                 .ForMember(dest => dest.DataSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.DataSetsCount))))
-                .ForMember(dest => dest.DataSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.DataSetsIds))))
+                .ForMember(dest => dest.DataSetsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.DataSetsIds))))
                 .ForMember(dest => dest.Document, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.Document))))
                 .ForMember(dest => dest.DocumentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.DocumentId))))
                 .ForMember(dest => dest.ErrorData, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ErrorData))))

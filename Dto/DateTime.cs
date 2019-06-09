@@ -47,18 +47,26 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DateDay), Description = "int?", IsRequired = false)]
         public int? DateDay { get; set; }
+        public List<int> DateDayIds { get; set; }
+        public int? DateDayCount { get; set; }
 
 
         [ApiMember(Name = nameof(DateMonth), Description = "int?", IsRequired = false)]
         public int? DateMonth { get; set; }
+        public List<int> DateMonthIds { get; set; }
+        public int? DateMonthCount { get; set; }
 
 
         [ApiMember(Name = nameof(DateTime), Description = "DateTime?", IsRequired = false)]
         public DateTime? DateTime { get; set; }
+        public List<int> DateTimeIds { get; set; }
+        public int? DateTimeCount { get; set; }
 
 
         [ApiMember(Name = nameof(DateYear), Description = "int?", IsRequired = false)]
         public int? DateYear { get; set; }
+        public List<int> DateYearIds { get; set; }
+        public int? DateYearCount { get; set; }
 
 
 
@@ -82,26 +90,12 @@ namespace Services.Dto
 
     public partial class DateTimeDto : DateTimeBase, IReturn<DateTimeDto>, IDto, ICloneable
     {
-        public DateTimeDto()
-        {
-            _Constructor();
-        }
+        public DateTimeDto() => _Constructor();
 
         public DateTimeDto(int? id) : base(DocConvert.ToInt(id)) {}
         public DateTimeDto(int id) : base(id) {}
-        public DateTimeDto(int? pId, int? pDateDay, int? pDateMonth, DateTime? pDateTime, int? pDateYear) : 
+        public DateTimeDto(int? pId, int? pDateDay, int? pDateMonth, DateTime? pDateTime, int? pDateYear) :
             base(pId, pDateDay, pDateMonth, pDateTime, pDateYear) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<DateTimeDto>();
 

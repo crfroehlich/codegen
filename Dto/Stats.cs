@@ -57,18 +57,26 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ExternalId), Description = "int?", IsRequired = false)]
         public int? ExternalId { get; set; }
+        public List<int> ExternalIdIds { get; set; }
+        public int? ExternalIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ExternalType), Description = "string", IsRequired = false)]
         public string ExternalType { get; set; }
+        public List<int> ExternalTypeIds { get; set; }
+        public int? ExternalTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(ObjectId), Description = "int?", IsRequired = true)]
         public int? ObjectId { get; set; }
+        public List<int> ObjectIdIds { get; set; }
+        public int? ObjectIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ObjectType), Description = "string", IsRequired = true)]
         public string ObjectType { get; set; }
+        public List<int> ObjectTypeIds { get; set; }
+        public int? ObjectTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(StudySetStats), Description = "StatsStudySet", IsRequired = false)]
@@ -101,26 +109,12 @@ namespace Services.Dto
 
     public partial class Stats : StatsBase, IReturn<Stats>, IDto, ICloneable
     {
-        public Stats()
-        {
-            _Constructor();
-        }
+        public Stats() => _Constructor();
 
         public Stats(int? id) : base(DocConvert.ToInt(id)) {}
         public Stats(int id) : base(id) {}
-        public Stats(int? pId, Reference pApp, int? pAppId, int? pExternalId, string pExternalType, int? pObjectId, string pObjectType, Reference pStudySetStats, int? pStudySetStatsId) : 
+        public Stats(int? pId, Reference pApp, int? pAppId, int? pExternalId, string pExternalType, int? pObjectId, string pObjectType, Reference pStudySetStats, int? pStudySetStatsId) :
             base(pId, pApp, pAppId, pExternalId, pExternalType, pObjectId, pObjectType, pStudySetStats, pStudySetStatsId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Stats>();
 

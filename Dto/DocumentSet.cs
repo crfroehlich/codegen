@@ -74,6 +74,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Confidential), Description = "bool", IsRequired = false)]
         public bool Confidential { get; set; }
+        public List<int> ConfidentialIds { get; set; }
+        public int? ConfidentialCount { get; set; }
 
 
         [ApiMember(Name = nameof(Divisions), Description = "Division", IsRequired = false)]
@@ -102,10 +104,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(LegacyDocumentSetId), Description = "int?", IsRequired = false)]
         public int? LegacyDocumentSetId { get; set; }
+        public List<int> LegacyDocumentSetIdIds { get; set; }
+        public int? LegacyDocumentSetIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owner), Description = "DocumentSet", IsRequired = false)]
@@ -128,6 +134,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Settings), Description = "string", IsRequired = false)]
         public string Settings { get; set; }
+        public List<int> SettingsIds { get; set; }
+        public int? SettingsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Stats), Description = "StatsStudySet", IsRequired = false)]
@@ -139,6 +147,8 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"Library",@"SERVE Portal",@"Therapeutic Area"})]
         [ApiMember(Name = nameof(Type), Description = "DocumentSetTypeEnm?", IsRequired = false)]
         public DocumentSetTypeEnm? Type { get; set; }
+        public List<int> TypeIds { get; set; }
+        public int? TypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
@@ -189,26 +199,12 @@ namespace Services.Dto
 
     public partial class DocumentSet : DocumentSetBase, IReturn<DocumentSet>, IDto, ICloneable
     {
-        public DocumentSet()
-        {
-            _Constructor();
-        }
+        public DocumentSet() => _Constructor();
 
         public DocumentSet(int? id) : base(DocConvert.ToInt(id)) {}
         public DocumentSet(int id) : base(id) {}
-        public DocumentSet(int? pId, List<Reference> pClients, int? pClientsCount, bool pConfidential, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, List<Reference> pHistories, int? pHistoriesCount, int? pLegacyDocumentSetId, string pName, Reference pOwner, int? pOwnerId, Reference pProjectTeam, int? pProjectTeamId, List<Reference> pScopes, int? pScopesCount, string pSettings, List<Reference> pStats, int? pStatsCount, DocumentSetTypeEnm? pType, List<Reference> pUsers, int? pUsersCount) : 
+        public DocumentSet(int? pId, List<Reference> pClients, int? pClientsCount, bool pConfidential, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, List<Reference> pHistories, int? pHistoriesCount, int? pLegacyDocumentSetId, string pName, Reference pOwner, int? pOwnerId, Reference pProjectTeam, int? pProjectTeamId, List<Reference> pScopes, int? pScopesCount, string pSettings, List<Reference> pStats, int? pStatsCount, DocumentSetTypeEnm? pType, List<Reference> pUsers, int? pUsersCount) :
             base(pId, pClients, pClientsCount, pConfidential, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pHistories, pHistoriesCount, pLegacyDocumentSetId, pName, pOwner, pOwnerId, pProjectTeam, pProjectTeamId, pScopes, pScopesCount, pSettings, pStats, pStatsCount, pType, pUsers, pUsersCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<DocumentSet>();
 
@@ -246,7 +242,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Clients), nameof(ClientsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(Users), nameof(UsersCount)
+            nameof(Clients), nameof(ClientsCount), nameof(ClientsIds), nameof(Divisions), nameof(DivisionsCount), nameof(DivisionsIds), nameof(Documents), nameof(DocumentsCount), nameof(DocumentsIds), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(DocumentSetsIds), nameof(Histories), nameof(HistoriesCount), nameof(HistoriesIds), nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds), nameof(Stats), nameof(StatsCount), nameof(StatsIds), nameof(Users), nameof(UsersCount), nameof(UsersIds)
         };
         private List<string> collections { get { return _collections; } }
 

@@ -54,6 +54,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Text), Description = "string", IsRequired = false)]
         public string Text { get; set; }
+        public List<int> TextIds { get; set; }
+        public int? TextCount { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
@@ -84,26 +86,12 @@ namespace Services.Dto
 
     public partial class Comment : CommentBase, IReturn<Comment>, IDto, ICloneable
     {
-        public Comment()
-        {
-            _Constructor();
-        }
+        public Comment() => _Constructor();
 
         public Comment(int? id) : base(DocConvert.ToInt(id)) {}
         public Comment(int id) : base(id) {}
-        public Comment(int? pId, List<Reference> pScopes, int? pScopesCount, string pText, Reference pUser, int? pUserId) : 
+        public Comment(int? pId, List<Reference> pScopes, int? pScopesCount, string pText, Reference pUser, int? pUserId) :
             base(pId, pScopes, pScopesCount, pText, pUser, pUserId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Comment>();
 
@@ -141,7 +129,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Scopes), nameof(ScopesCount)
+            nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds)
         };
         private List<string> collections { get { return _collections; } }
 

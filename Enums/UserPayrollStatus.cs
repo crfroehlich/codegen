@@ -64,8 +64,7 @@ namespace Services.Enums
         public const string CONTRACT = "Contract";
         public const string FULL_TIME = "Full-Time";
         public const string PART_TIME = "Part-Time";
-        
-        
+
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantUserPayrollStatus).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -95,8 +94,6 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-
-
         public bool Equals(DocConstantUserPayrollStatus obj) => this == obj;
 
         public static bool operator ==(DocConstantUserPayrollStatus x, DocConstantUserPayrollStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -122,6 +119,5 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantUserPayrollStatus obj) => obj?.GetHashCode() ?? -17;
-
     }
 }

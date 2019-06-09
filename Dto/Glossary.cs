@@ -51,6 +51,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Definition), Description = "string", IsRequired = false)]
         public string Definition { get; set; }
+        public List<int> DefinitionIds { get; set; }
+        public int? DefinitionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]
@@ -61,6 +63,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Icon), Description = "string", IsRequired = false)]
         public string Icon { get; set; }
+        public List<int> IconIds { get; set; }
+        public int? IconCount { get; set; }
 
 
         [ApiMember(Name = nameof(Page), Description = "Page", IsRequired = false)]
@@ -100,26 +104,12 @@ namespace Services.Dto
 
     public partial class Glossary : GlossaryBase, IReturn<Glossary>, IDto, ICloneable
     {
-        public Glossary()
-        {
-            _Constructor();
-        }
+        public Glossary() => _Constructor();
 
         public Glossary(int? id) : base(DocConvert.ToInt(id)) {}
         public Glossary(int id) : base(id) {}
-        public Glossary(int? pId, string pDefinition, Reference pEnum, int? pEnumId, string pIcon, Reference pPage, int? pPageId, Reference pTerm, int? pTermId) : 
+        public Glossary(int? pId, string pDefinition, Reference pEnum, int? pEnumId, string pIcon, Reference pPage, int? pPageId, Reference pTerm, int? pTermId) :
             base(pId, pDefinition, pEnum, pEnumId, pIcon, pPage, pPageId, pTerm, pTermId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Glossary>();
 

@@ -31,13 +31,12 @@ namespace Services.Schema
     {
         private const string SERVEPORTALSET_CACHE = "ServePortalSetCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.SERVEPORTALSET;
-        
+
         public DocEntityServePortalSet(Session session) : base(session) {}
 
         public DocEntityServePortalSet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new ServePortalSet()));
-
         public static DocEntityServePortalSet Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -95,13 +94,10 @@ namespace Services.Schema
 
 
 
-
         public override ModelNameEnm ClassName => CLASS_NAME;
-
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindServePortalSets";
-
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -156,7 +152,6 @@ namespace Services.Schema
                 return ret;
             }
         }
-
 
         public ServePortalSet ToDto() => Mapper.Map<DocEntityServePortalSet, ServePortalSet>(this);
 

@@ -49,6 +49,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IsAbsolute), Description = "bool", IsRequired = false)]
         public bool IsAbsolute { get; set; }
+        public List<int> IsAbsoluteIds { get; set; }
+        public int? IsAbsoluteCount { get; set; }
 
 
         [ApiMember(Name = nameof(MeanValue), Description = "MeanBase", IsRequired = false)]
@@ -92,26 +94,12 @@ namespace Services.Dto
 
     public partial class TimePoint : TimePointBase, IReturn<TimePoint>, IDto, ICloneable
     {
-        public TimePoint()
-        {
-            _Constructor();
-        }
+        public TimePoint() => _Constructor();
 
         public TimePoint(int? id) : base(DocConvert.ToInt(id)) {}
         public TimePoint(int id) : base(id) {}
-        public TimePoint(int? pId, bool pIsAbsolute, TypeMeanBase pMeanValue, TypeUnitValue pSingleValue, TypeUnitRange pTotalValue, Reference pType, int? pTypeId) : 
+        public TimePoint(int? pId, bool pIsAbsolute, TypeMeanBase pMeanValue, TypeUnitValue pSingleValue, TypeUnitRange pTotalValue, Reference pType, int? pTypeId) :
             base(pId, pIsAbsolute, pMeanValue, pSingleValue, pTotalValue, pType, pTypeId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<TimePoint>();
 

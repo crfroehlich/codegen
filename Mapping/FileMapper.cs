@@ -37,7 +37,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Rights, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<File>(c, nameof(DocEntityFile.Rights))))
                 .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<File>(c, nameof(DocEntityFile.Scopes))))
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<File>(c, nameof(DocEntityFile.ScopesCount))))
-                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<File>(c, nameof(DocEntityFile.ScopesIds))))
+                .ForMember(dest => dest.ScopesIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<File>(c, nameof(DocEntityFile.ScopesIds))))
                 .ForMember(dest => dest.Source, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<File>(c, nameof(DocEntityFile.Source))))
                 .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<File>(c, nameof(DocEntityFile.Type))))
                 .MaxDepth(2);

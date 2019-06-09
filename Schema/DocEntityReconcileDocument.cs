@@ -31,13 +31,12 @@ namespace Services.Schema
     {
         private const string RECONCILEDOCUMENT_CACHE = "ReconcileDocumentCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.RECONCILEDOCUMENT;
-        
+
         public DocEntityReconcileDocument(Session session) : base(session) {}
 
         public DocEntityReconcileDocument() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new ReconcileDocument()));
-
         public static DocEntityReconcileDocument Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -110,13 +109,10 @@ namespace Services.Schema
 
 
 
-
         public override ModelNameEnm ClassName => CLASS_NAME;
-
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindReconcileDocuments";
-
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -182,7 +178,6 @@ namespace Services.Schema
                 return ret;
             }
         }
-
 
         public ReconcileDocument ToDto() => Mapper.Map<DocEntityReconcileDocument, ReconcileDocument>(this);
 

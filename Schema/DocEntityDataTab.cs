@@ -31,13 +31,12 @@ namespace Services.Schema
     {
         private const string DATATAB_CACHE = "DataTabCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.DATATAB;
-        
+
         public DocEntityDataTab(Session session) : base(session) {}
 
         public DocEntityDataTab() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DataTab()));
-
         public static DocEntityDataTab Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -120,13 +119,10 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
-
         public override ModelNameEnm ClassName => CLASS_NAME;
-
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindDataTabs";
-
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -191,7 +187,6 @@ namespace Services.Schema
                 return ret;
             }
         }
-
 
         public DataTab ToDto() => Mapper.Map<DocEntityDataTab, DataTab>(this);
 

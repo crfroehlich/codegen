@@ -89,8 +89,7 @@ namespace Services.Enums
         public const string VARIANCE_IQR = "Variance IQR";
         public const string VARIANCE_PERCENTILE = "Variance Percentile";
         public const string VARIANCE_TOTAL = "Variance Total";
-        
-        
+
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantMeanRangeType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -120,8 +119,6 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-
-
         public bool Equals(DocConstantMeanRangeType obj) => this == obj;
 
         public static bool operator ==(DocConstantMeanRangeType x, DocConstantMeanRangeType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -147,6 +144,5 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantMeanRangeType obj) => obj?.GetHashCode() ?? -17;
-
     }
 }

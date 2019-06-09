@@ -32,7 +32,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, "Updated")))
                 .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Children))))
                 .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ChildrenCount))))
-                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ChildrenIds))))
+                .ForMember(dest => dest.ChildrenIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ChildrenIds))))
                 .ForMember(dest => dest.Client, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Client))))
                 .ForMember(dest => dest.ClientId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ClientId))))
                 .ForMember(dest => dest.DatabaseDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DatabaseDeadline))))
@@ -60,7 +60,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Status))))
                 .ForMember(dest => dest.TimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCards))))
                 .ForMember(dest => dest.TimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCardsCount))))
-                .ForMember(dest => dest.TimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCardsIds))))
+                .ForMember(dest => dest.TimeCardsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCardsIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Project,DocEntityProject>()
                 .MaxDepth(2);

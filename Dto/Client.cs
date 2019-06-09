@@ -76,6 +76,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
@@ -92,6 +94,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(SalesforceAccountId), Description = "string", IsRequired = false)]
         public string SalesforceAccountId { get; set; }
+        public List<int> SalesforceAccountIdIds { get; set; }
+        public int? SalesforceAccountIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
@@ -102,6 +106,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Settings), Description = "ClientSettings", IsRequired = false)]
         public ClientSettings Settings { get; set; }
+        public List<int> SettingsIds { get; set; }
+        public int? SettingsCount { get; set; }
 
 
 
@@ -136,26 +142,12 @@ namespace Services.Dto
 
     public partial class Client : ClientBase, IReturn<Client>, IDto, ICloneable
     {
-        public Client()
-        {
-            _Constructor();
-        }
+        public Client() => _Constructor();
 
         public Client(int? id) : base(DocConvert.ToInt(id)) {}
         public Client(int id) : base(id) {}
-        public Client(int? pId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, List<Reference> pProjects, int? pProjectsCount, Reference pRole, int? pRoleId, string pSalesforceAccountId, List<Reference> pScopes, int? pScopesCount, ClientSettings pSettings) : 
+        public Client(int? pId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, List<Reference> pProjects, int? pProjectsCount, Reference pRole, int? pRoleId, string pSalesforceAccountId, List<Reference> pScopes, int? pScopesCount, ClientSettings pSettings) :
             base(pId, pDefaultLocale, pDefaultLocaleId, pDivisions, pDivisionsCount, pDocumentSets, pDocumentSetsCount, pName, pProjects, pProjectsCount, pRole, pRoleId, pSalesforceAccountId, pScopes, pScopesCount, pSettings) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Client>();
 
@@ -193,7 +185,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Divisions), nameof(DivisionsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Projects), nameof(ProjectsCount), nameof(Scopes), nameof(ScopesCount)
+            nameof(Divisions), nameof(DivisionsCount), nameof(DivisionsIds), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(DocumentSetsIds), nameof(Projects), nameof(ProjectsCount), nameof(ProjectsIds), nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds)
         };
         private List<string> collections { get { return _collections; } }
 

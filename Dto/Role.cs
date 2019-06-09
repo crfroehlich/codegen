@@ -71,10 +71,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
+        public List<int> DescriptionIds { get; set; }
+        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Features), Description = "string", IsRequired = false)]
         public string Features { get; set; }
+        public List<int> FeaturesIds { get; set; }
+        public int? FeaturesCount { get; set; }
 
 
         [ApiMember(Name = nameof(FeatureSets), Description = "FeatureSet", IsRequired = false)]
@@ -85,14 +89,20 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IsInternal), Description = "bool", IsRequired = false)]
         public bool IsInternal { get; set; }
+        public List<int> IsInternalIds { get; set; }
+        public int? IsInternalCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsSuperAdmin), Description = "bool", IsRequired = false)]
         public bool IsSuperAdmin { get; private set; }
+        public List<int> IsSuperAdminIds { get; set; }
+        public int? IsSuperAdminCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Pages), Description = "Page", IsRequired = false)]
@@ -103,6 +113,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Permissions), Description = "string", IsRequired = false)]
         public string Permissions { get; set; }
+        public List<int> PermissionsIds { get; set; }
+        public int? PermissionsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
@@ -144,26 +156,12 @@ namespace Services.Dto
 
     public partial class Role : RoleBase, IReturn<Role>, IDto, ICloneable
     {
-        public Role()
-        {
-            _Constructor();
-        }
+        public Role() => _Constructor();
 
         public Role(int? id) : base(DocConvert.ToInt(id)) {}
         public Role(int id) : base(id) {}
-        public Role(int? pId, Reference pAdminTeam, int? pAdminTeamId, List<Reference> pApps, int? pAppsCount, string pDescription, string pFeatures, List<Reference> pFeatureSets, int? pFeatureSetsCount, bool pIsInternal, bool pIsSuperAdmin, string pName, List<Reference> pPages, int? pPagesCount, string pPermissions, List<Reference> pUsers, int? pUsersCount) : 
+        public Role(int? pId, Reference pAdminTeam, int? pAdminTeamId, List<Reference> pApps, int? pAppsCount, string pDescription, string pFeatures, List<Reference> pFeatureSets, int? pFeatureSetsCount, bool pIsInternal, bool pIsSuperAdmin, string pName, List<Reference> pPages, int? pPagesCount, string pPermissions, List<Reference> pUsers, int? pUsersCount) :
             base(pId, pAdminTeam, pAdminTeamId, pApps, pAppsCount, pDescription, pFeatures, pFeatureSets, pFeatureSetsCount, pIsInternal, pIsSuperAdmin, pName, pPages, pPagesCount, pPermissions, pUsers, pUsersCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Role>();
 
@@ -201,7 +199,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Apps), nameof(AppsCount), nameof(FeatureSets), nameof(FeatureSetsCount), nameof(Pages), nameof(PagesCount), nameof(Users), nameof(UsersCount)
+            nameof(Apps), nameof(AppsCount), nameof(AppsIds), nameof(FeatureSets), nameof(FeatureSetsCount), nameof(FeatureSetsIds), nameof(Pages), nameof(PagesCount), nameof(PagesIds), nameof(Users), nameof(UsersCount), nameof(UsersIds)
         };
         private List<string> collections { get { return _collections; } }
 

@@ -55,14 +55,20 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(OwnerId), Description = "int?", IsRequired = true)]
         public int? OwnerId { get; set; }
+        public List<int> OwnerIdIds { get; set; }
+        public int? OwnerIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(OwnerType), Description = "string", IsRequired = true)]
         public string OwnerType { get; set; }
+        public List<int> OwnerTypeIds { get; set; }
+        public int? OwnerTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Value), Description = "decimal", IsRequired = true)]
         public decimal Value { get; set; }
+        public List<int> ValueIds { get; set; }
+        public int? ValueCount { get; set; }
 
 
 
@@ -86,26 +92,12 @@ namespace Services.Dto
 
     public partial class StatsRecord : StatsRecordBase, IReturn<StatsRecord>, IDto, ICloneable
     {
-        public StatsRecord()
-        {
-            _Constructor();
-        }
+        public StatsRecord() => _Constructor();
 
         public StatsRecord(int? id) : base(DocConvert.ToInt(id)) {}
         public StatsRecord(int id) : base(id) {}
-        public StatsRecord(int? pId, Reference pName, int? pNameId, int? pOwnerId, string pOwnerType, decimal pValue) : 
+        public StatsRecord(int? pId, Reference pName, int? pNameId, int? pOwnerId, string pOwnerType, decimal pValue) :
             base(pId, pName, pNameId, pOwnerId, pOwnerType, pValue) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<StatsRecord>();
 

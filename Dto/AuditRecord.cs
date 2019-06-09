@@ -65,6 +65,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Action), Description = "string", IsRequired = false)]
         public string Action { get; set; }
+        public List<int> ActionIds { get; set; }
+        public int? ActionCount { get; set; }
 
 
         [ApiMember(Name = nameof(BackgroundTask), Description = "BackgroundTask", IsRequired = false)]
@@ -75,14 +77,20 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ChangedOnDate), Description = "DateTime?", IsRequired = true)]
         public DateTime? ChangedOnDate { get; set; }
+        public List<int> ChangedOnDateIds { get; set; }
+        public int? ChangedOnDateCount { get; set; }
 
 
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         public string Data { get; set; }
+        public List<int> DataIds { get; set; }
+        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(DatabaseSessionId), Description = "string", IsRequired = false)]
         public string DatabaseSessionId { get; set; }
+        public List<int> DatabaseSessionIdIds { get; set; }
+        public int? DatabaseSessionIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Deltas), Description = "AuditDelta", IsRequired = false)]
@@ -93,14 +101,20 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(EntityId), Description = "int?", IsRequired = false)]
         public int? EntityId { get; set; }
+        public List<int> EntityIdIds { get; set; }
+        public int? EntityIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(EntityType), Description = "string", IsRequired = false)]
         public string EntityType { get; set; }
+        public List<int> EntityTypeIds { get; set; }
+        public int? EntityTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(EntityVersion), Description = "int?", IsRequired = false)]
         public int? EntityVersion { get; set; }
+        public List<int> EntityVersionIds { get; set; }
+        public int? EntityVersionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Events), Description = "Event", IsRequired = false)]
@@ -117,14 +131,20 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(TargetId), Description = "int?", IsRequired = false)]
         public int? TargetId { get; set; }
+        public List<int> TargetIdIds { get; set; }
+        public int? TargetIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(TargetType), Description = "string", IsRequired = false)]
         public string TargetType { get; set; }
+        public List<int> TargetTypeIds { get; set; }
+        public int? TargetTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(TargetVersion), Description = "int?", IsRequired = false)]
         public int? TargetVersion { get; set; }
+        public List<int> TargetVersionIds { get; set; }
+        public int? TargetVersionCount { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = false)]
@@ -177,26 +197,12 @@ namespace Services.Dto
 
     public partial class AuditRecord : AuditRecordBase, IReturn<AuditRecord>, IDto, ICloneable
     {
-        public AuditRecord()
-        {
-            _Constructor();
-        }
+        public AuditRecord() => _Constructor();
 
         public AuditRecord(int? id) : base(DocConvert.ToInt(id)) {}
         public AuditRecord(int id) : base(id) {}
-        public AuditRecord(int? pId, string pAction, Reference pBackgroundTask, int? pBackgroundTaskId, DateTime? pChangedOnDate, string pData, string pDatabaseSessionId, List<Reference> pDeltas, int? pDeltasCount, int? pEntityId, string pEntityType, int? pEntityVersion, List<Reference> pEvents, int? pEventsCount, Reference pImpersonation, int? pImpersonationId, int? pTargetId, string pTargetType, int? pTargetVersion, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId) : 
+        public AuditRecord(int? pId, string pAction, Reference pBackgroundTask, int? pBackgroundTaskId, DateTime? pChangedOnDate, string pData, string pDatabaseSessionId, List<Reference> pDeltas, int? pDeltasCount, int? pEntityId, string pEntityType, int? pEntityVersion, List<Reference> pEvents, int? pEventsCount, Reference pImpersonation, int? pImpersonationId, int? pTargetId, string pTargetType, int? pTargetVersion, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId) :
             base(pId, pAction, pBackgroundTask, pBackgroundTaskId, pChangedOnDate, pData, pDatabaseSessionId, pDeltas, pDeltasCount, pEntityId, pEntityType, pEntityVersion, pEvents, pEventsCount, pImpersonation, pImpersonationId, pTargetId, pTargetType, pTargetVersion, pUser, pUserId, pUserSession, pUserSessionId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<AuditRecord>();
 
@@ -234,7 +240,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Deltas), nameof(DeltasCount), nameof(Events), nameof(EventsCount)
+            nameof(Deltas), nameof(DeltasCount), nameof(DeltasIds), nameof(Events), nameof(EventsCount), nameof(EventsIds)
         };
         private List<string> collections { get { return _collections; } }
 

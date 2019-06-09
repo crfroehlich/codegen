@@ -51,6 +51,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(AutoDelete), Description = "bool", IsRequired = false)]
         public bool AutoDelete { get; set; }
+        public List<int> AutoDeleteIds { get; set; }
+        public int? AutoDeleteCount { get; set; }
 
 
         [ApiMember(Name = nameof(BackgroundTask), Description = "BackgroundTask", IsRequired = false)]
@@ -61,22 +63,32 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
+        public List<int> DescriptionIds { get; set; }
+        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Durable), Description = "bool", IsRequired = false)]
         public bool Durable { get; set; }
+        public List<int> DurableIds { get; set; }
+        public int? DurableCount { get; set; }
 
 
         [ApiMember(Name = nameof(Enabled), Description = "bool", IsRequired = false)]
         public bool Enabled { get; set; }
+        public List<int> EnabledIds { get; set; }
+        public int? EnabledCount { get; set; }
 
 
         [ApiMember(Name = nameof(Exclusive), Description = "bool", IsRequired = false)]
         public bool Exclusive { get; set; }
+        public List<int> ExclusiveIds { get; set; }
+        public int? ExclusiveCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
 
@@ -104,26 +116,12 @@ namespace Services.Dto
 
     public partial class QueueChannel : QueueChannelBase, IReturn<QueueChannel>, IDto, ICloneable
     {
-        public QueueChannel()
-        {
-            _Constructor();
-        }
+        public QueueChannel() => _Constructor();
 
         public QueueChannel(int? id) : base(DocConvert.ToInt(id)) {}
         public QueueChannel(int id) : base(id) {}
-        public QueueChannel(int? pId, bool pAutoDelete, Reference pBackgroundTask, int? pBackgroundTaskId, string pDescription, bool pDurable, bool pEnabled, bool pExclusive, string pName) : 
+        public QueueChannel(int? pId, bool pAutoDelete, Reference pBackgroundTask, int? pBackgroundTaskId, string pDescription, bool pDurable, bool pEnabled, bool pExclusive, string pName) :
             base(pId, pAutoDelete, pBackgroundTask, pBackgroundTaskId, pDescription, pDurable, pEnabled, pExclusive, pName) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<QueueChannel>();
 

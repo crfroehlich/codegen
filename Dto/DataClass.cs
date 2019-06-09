@@ -69,23 +69,33 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(AllowDelete), Description = "bool", IsRequired = false)]
         public bool AllowDelete { get; set; }
+        public List<int> AllowDeleteIds { get; set; }
+        public int? AllowDeleteCount { get; set; }
 
 
         [ApiMember(Name = nameof(AllSelectByDefault), Description = "bool", IsRequired = false)]
         public bool AllSelectByDefault { get; set; }
+        public List<int> AllSelectByDefaultIds { get; set; }
+        public int? AllSelectByDefaultCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"AdjudicatedRating",@"App",@"Attribute",@"AttributeInterval",@"AuditDelta",@"AuditRecord",@"BackgroundTask",@"BackgroundTaskHistory",@"BackgroundTaskItem",@"Broadcast",@"Client",@"Comment",@"DatabaseVersion",@"DataClass",@"DataProperty",@"DataSet",@"DataTab",@"DateTime",@"Default",@"DiseaseStateSet",@"Division",@"Document",@"DocumentSet",@"DocumentSetHistory",@"Entities",@"EoD",@"Event",@"Favorite",@"FeatureSet",@"File",@"Glossary",@"Help",@"History",@"Impersonation",@"ImportData",@"Interval",@"Junction",@"LibrarySet",@"Locale",@"LocaleLookup",@"LookupCategory",@"LookupTable",@"LookupTableBinding",@"LookupTableEnum",@"MeanRanges",@"MeanRangeValue",@"MeanVariances",@"MeanVarianceValue",@"Page",@"Project",@"QueueChannel",@"Rating",@"ReconcileDocument",@"Role",@"Scope",@"ServePortalSet",@"Stats",@"StatsRecord",@"StatsStudySet",@"StudyDesign",@"StudyType",@"Tag",@"Task",@"Team",@"TermCategory",@"TermMaster",@"TermSynonym",@"TherapeuticAreaSet",@"TimeCard",@"TimePoint",@"UnitConversionRules",@"UnitOfMeasure",@"Units",@"UnitValue",@"Update",@"User",@"UserRequest",@"UserSession",@"UserType",@"ValueType",@"VariableInstance",@"VariableRule",@"Workflow"})]
         [ApiMember(Name = nameof(Base), Description = "ModelNameEnm?", IsRequired = false)]
         public ModelNameEnm? Base { get; set; }
+        public List<int> BaseIds { get; set; }
+        public int? BaseCount { get; set; }
 
 
         [ApiMember(Name = nameof(CacheDuration), Description = "int?", IsRequired = false)]
         public int? CacheDuration { get; set; }
+        public List<int> CacheDurationIds { get; set; }
+        public int? CacheDurationCount { get; set; }
 
 
         [ApiMember(Name = nameof(ClassId), Description = "int?", IsRequired = true)]
         public int? ClassId { get; set; }
+        public List<int> ClassIdIds { get; set; }
+        public int? ClassIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(CustomCollections), Description = "DataProperty", IsRequired = false)]
@@ -96,10 +106,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DELETE), Description = "bool", IsRequired = false)]
         public bool DELETE { get; set; }
+        public List<int> DELETEIds { get; set; }
+        public int? DELETECount { get; set; }
 
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
+        public List<int> DescriptionIds { get; set; }
+        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(DontFlattenProperties), Description = "DataProperty", IsRequired = false)]
@@ -110,14 +124,20 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DtoSuffix), Description = "string", IsRequired = false)]
         public string DtoSuffix { get; set; }
+        public List<int> DtoSuffixIds { get; set; }
+        public int? DtoSuffixCount { get; set; }
 
 
         [ApiMember(Name = nameof(FlattenReferences), Description = "bool", IsRequired = false)]
         public bool FlattenReferences { get; set; }
+        public List<int> FlattenReferencesIds { get; set; }
+        public int? FlattenReferencesCount { get; set; }
 
 
         [ApiMember(Name = nameof(GET), Description = "bool", IsRequired = false)]
         public bool GET { get; set; }
+        public List<int> GETIds { get; set; }
+        public int? GETCount { get; set; }
 
 
         [ApiMember(Name = nameof(IgnoreProps), Description = "DataProperty", IsRequired = false)]
@@ -128,22 +148,32 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IsInsertOnly), Description = "bool", IsRequired = false)]
         public bool IsInsertOnly { get; set; }
+        public List<int> IsInsertOnlyIds { get; set; }
+        public int? IsInsertOnlyCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsReadOnly), Description = "bool", IsRequired = false)]
         public bool IsReadOnly { get; set; }
+        public List<int> IsReadOnlyIds { get; set; }
+        public int? IsReadOnlyCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(PATCH), Description = "bool", IsRequired = false)]
         public bool PATCH { get; set; }
+        public List<int> PATCHIds { get; set; }
+        public int? PATCHCount { get; set; }
 
 
         [ApiMember(Name = nameof(POST), Description = "bool", IsRequired = false)]
         public bool POST { get; set; }
+        public List<int> POSTIds { get; set; }
+        public int? POSTCount { get; set; }
 
 
         [ApiMember(Name = nameof(Properties), Description = "DataProperty", IsRequired = false)]
@@ -154,6 +184,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(PUT), Description = "bool", IsRequired = false)]
         public bool PUT { get; set; }
+        public List<int> PUTIds { get; set; }
+        public int? PUTCount { get; set; }
 
 
         [ApiMember(Name = nameof(Tabs), Description = "DataTab", IsRequired = false)]
@@ -204,26 +236,12 @@ namespace Services.Dto
 
     public partial class DataClass : DataClassBase, IReturn<DataClass>, IDto, ICloneable
     {
-        public DataClass()
-        {
-            _Constructor();
-        }
+        public DataClass() => _Constructor();
 
         public DataClass(int? id) : base(DocConvert.ToInt(id)) {}
         public DataClass(int id) : base(id) {}
-        public DataClass(int? pId, bool pAllowDelete, bool pAllSelectByDefault, ModelNameEnm? pBase, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) : 
+        public DataClass(int? pId, bool pAllowDelete, bool pAllSelectByDefault, ModelNameEnm? pBase, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) :
             base(pId, pAllowDelete, pAllSelectByDefault, pBase, pCacheDuration, pClassId, pCustomCollections, pCustomCollectionsCount, pDELETE, pDescription, pDontFlattenProperties, pDontFlattenPropertiesCount, pDtoSuffix, pFlattenReferences, pGET, pIgnoreProps, pIgnorePropsCount, pIsInsertOnly, pIsReadOnly, pName, pPATCH, pPOST, pProperties, pPropertiesCount, pPUT, pTabs, pTabsCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<DataClass>();
 
@@ -261,7 +279,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(CustomCollections), nameof(CustomCollectionsCount), nameof(DontFlattenProperties), nameof(DontFlattenPropertiesCount), nameof(IgnoreProps), nameof(IgnorePropsCount), nameof(Properties), nameof(PropertiesCount), nameof(Tabs), nameof(TabsCount)
+            nameof(CustomCollections), nameof(CustomCollectionsCount), nameof(CustomCollectionsIds), nameof(DontFlattenProperties), nameof(DontFlattenPropertiesCount), nameof(DontFlattenPropertiesIds), nameof(IgnoreProps), nameof(IgnorePropsCount), nameof(IgnorePropsIds), nameof(Properties), nameof(PropertiesCount), nameof(PropertiesIds), nameof(Tabs), nameof(TabsCount), nameof(TabsIds)
         };
         private List<string> collections { get { return _collections; } }
 

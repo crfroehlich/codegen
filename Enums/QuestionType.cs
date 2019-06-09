@@ -79,8 +79,7 @@ namespace Services.Enums
         public const string NUMBER = "Number";
         public const string YES_NO = "Yes/No";
         public const string YES_NO_NA = "Yes/No/Na";
-        
-        
+
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantQuestionType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -110,8 +109,6 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-
-
         public bool Equals(DocConstantQuestionType obj) => this == obj;
 
         public static bool operator ==(DocConstantQuestionType x, DocConstantQuestionType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -137,6 +134,5 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantQuestionType obj) => obj?.GetHashCode() ?? -17;
-
     }
 }

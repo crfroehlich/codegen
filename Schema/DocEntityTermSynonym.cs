@@ -31,13 +31,12 @@ namespace Services.Schema
     {
         private const string TERMSYNONYM_CACHE = "TermSynonymCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.TERMSYNONYM;
-        
+
         public DocEntityTermSynonym(Session session) : base(session) {}
 
         public DocEntityTermSynonym() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new TermSynonym()));
-
         public static DocEntityTermSynonym Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -135,13 +134,10 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
-
         public override ModelNameEnm ClassName => CLASS_NAME;
-
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindTermSynonyms";
-
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -205,7 +201,6 @@ namespace Services.Schema
                 return ret;
             }
         }
-
 
         public TermSynonym ToDto() => Mapper.Map<DocEntityTermSynonym, TermSynonym>(this);
 

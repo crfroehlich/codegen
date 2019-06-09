@@ -58,6 +58,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Attempts), Description = "int?", IsRequired = false)]
         public int? Attempts { get; set; }
+        public List<int> AttemptsIds { get; set; }
+        public int? AttemptsCount { get; set; }
 
 
         [ApiMember(Name = nameof(AuditRecord), Description = "AuditRecord", IsRequired = false)]
@@ -68,34 +70,50 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Data), Description = "JsonObject", IsRequired = false)]
         public JsonObject Data { get; set; }
+        public List<int> DataIds { get; set; }
+        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
+        public List<int> DescriptionIds { get; set; }
+        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Ended), Description = "DateTime?", IsRequired = false)]
         public DateTime? Ended { get; set; }
+        public List<int> EndedIds { get; set; }
+        public int? EndedCount { get; set; }
 
 
         [ApiMember(Name = nameof(EntityId), Description = "int?", IsRequired = false)]
         public int? EntityId { get; set; }
+        public List<int> EntityIdIds { get; set; }
+        public int? EntityIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ExecutionTime), Description = "string", IsRequired = false)]
         public string ExecutionTime { get; set; }
+        public List<int> ExecutionTimeIds { get; set; }
+        public int? ExecutionTimeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Started), Description = "DateTime?", IsRequired = false)]
         public DateTime? Started { get; set; }
+        public List<int> StartedIds { get; set; }
+        public int? StartedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Status), Description = "string", IsRequired = false)]
         public string Status { get; set; }
+        public List<int> StatusIds { get; set; }
+        public int? StatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(Succeeded), Description = "bool", IsRequired = false)]
         public bool Succeeded { get; set; }
+        public List<int> SucceededIds { get; set; }
+        public int? SucceededCount { get; set; }
 
 
         [ApiMember(Name = nameof(Task), Description = "BackgroundTask", IsRequired = true)]
@@ -141,26 +159,12 @@ namespace Services.Dto
 
     public partial class BackgroundTaskItem : BackgroundTaskItemBase, IReturn<BackgroundTaskItem>, IDto, ICloneable
     {
-        public BackgroundTaskItem()
-        {
-            _Constructor();
-        }
+        public BackgroundTaskItem() => _Constructor();
 
         public BackgroundTaskItem(int? id) : base(DocConvert.ToInt(id)) {}
         public BackgroundTaskItem(int id) : base(id) {}
-        public BackgroundTaskItem(int? pId, int? pAttempts, Reference pAuditRecord, int? pAuditRecordId, JsonObject pData, string pDescription, DateTime? pEnded, int? pEntityId, string pExecutionTime, DateTime? pStarted, string pStatus, bool pSucceeded, Reference pTask, int? pTaskId, List<Reference> pTaskHistory, int? pTaskHistoryCount) : 
+        public BackgroundTaskItem(int? pId, int? pAttempts, Reference pAuditRecord, int? pAuditRecordId, JsonObject pData, string pDescription, DateTime? pEnded, int? pEntityId, string pExecutionTime, DateTime? pStarted, string pStatus, bool pSucceeded, Reference pTask, int? pTaskId, List<Reference> pTaskHistory, int? pTaskHistoryCount) :
             base(pId, pAttempts, pAuditRecord, pAuditRecordId, pData, pDescription, pEnded, pEntityId, pExecutionTime, pStarted, pStatus, pSucceeded, pTask, pTaskId, pTaskHistory, pTaskHistoryCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<BackgroundTaskItem>();
 
@@ -198,7 +202,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(TaskHistory), nameof(TaskHistoryCount)
+            nameof(TaskHistory), nameof(TaskHistoryCount), nameof(TaskHistoryIds)
         };
         private List<string> collections { get { return _collections; } }
 

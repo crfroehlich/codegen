@@ -65,6 +65,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         public int? Order { get; set; }
+        public List<int> OrderIds { get; set; }
+        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owners), Description = "MeanRanges", IsRequired = false)]
@@ -75,10 +77,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Percent), Description = "decimal?", IsRequired = false)]
         public decimal? Percent { get; set; }
+        public List<int> PercentIds { get; set; }
+        public int? PercentCount { get; set; }
 
 
         [ApiMember(Name = nameof(PercentLow), Description = "decimal?", IsRequired = false)]
         public decimal? PercentLow { get; set; }
+        public List<int> PercentLowIds { get; set; }
+        public int? PercentLowCount { get; set; }
 
 
         [ApiMember(Name = nameof(Range), Description = "UnitsRange", IsRequired = false)]
@@ -117,26 +123,12 @@ namespace Services.Dto
 
     public partial class MeanRangeValue : MeanRangeValueBase, IReturn<MeanRangeValue>, IDto, ICloneable
     {
-        public MeanRangeValue()
-        {
-            _Constructor();
-        }
+        public MeanRangeValue() => _Constructor();
 
         public MeanRangeValue(int? id) : base(DocConvert.ToInt(id)) {}
         public MeanRangeValue(int id) : base(id) {}
-        public MeanRangeValue(int? pId, Reference pMeanVarianceType, int? pMeanVarianceTypeId, TypeUnits pMidSpread, int? pOrder, List<MeanRanges> pOwners, int? pOwnersCount, decimal? pPercent, decimal? pPercentLow, TypeUnitsRange pRange, Reference pType, int? pTypeId) : 
+        public MeanRangeValue(int? pId, Reference pMeanVarianceType, int? pMeanVarianceTypeId, TypeUnits pMidSpread, int? pOrder, List<MeanRanges> pOwners, int? pOwnersCount, decimal? pPercent, decimal? pPercentLow, TypeUnitsRange pRange, Reference pType, int? pTypeId) :
             base(pId, pMeanVarianceType, pMeanVarianceTypeId, pMidSpread, pOrder, pOwners, pOwnersCount, pPercent, pPercentLow, pRange, pType, pTypeId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<MeanRangeValue>();
 
@@ -172,7 +164,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Owners), nameof(OwnersCount)
+            nameof(Owners), nameof(OwnersCount), nameof(OwnersIds)
         };
         private List<string> collections { get { return _collections; } }
 

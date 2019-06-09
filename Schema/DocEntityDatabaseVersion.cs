@@ -31,13 +31,12 @@ namespace Services.Schema
     {
         private const string DATABASEVERSION_CACHE = "DatabaseVersionCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.DATABASEVERSION;
-        
+
         public DocEntityDatabaseVersion(Session session) : base(session) {}
 
         public DocEntityDatabaseVersion() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DatabaseVersion()));
-
         public static DocEntityDatabaseVersion Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -119,13 +118,10 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
-
         public override ModelNameEnm ClassName => CLASS_NAME;
-
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindDatabaseVersions";
-
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -186,7 +182,6 @@ namespace Services.Schema
                 return ret;
             }
         }
-
 
         public DatabaseVersion ToDto() => Mapper.Map<DocEntityDatabaseVersion, DatabaseVersion>(this);
 

@@ -59,26 +59,12 @@ namespace Services.Dto
 
     public partial class MeanRanges : MeanRangesBase, IReturn<MeanRanges>, IDto, ICloneable
     {
-        public MeanRanges()
-        {
-            _Constructor();
-        }
+        public MeanRanges() => _Constructor();
 
         public MeanRanges(int? id) : base(DocConvert.ToInt(id)) {}
         public MeanRanges(int id) : base(id) {}
-        public MeanRanges(int? pId, bool isDummyParam) : 
+        public MeanRanges(int? pId, bool isDummyParam) :
             base(pId, isDummyParam) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<MeanRanges>();
 
@@ -114,7 +100,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Ranges), nameof(Ranges), nameof(RangesCount)
+            nameof(Ranges), nameof(Ranges), nameof(RangesCount), nameof(RangesIds)
         };
         private List<string> collections { get { return _collections; } }
 

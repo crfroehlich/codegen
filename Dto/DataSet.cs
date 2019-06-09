@@ -76,6 +76,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(AdditionalCriteria), Description = "string", IsRequired = false)]
         public string AdditionalCriteria { get; set; }
+        public List<int> AdditionalCriteriaIds { get; set; }
+        public int? AdditionalCriteriaCount { get; set; }
 
 
         [ApiMember(Name = nameof(Characteristics), Description = "Tag", IsRequired = false)]
@@ -92,26 +94,38 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DataCollection), Description = "string", IsRequired = false)]
         public string DataCollection { get; set; }
+        public List<int> DataCollectionIds { get; set; }
+        public int? DataCollectionCount { get; set; }
 
 
         [ApiMember(Name = nameof(EvidencePortalId), Description = "int?", IsRequired = false)]
         public int? EvidencePortalId { get; set; }
+        public List<int> EvidencePortalIdIds { get; set; }
+        public int? EvidencePortalIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ExtractionProtocol), Description = "string", IsRequired = false)]
         public string ExtractionProtocol { get; set; }
+        public List<int> ExtractionProtocolIds { get; set; }
+        public int? ExtractionProtocolCount { get; set; }
 
 
         [ApiMember(Name = nameof(FqId), Description = "int?", IsRequired = false)]
         public int? FqId { get; set; }
+        public List<int> FqIdIds { get; set; }
+        public int? FqIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(FramedQuestionId), Description = "int?", IsRequired = false)]
         public int? FramedQuestionId { get; set; }
+        public List<int> FramedQuestionIdIds { get; set; }
+        public int? FramedQuestionIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(GeneralScope), Description = "string", IsRequired = false)]
         public string GeneralScope { get; set; }
+        public List<int> GeneralScopeIds { get; set; }
+        public int? GeneralScopeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Imports), Description = "ImportData", IsRequired = false)]
@@ -122,6 +136,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Indications), Description = "string", IsRequired = false)]
         public string Indications { get; set; }
+        public List<int> IndicationsIds { get; set; }
+        public int? IndicationsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Interventions), Description = "Tag", IsRequired = false)]
@@ -132,26 +148,38 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Notes), Description = "string", IsRequired = false)]
         public string Notes { get; set; }
+        public List<int> NotesIds { get; set; }
+        public int? NotesCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalComparators), Description = "string", IsRequired = false)]
         public string OriginalComparators { get; set; }
+        public List<int> OriginalComparatorsIds { get; set; }
+        public int? OriginalComparatorsCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalDatabase), Description = "string", IsRequired = false)]
         public string OriginalDatabase { get; set; }
+        public List<int> OriginalDatabaseIds { get; set; }
+        public int? OriginalDatabaseCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalDesigns), Description = "string", IsRequired = false)]
         public string OriginalDesigns { get; set; }
+        public List<int> OriginalDesignsIds { get; set; }
+        public int? OriginalDesignsCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalInterventions), Description = "string", IsRequired = false)]
         public string OriginalInterventions { get; set; }
+        public List<int> OriginalInterventionsIds { get; set; }
+        public int? OriginalInterventionsCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalOutcomes), Description = "string", IsRequired = false)]
         public string OriginalOutcomes { get; set; }
+        public List<int> OriginalOutcomesIds { get; set; }
+        public int? OriginalOutcomesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Outcomes), Description = "Tag", IsRequired = false)]
@@ -162,6 +190,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Participants), Description = "string", IsRequired = false)]
         public string Participants { get; set; }
+        public List<int> ParticipantsIds { get; set; }
+        public int? ParticipantsCount { get; set; }
 
 
         [ApiMember(Name = nameof(PrismaWorkflow), Description = "Workflow", IsRequired = false)]
@@ -178,10 +208,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ShowEtw), Description = "bool", IsRequired = false)]
         public bool ShowEtw { get; set; }
+        public List<int> ShowEtwIds { get; set; }
+        public int? ShowEtwCount { get; set; }
 
 
         [ApiMember(Name = nameof(ShowPublicationType), Description = "bool", IsRequired = false)]
         public bool ShowPublicationType { get; set; }
+        public List<int> ShowPublicationTypeIds { get; set; }
+        public int? ShowPublicationTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(StudyDesigns), Description = "StudyDesign", IsRequired = false)]
@@ -240,26 +274,12 @@ namespace Services.Dto
 
     public partial class DataSet : DataSetBase, IReturn<DataSet>, IDto, ICloneable
     {
-        public DataSet()
-        {
-            _Constructor();
-        }
+        public DataSet() => _Constructor();
 
         public DataSet(int? id) : base(DocConvert.ToInt(id)) {}
         public DataSet(int id) : base(id) {}
-        public DataSet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pComparators, int? pComparatorsCount, string pDataCollection, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, List<Reference> pOutcomes, int? pOutcomesCount, string pParticipants, Reference pPrismaWorkflow, int? pPrismaWorkflowId, List<Reference> pProjects, int? pProjectsCount, bool pShowEtw, bool pShowPublicationType, List<Reference> pStudyDesigns, int? pStudyDesignsCount) : 
+        public DataSet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pComparators, int? pComparatorsCount, string pDataCollection, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, List<Reference> pOutcomes, int? pOutcomesCount, string pParticipants, Reference pPrismaWorkflow, int? pPrismaWorkflowId, List<Reference> pProjects, int? pProjectsCount, bool pShowEtw, bool pShowPublicationType, List<Reference> pStudyDesigns, int? pStudyDesignsCount) :
             base(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pComparators, pComparatorsCount, pDataCollection, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOutcomes, pOutcomesCount, pParticipants, pPrismaWorkflow, pPrismaWorkflowId, pProjects, pProjectsCount, pShowEtw, pShowPublicationType, pStudyDesigns, pStudyDesignsCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<DataSet>();
 
@@ -297,7 +317,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Characteristics), nameof(CharacteristicsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Projects), nameof(ProjectsCount), nameof(StudyDesigns), nameof(StudyDesignsCount)
+            nameof(Characteristics), nameof(CharacteristicsCount), nameof(CharacteristicsIds), nameof(Comparators), nameof(ComparatorsCount), nameof(ComparatorsIds), nameof(Imports), nameof(ImportsCount), nameof(ImportsIds), nameof(Interventions), nameof(InterventionsCount), nameof(InterventionsIds), nameof(Outcomes), nameof(OutcomesCount), nameof(OutcomesIds), nameof(Projects), nameof(ProjectsCount), nameof(ProjectsIds), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(StudyDesignsIds)
         };
         private List<string> collections { get { return _collections; } }
 

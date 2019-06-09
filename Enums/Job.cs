@@ -41,6 +41,10 @@ namespace Services.Enums
         EXTRACT_IMPORT = 139850823,
         [EnumMember(Value = DocConstantJob.EXTRACT_NOTIFICATIONS), SCDescript(DocConstantJob.EXTRACT_NOTIFICATIONS), SSDescript(DocConstantJob.EXTRACT_NOTIFICATIONS), SCDisplay(Name = DocConstantJob.EXTRACT_NOTIFICATIONS)]
         EXTRACT_NOTIFICATIONS = 139850824,
+        [EnumMember(Value = DocConstantJob.IMPORT_DOC_SEARCH_IDS), SCDescript(DocConstantJob.IMPORT_DOC_SEARCH_IDS), SSDescript(DocConstantJob.IMPORT_DOC_SEARCH_IDS), SCDisplay(Name = DocConstantJob.IMPORT_DOC_SEARCH_IDS)]
+        IMPORT_DOC_SEARCH_IDS = 155133755,
+        [EnumMember(Value = DocConstantJob.IMPORT_FRAMED_QUESTIONS), SCDescript(DocConstantJob.IMPORT_FRAMED_QUESTIONS), SSDescript(DocConstantJob.IMPORT_FRAMED_QUESTIONS), SCDisplay(Name = DocConstantJob.IMPORT_FRAMED_QUESTIONS)]
+        IMPORT_FRAMED_QUESTIONS = 155133754,
         [EnumMember(Value = DocConstantJob.IMPORT_LIBRARY), SCDescript(DocConstantJob.IMPORT_LIBRARY), SSDescript(DocConstantJob.IMPORT_LIBRARY), SCDisplay(Name = DocConstantJob.IMPORT_LIBRARY)]
         IMPORT_LIBRARY = 139850825,
         [EnumMember(Value = DocConstantJob.IMPORT_PACKAGES), SCDescript(DocConstantJob.IMPORT_PACKAGES), SSDescript(DocConstantJob.IMPORT_PACKAGES), SCDisplay(Name = DocConstantJob.IMPORT_PACKAGES)]
@@ -87,6 +91,10 @@ namespace Services.Enums
                     return DocConstantJob.EXTRACT_IMPORT;
                 case JobEnm.EXTRACT_NOTIFICATIONS:
                     return DocConstantJob.EXTRACT_NOTIFICATIONS;
+                case JobEnm.IMPORT_DOC_SEARCH_IDS:
+                    return DocConstantJob.IMPORT_DOC_SEARCH_IDS;
+                case JobEnm.IMPORT_FRAMED_QUESTIONS:
+                    return DocConstantJob.IMPORT_FRAMED_QUESTIONS;
                 case JobEnm.IMPORT_LIBRARY:
                     return DocConstantJob.IMPORT_LIBRARY;
                 case JobEnm.IMPORT_PACKAGES:
@@ -132,6 +140,8 @@ namespace Services.Enums
         public const string CREATE_DOCUMENT_SET_QUEUES = "CreateDocumentSetQueues";
         public const string EXTRACT_IMPORT = "ExtractImport";
         public const string EXTRACT_NOTIFICATIONS = "ExtractNotifications";
+        public const string IMPORT_DOC_SEARCH_IDS = "ImportDocSearchIds";
+        public const string IMPORT_FRAMED_QUESTIONS = "ImportFramedQuestions";
         public const string IMPORT_LIBRARY = "ImportLibrary";
         public const string IMPORT_PACKAGES = "ImportPackages";
         public const string INVALIDATE_EXPIRED_CACHE = "InvalidateExpiredCache";
@@ -144,8 +154,7 @@ namespace Services.Enums
         public const string STUDYSET_HISTORY = "StudySetHistory";
         public const string SYNC_LOOKUP_TABLES = "SyncLookupTables";
         public const string SYNC_USERS = "SyncUsers";
-        
-        
+
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantJob).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -175,8 +184,6 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-
-
         public bool Equals(DocConstantJob obj) => this == obj;
 
         public static bool operator ==(DocConstantJob x, DocConstantJob y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -202,6 +209,5 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantJob obj) => obj?.GetHashCode() ?? -17;
-
     }
 }

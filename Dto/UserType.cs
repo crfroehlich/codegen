@@ -101,26 +101,12 @@ namespace Services.Dto
 
     public partial class UserType : UserTypeBase, IReturn<UserType>, IDto, ICloneable
     {
-        public UserType()
-        {
-            _Constructor();
-        }
+        public UserType() => _Constructor();
 
         public UserType(int? id) : base(DocConvert.ToInt(id)) {}
         public UserType(int id) : base(id) {}
-        public UserType(int? pId, Reference pPayrollStatus, int? pPayrollStatusId, Reference pPayrollType, int? pPayrollTypeId, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : 
+        public UserType(int? pId, Reference pPayrollStatus, int? pPayrollStatusId, Reference pPayrollType, int? pPayrollTypeId, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) :
             base(pId, pPayrollStatus, pPayrollStatusId, pPayrollType, pPayrollTypeId, pType, pTypeId, pUsers, pUsersCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<UserType>();
 
@@ -158,7 +144,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Users), nameof(UsersCount)
+            nameof(Users), nameof(UsersCount), nameof(UsersIds)
         };
         private List<string> collections { get { return _collections; } }
 

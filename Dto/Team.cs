@@ -65,18 +65,26 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
+        public List<int> DescriptionIds { get; set; }
+        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Email), Description = "string", IsRequired = false)]
         public string Email { get; set; }
+        public List<int> EmailIds { get; set; }
+        public int? EmailCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsInternal), Description = "bool", IsRequired = false)]
         public bool IsInternal { get; set; }
+        public List<int> IsInternalIds { get; set; }
+        public int? IsInternalCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
+        public List<int> NameIds { get; set; }
+        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owner), Description = "User", IsRequired = true)]
@@ -93,10 +101,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Settings), Description = "TeamSettings", IsRequired = false)]
         public TeamSettings Settings { get; set; }
+        public List<int> SettingsIds { get; set; }
+        public int? SettingsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Slack), Description = "string", IsRequired = false)]
         public string Slack { get; set; }
+        public List<int> SlackIds { get; set; }
+        public int? SlackCount { get; set; }
 
 
         [ApiMember(Name = nameof(Updates), Description = "Update", IsRequired = false)]
@@ -144,26 +156,12 @@ namespace Services.Dto
 
     public partial class Team : TeamBase, IReturn<Team>, IDto, ICloneable
     {
-        public Team()
-        {
-            _Constructor();
-        }
+        public Team() => _Constructor();
 
         public Team(int? id) : base(DocConvert.ToInt(id)) {}
         public Team(int id) : base(id) {}
-        public Team(int? pId, List<Reference> pAdminRoles, int? pAdminRolesCount, string pDescription, string pEmail, bool pIsInternal, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, TeamSettings pSettings, string pSlack, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : 
+        public Team(int? pId, List<Reference> pAdminRoles, int? pAdminRolesCount, string pDescription, string pEmail, bool pIsInternal, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, TeamSettings pSettings, string pSlack, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) :
             base(pId, pAdminRoles, pAdminRolesCount, pDescription, pEmail, pIsInternal, pName, pOwner, pOwnerId, pScopes, pScopesCount, pSettings, pSlack, pUpdates, pUpdatesCount, pUsers, pUsersCount) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Team>();
 
@@ -201,7 +199,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(AdminRoles), nameof(AdminRolesCount), nameof(Scopes), nameof(ScopesCount), nameof(Updates), nameof(UpdatesCount), nameof(Users), nameof(UsersCount)
+            nameof(AdminRoles), nameof(AdminRolesCount), nameof(AdminRolesIds), nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds), nameof(Updates), nameof(UpdatesCount), nameof(UpdatesIds), nameof(Users), nameof(UsersCount), nameof(UsersIds)
         };
         private List<string> collections { get { return _collections; } }
 

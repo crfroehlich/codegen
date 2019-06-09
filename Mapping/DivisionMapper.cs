@@ -36,14 +36,14 @@ namespace Services.Schema
                 .ForMember(dest => dest.DefaultLocaleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.DefaultLocaleId))))
                 .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.DocumentSets))))
                 .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.DocumentSetsCount))))
-                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.DocumentSetsIds))))
+                .ForMember(dest => dest.DocumentSetsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.DocumentSetsIds))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.Name))))
                 .ForMember(dest => dest.Role, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.Role))))
                 .ForMember(dest => dest.RoleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.RoleId))))
                 .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.Settings))))
                 .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.Users))))
                 .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.UsersCount))))
-                .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.UsersIds))))
+                .ForMember(dest => dest.UsersIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.UsersIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Division,DocEntityDivision>()
                 .MaxDepth(2);

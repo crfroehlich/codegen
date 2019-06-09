@@ -58,18 +58,26 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Body), Description = "string", IsRequired = false)]
         public string Body { get; set; }
+        public List<int> BodyIds { get; set; }
+        public int? BodyCount { get; set; }
 
 
         [ApiMember(Name = nameof(DeliveryStatus), Description = "string", IsRequired = false)]
         public string DeliveryStatus { get; set; }
+        public List<int> DeliveryStatusIds { get; set; }
+        public int? DeliveryStatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(EmailAttempts), Description = "int?", IsRequired = false)]
         public int? EmailAttempts { get; set; }
+        public List<int> EmailAttemptsIds { get; set; }
+        public int? EmailAttemptsCount { get; set; }
 
 
         [ApiMember(Name = nameof(EmailSent), Description = "DateTime?", IsRequired = false)]
         public DateTime? EmailSent { get; set; }
+        public List<int> EmailSentIds { get; set; }
+        public int? EmailSentCount { get; set; }
 
 
         [ApiMember(Name = nameof(Events), Description = "Event", IsRequired = false)]
@@ -80,22 +88,32 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Link), Description = "string", IsRequired = false)]
         public string Link { get; set; }
+        public List<int> LinkIds { get; set; }
+        public int? LinkCount { get; set; }
 
 
         [ApiMember(Name = nameof(Priority), Description = "int?", IsRequired = false)]
         public int? Priority { get; set; }
+        public List<int> PriorityIds { get; set; }
+        public int? PriorityCount { get; set; }
 
 
         [ApiMember(Name = nameof(Read), Description = "DateTime?", IsRequired = false)]
         public DateTime? Read { get; set; }
+        public List<int> ReadIds { get; set; }
+        public int? ReadCount { get; set; }
 
 
         [ApiMember(Name = nameof(SlackSent), Description = "DateTime?", IsRequired = false)]
         public DateTime? SlackSent { get; set; }
+        public List<int> SlackSentIds { get; set; }
+        public int? SlackSentCount { get; set; }
 
 
         [ApiMember(Name = nameof(Subject), Description = "string", IsRequired = false)]
         public string Subject { get; set; }
+        public List<int> SubjectIds { get; set; }
+        public int? SubjectCount { get; set; }
 
 
         [ApiMember(Name = nameof(Team), Description = "Team", IsRequired = false)]
@@ -142,26 +160,12 @@ namespace Services.Dto
 
     public partial class Update : UpdateBase, IReturn<Update>, IDto, ICloneable
     {
-        public Update()
-        {
-            _Constructor();
-        }
+        public Update() => _Constructor();
 
         public Update(int? id) : base(DocConvert.ToInt(id)) {}
         public Update(int id) : base(id) {}
-        public Update(int? pId, string pBody, string pDeliveryStatus, int? pEmailAttempts, DateTime? pEmailSent, List<Reference> pEvents, int? pEventsCount, string pLink, int? pPriority, DateTime? pRead, DateTime? pSlackSent, string pSubject, Reference pTeam, int? pTeamId, Reference pUser, int? pUserId) : 
+        public Update(int? pId, string pBody, string pDeliveryStatus, int? pEmailAttempts, DateTime? pEmailSent, List<Reference> pEvents, int? pEventsCount, string pLink, int? pPriority, DateTime? pRead, DateTime? pSlackSent, string pSubject, Reference pTeam, int? pTeamId, Reference pUser, int? pUserId) :
             base(pId, pBody, pDeliveryStatus, pEmailAttempts, pEmailSent, pEvents, pEventsCount, pLink, pPriority, pRead, pSlackSent, pSubject, pTeam, pTeamId, pUser, pUserId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Update>();
 
@@ -199,7 +203,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Events), nameof(EventsCount)
+            nameof(Events), nameof(EventsCount), nameof(EventsIds)
         };
         private List<string> collections { get { return _collections; } }
 

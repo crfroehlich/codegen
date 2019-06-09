@@ -59,22 +59,32 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(BoundTerms), Description = "int?", IsRequired = false)]
         public int? BoundTerms { get; set; }
+        public List<int> BoundTermsIds { get; set; }
+        public int? BoundTermsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Characteristics), Description = "int?", IsRequired = false)]
         public int? Characteristics { get; set; }
+        public List<int> CharacteristicsIds { get; set; }
+        public int? CharacteristicsCount { get; set; }
 
 
         [ApiMember(Name = nameof(DataPoints), Description = "int?", IsRequired = false)]
         public int? DataPoints { get; set; }
+        public List<int> DataPointsIds { get; set; }
+        public int? DataPointsCount { get; set; }
 
 
         [ApiMember(Name = nameof(DesignCount), Description = "int?", IsRequired = false)]
         public int? DesignCount { get; set; }
+        public List<int> DesignCountIds { get; set; }
+        public int? DesignCountCount { get; set; }
 
 
         [ApiMember(Name = nameof(DesignList), Description = "string", IsRequired = false)]
         public string DesignList { get; set; }
+        public List<int> DesignListIds { get; set; }
+        public int? DesignListCount { get; set; }
 
 
         [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = true)]
@@ -85,14 +95,20 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Interventions), Description = "int?", IsRequired = false)]
         public int? Interventions { get; set; }
+        public List<int> InterventionsIds { get; set; }
+        public int? InterventionsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Outcomes), Description = "int?", IsRequired = false)]
         public int? Outcomes { get; set; }
+        public List<int> OutcomesIds { get; set; }
+        public int? OutcomesCount { get; set; }
 
 
         [ApiMember(Name = nameof(OutcomesReported), Description = "int?", IsRequired = false)]
         public int? OutcomesReported { get; set; }
+        public List<int> OutcomesReportedIds { get; set; }
+        public int? OutcomesReportedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Stat), Description = "Stats", IsRequired = true)]
@@ -103,18 +119,26 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Studies), Description = "int?", IsRequired = false)]
         public int? Studies { get; set; }
+        public List<int> StudiesIds { get; set; }
+        public int? StudiesCount { get; set; }
 
 
         [ApiMember(Name = nameof(TypeCount), Description = "int?", IsRequired = false)]
         public int? TypeCount { get; set; }
+        public List<int> TypeCountIds { get; set; }
+        public int? TypeCountCount { get; set; }
 
 
         [ApiMember(Name = nameof(TypeList), Description = "string", IsRequired = false)]
         public string TypeList { get; set; }
+        public List<int> TypeListIds { get; set; }
+        public int? TypeListCount { get; set; }
 
 
         [ApiMember(Name = nameof(UnboundTerms), Description = "int?", IsRequired = false)]
         public int? UnboundTerms { get; set; }
+        public List<int> UnboundTermsIds { get; set; }
+        public int? UnboundTermsCount { get; set; }
 
 
 
@@ -149,26 +173,12 @@ namespace Services.Dto
 
     public partial class StatsStudySet : StatsStudySetBase, IReturn<StatsStudySet>, IDto, ICloneable
     {
-        public StatsStudySet()
-        {
-            _Constructor();
-        }
+        public StatsStudySet() => _Constructor();
 
         public StatsStudySet(int? id) : base(DocConvert.ToInt(id)) {}
         public StatsStudySet(int id) : base(id) {}
-        public StatsStudySet(int? pId, int? pBoundTerms, int? pCharacteristics, int? pDataPoints, int? pDesignCount, string pDesignList, Reference pDocumentSet, int? pDocumentSetId, int? pInterventions, int? pOutcomes, int? pOutcomesReported, Reference pStat, int? pStatId, int? pStudies, int? pTypeCount, string pTypeList, int? pUnboundTerms) : 
+        public StatsStudySet(int? pId, int? pBoundTerms, int? pCharacteristics, int? pDataPoints, int? pDesignCount, string pDesignList, Reference pDocumentSet, int? pDocumentSetId, int? pInterventions, int? pOutcomes, int? pOutcomesReported, Reference pStat, int? pStatId, int? pStudies, int? pTypeCount, string pTypeList, int? pUnboundTerms) :
             base(pId, pBoundTerms, pCharacteristics, pDataPoints, pDesignCount, pDesignList, pDocumentSet, pDocumentSetId, pInterventions, pOutcomes, pOutcomesReported, pStat, pStatId, pStudies, pTypeCount, pTypeList, pUnboundTerms) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<StatsStudySet>();
 
@@ -204,7 +214,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Records), nameof(Records), nameof(RecordsCount)
+            nameof(Records), nameof(Records), nameof(RecordsCount), nameof(RecordsIds)
         };
         private List<string> collections { get { return _collections; } }
 

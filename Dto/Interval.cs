@@ -64,6 +64,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(CalendarType), Description = "string", IsRequired = false)]
         public string CalendarType { get; set; }
+        public List<int> CalendarTypeIds { get; set; }
+        public int? CalendarTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(FollowUp), Description = "TimePoint", IsRequired = false)]
@@ -104,26 +106,12 @@ namespace Services.Dto
 
     public partial class Interval : IntervalBase, IReturn<Interval>, IDto, ICloneable
     {
-        public Interval()
-        {
-            _Constructor();
-        }
+        public Interval() => _Constructor();
 
         public Interval(int? id) : base(DocConvert.ToInt(id)) {}
         public Interval(int id) : base(id) {}
-        public Interval(int? pId, DateTimeDto pCalendarDateEnd, int? pCalendarDateEndId, DateTimeDto pCalendarDateStart, int? pCalendarDateStartId, string pCalendarType, TimePoint pFollowUp, int? pFollowUpId, TimePoint pTimeOfDay, int? pTimeOfDayId) : 
+        public Interval(int? pId, DateTimeDto pCalendarDateEnd, int? pCalendarDateEndId, DateTimeDto pCalendarDateStart, int? pCalendarDateStartId, string pCalendarType, TimePoint pFollowUp, int? pFollowUpId, TimePoint pTimeOfDay, int? pTimeOfDayId) :
             base(pId, pCalendarDateEnd, pCalendarDateEndId, pCalendarDateStart, pCalendarDateStartId, pCalendarType, pFollowUp, pFollowUpId, pTimeOfDay, pTimeOfDayId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<Interval>();
 

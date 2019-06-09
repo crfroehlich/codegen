@@ -62,10 +62,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IsDefault), Description = "bool", IsRequired = false)]
         public bool IsDefault { get; set; }
+        public List<int> IsDefaultIds { get; set; }
+        public int? IsDefaultCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsDestinationSi), Description = "bool", IsRequired = false)]
         public bool IsDestinationSi { get; set; }
+        public List<int> IsDestinationSiIds { get; set; }
+        public int? IsDestinationSiCount { get; set; }
 
 
         [ApiMember(Name = nameof(ModifierTerm), Description = "TermMaster", IsRequired = false)]
@@ -76,6 +80,8 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Multiplier), Description = "decimal", IsRequired = true)]
         public decimal Multiplier { get; set; }
+        public List<int> MultiplierIds { get; set; }
+        public int? MultiplierCount { get; set; }
 
 
         [ApiMember(Name = nameof(Parent), Description = "LookupTable", IsRequired = false)]
@@ -126,26 +132,12 @@ namespace Services.Dto
 
     public partial class UnitConversionRules : UnitConversionRulesBase, IReturn<UnitConversionRules>, IDto, ICloneable
     {
-        public UnitConversionRules()
-        {
-            _Constructor();
-        }
+        public UnitConversionRules() => _Constructor();
 
         public UnitConversionRules(int? id) : base(DocConvert.ToInt(id)) {}
         public UnitConversionRules(int id) : base(id) {}
-        public UnitConversionRules(int? pId, Reference pDestinationUnit, int? pDestinationUnitId, bool pIsDefault, bool pIsDestinationSi, Reference pModifierTerm, int? pModifierTermId, decimal pMultiplier, Reference pParent, int? pParentId, Reference pRootTerm, int? pRootTermId, Reference pSourceUnit, int? pSourceUnitId) : 
+        public UnitConversionRules(int? pId, Reference pDestinationUnit, int? pDestinationUnitId, bool pIsDefault, bool pIsDestinationSi, Reference pModifierTerm, int? pModifierTermId, decimal pMultiplier, Reference pParent, int? pParentId, Reference pRootTerm, int? pRootTermId, Reference pSourceUnit, int? pSourceUnitId) :
             base(pId, pDestinationUnit, pDestinationUnitId, pIsDefault, pIsDestinationSi, pModifierTerm, pModifierTermId, pMultiplier, pParent, pParentId, pRootTerm, pRootTermId, pSourceUnit, pSourceUnitId) { }
-
-        public new bool? ShouldSerialize(string field)
-        {
-            //Allow individual classes to specify their own logic
-            var manualOverride = _ShouldSerialize(field);
-            if(null != manualOverride) return manualOverride;
-
-            if (IgnoredSelect.Matches(field, true)) return false;
-            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
-            return ret;
-        }
 
         public static List<string> Fields => DocTools.Fields<UnitConversionRules>();
 

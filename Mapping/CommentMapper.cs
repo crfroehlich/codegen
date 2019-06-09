@@ -32,7 +32,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comment>(c, "Updated")))
                 .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comment>(c, nameof(DocEntityComment.Scopes))))
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comment>(c, nameof(DocEntityComment.ScopesCount))))
-                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comment>(c, nameof(DocEntityComment.ScopesIds))))
+                .ForMember(dest => dest.ScopesIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comment>(c, nameof(DocEntityComment.ScopesIds))))
                 .ForMember(dest => dest.Text, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comment>(c, nameof(DocEntityComment.Text))))
                 .ForMember(dest => dest.User, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comment>(c, nameof(DocEntityComment.User))))
                 .ForMember(dest => dest.UserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comment>(c, nameof(DocEntityComment.UserId))))
