@@ -90,12 +90,16 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(true == request.DocumentsIds?.Any())
                 {
                     entities = entities.Where(en => en.Documents.Any(r => r.Id.In(request.DocumentsIds)));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))
                 {
                     entities = entities.Where(en => en.Owner.Id == request.Owner.Id );
@@ -110,12 +114,16 @@ namespace Services.API
                 }
                 if(request.Status.HasValue)
                     entities = entities.Where(en => request.Status.Value == en.Status);
+                if(!DocTools.IsNullOrEmpty(request.Statuss))
+                    entities = entities.Where(en => en.Status.In(request.Statuss));
                 if(true == request.TasksIds?.Any())
                 {
                     entities = entities.Where(en => en.Tasks.Any(r => r.Id.In(request.TasksIds)));
                 }
                 if(request.Type.HasValue)
                     entities = entities.Where(en => request.Type.Value == en.Type);
+                if(!DocTools.IsNullOrEmpty(request.Types))
+                    entities = entities.Where(en => en.Type.In(request.Types));
                 if(!DocTools.IsNullOrEmpty(request.User) && !DocTools.IsNullOrEmpty(request.User.Id))
                 {
                     entities = entities.Where(en => en.User.Id == request.User.Id );

@@ -94,6 +94,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Method))
                     entities = entities.Where(en => en.Method.Contains(request.Method));
+                if(!DocTools.IsNullOrEmpty(request.Methods))
+                    entities = entities.Where(en => en.Method.In(request.Methods));
                 if(!DocTools.IsNullOrEmpty(request.Page) && !DocTools.IsNullOrEmpty(request.Page.Id))
                 {
                     entities = entities.Where(en => en.Page.Id == request.Page.Id );
@@ -104,8 +106,12 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Path))
                     entities = entities.Where(en => en.Path.Contains(request.Path));
+                if(!DocTools.IsNullOrEmpty(request.Paths))
+                    entities = entities.Where(en => en.Path.In(request.Paths));
                 if(!DocTools.IsNullOrEmpty(request.URL))
                     entities = entities.Where(en => en.URL.Contains(request.URL));
+                if(!DocTools.IsNullOrEmpty(request.URLs))
+                    entities = entities.Where(en => en.URL.In(request.URLs));
                 if(!DocTools.IsNullOrEmpty(request.UserSession) && !DocTools.IsNullOrEmpty(request.UserSession.Id))
                 {
                     entities = entities.Where(en => en.UserSession.Id == request.UserSession.Id );

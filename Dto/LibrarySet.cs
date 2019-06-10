@@ -325,30 +325,44 @@ namespace Services.Dto
         public List<int> HistoriesIds { get; set; }
         public int? LegacyDocumentSetId { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public Reference ProjectTeam { get; set; }
         public List<int> ProjectTeamIds { get; set; }
         public List<int> ScopesIds { get; set; }
         public string Settings { get; set; }
+        public List<string> Settingss { get; set; }
         public List<int> StatsIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"Library",@"SERVE Portal",@"Therapeutic Area"})]
         public DocumentSetTypeEnm? Type { get; set; }
+        public List<DocumentSetTypeEnm> Types { get; set; }
         public List<int> UsersIds { get; set; }
         public string AdditionalCriteria { get; set; }
+        public List<string> AdditionalCriterias { get; set; }
         public List<int> CharacteristicsIds { get; set; }
         public List<int> ComparatorsIds { get; set; }
         public string GeneralScope { get; set; }
+        public List<string> GeneralScopes { get; set; }
         public string Indications { get; set; }
+        public List<string> Indicationss { get; set; }
         public List<int> InterventionsIds { get; set; }
         public int? LibraryPackageId { get; set; }
         public string Notes { get; set; }
+        public List<string> Notess { get; set; }
         public string OriginalComparators { get; set; }
+        public List<string> OriginalComparatorss { get; set; }
         public string OriginalDesigns { get; set; }
+        public List<string> OriginalDesignss { get; set; }
         public string OriginalInterventions { get; set; }
+        public List<string> OriginalInterventionss { get; set; }
         public string OriginalOutcomes { get; set; }
+        public List<string> OriginalOutcomess { get; set; }
         public string OriginalSearch { get; set; }
+        public List<string> OriginalSearchs { get; set; }
         public List<int> OutcomesIds { get; set; }
         public string Participants { get; set; }
+        public List<string> Participantss { get; set; }
         public List<int> ProjectsIds { get; set; }
         public DateTime? SearchEnd { get; set; }
         public DateTime? SearchEndAfter { get; set; }
@@ -357,10 +371,12 @@ namespace Services.Dto
         public DateTime? SearchStartAfter { get; set; }
         public DateTime? SearchStartBefore { get; set; }
         public string SearchStrategy { get; set; }
+        public List<string> SearchStrategys { get; set; }
         public DateTime? SearchUpdated { get; set; }
         public DateTime? SearchUpdatedAfter { get; set; }
         public DateTime? SearchUpdatedBefore { get; set; }
         public string SelectionCriteria { get; set; }
+        public List<string> SelectionCriterias { get; set; }
         public List<int> StudyDesignsIds { get; set; }
         public int? UpdateFrequency { get; set; }
     }

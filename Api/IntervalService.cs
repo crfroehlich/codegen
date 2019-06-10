@@ -102,6 +102,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.CalendarType))
                     entities = entities.Where(en => en.CalendarType.Contains(request.CalendarType));
+                if(!DocTools.IsNullOrEmpty(request.CalendarTypes))
+                    entities = entities.Where(en => en.CalendarType.In(request.CalendarTypes));
                 if(!DocTools.IsNullOrEmpty(request.FollowUp) && !DocTools.IsNullOrEmpty(request.FollowUp.Id))
                 {
                     entities = entities.Where(en => en.FollowUp.Id == request.FollowUp.Id );

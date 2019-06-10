@@ -88,20 +88,32 @@ namespace Services.API
                     entities = entities.Where(en => request.Cost.Value == en.Cost);
                 if(!DocTools.IsNullOrEmpty(request.FileLabel))
                     entities = entities.Where(en => en.FileLabel.Contains(request.FileLabel));
+                if(!DocTools.IsNullOrEmpty(request.FileLabels))
+                    entities = entities.Where(en => en.FileLabel.In(request.FileLabels));
                 if(!DocTools.IsNullOrEmpty(request.FileName))
                     entities = entities.Where(en => en.FileName.Contains(request.FileName));
+                if(!DocTools.IsNullOrEmpty(request.FileNames))
+                    entities = entities.Where(en => en.FileName.In(request.FileNames));
                 if(!DocTools.IsNullOrEmpty(request.OriginalFileName))
                     entities = entities.Where(en => en.OriginalFileName.Contains(request.OriginalFileName));
+                if(!DocTools.IsNullOrEmpty(request.OriginalFileNames))
+                    entities = entities.Where(en => en.OriginalFileName.In(request.OriginalFileNames));
                 if(request.Rights.HasValue)
                     entities = entities.Where(en => request.Rights.Value == en.Rights);
+                if(!DocTools.IsNullOrEmpty(request.Rightss))
+                    entities = entities.Where(en => en.Rights.In(request.Rightss));
                 if(true == request.ScopesIds?.Any())
                 {
                     entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
                 }
                 if(request.Source.HasValue)
                     entities = entities.Where(en => request.Source.Value == en.Source);
+                if(!DocTools.IsNullOrEmpty(request.Sources))
+                    entities = entities.Where(en => en.Source.In(request.Sources));
                 if(request.Type.HasValue)
                     entities = entities.Where(en => request.Type.Value == en.Type);
+                if(!DocTools.IsNullOrEmpty(request.Types))
+                    entities = entities.Where(en => en.Type.In(request.Types));
 
                 entities = ApplyFilters<DocEntityFile,FileSearch>(request, entities);
 

@@ -219,16 +219,20 @@ namespace Services.Dto
         public Reference AuditRecord { get; set; }
         public List<int> AuditRecordIds { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public DateTime? Ended { get; set; }
         public DateTime? EndedAfter { get; set; }
         public DateTime? EndedBefore { get; set; }
         public int? EntityId { get; set; }
         public string ExecutionTime { get; set; }
+        public List<string> ExecutionTimes { get; set; }
         public DateTime? Started { get; set; }
         public DateTime? StartedAfter { get; set; }
         public DateTime? StartedBefore { get; set; }
         public string Status { get; set; }
+        public List<string> Statuss { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> Succeeded { get; set; }
         public Reference Task { get; set; }

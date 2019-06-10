@@ -144,8 +144,10 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public List<int> ScopesIds { get; set; }
         public string URI { get; set; }
+        public List<string> URIs { get; set; }
     }
 
 

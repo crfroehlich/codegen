@@ -200,12 +200,15 @@ namespace Services.Dto
         public int? Id { get; set; }
         public List<int> ChildrenIds { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public int? OwnerId { get; set; }
         public string OwnerType { get; set; }
+        public List<string> OwnerTypes { get; set; }
         public Reference Parent { get; set; }
         public List<int> ParentIds { get; set; }
         public int? TargetId { get; set; }
         public string TargetType { get; set; }
+        public List<string> TargetTypes { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Approval",@"Comment",@"Flagged for Approval",@"Rating"})]

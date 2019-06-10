@@ -94,8 +94,12 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(request.Order.HasValue)
                     entities = entities.Where(en => request.Order.Value == en.Order);
 

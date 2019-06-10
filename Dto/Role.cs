@@ -219,15 +219,19 @@ namespace Services.Dto
         public List<int> AdminTeamIds { get; set; }
         public List<int> AppsIds { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public string Features { get; set; }
+        public List<string> Featuress { get; set; }
         public List<int> FeatureSetsIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsInternal { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsSuperAdmin { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public List<int> PagesIds { get; set; }
         public string Permissions { get; set; }
+        public List<string> Permissionss { get; set; }
         public List<int> UsersIds { get; set; }
     }
 

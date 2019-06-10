@@ -90,8 +90,12 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(!DocTools.IsNullOrEmpty(request.Email))
                     entities = entities.Where(en => en.Email.Contains(request.Email));
+                if(!DocTools.IsNullOrEmpty(request.Emails))
+                    entities = entities.Where(en => en.Email.In(request.Emails));
                 if(true == request.IsInternal?.Any())
                 {
                     if(request.IsInternal.Any(v => v == null)) entities = entities.Where(en => en.IsInternal.In(request.IsInternal) || en.IsInternal == null);
@@ -99,6 +103,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))
                 {
                     entities = entities.Where(en => en.Owner.Id == request.Owner.Id );
@@ -113,6 +119,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Slack))
                     entities = entities.Where(en => en.Slack.Contains(request.Slack));
+                if(!DocTools.IsNullOrEmpty(request.Slacks))
+                    entities = entities.Where(en => en.Slack.In(request.Slacks));
                 if(true == request.UpdatesIds?.Any())
                 {
                     entities = entities.Where(en => en.Updates.Any(r => r.Id.In(request.UpdatesIds)));

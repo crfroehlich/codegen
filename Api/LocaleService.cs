@@ -86,10 +86,16 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Country))
                     entities = entities.Where(en => en.Country.Contains(request.Country));
+                if(!DocTools.IsNullOrEmpty(request.Countrys))
+                    entities = entities.Where(en => en.Country.In(request.Countrys));
                 if(!DocTools.IsNullOrEmpty(request.Language))
                     entities = entities.Where(en => en.Language.Contains(request.Language));
+                if(!DocTools.IsNullOrEmpty(request.Languages))
+                    entities = entities.Where(en => en.Language.In(request.Languages));
                 if(!DocTools.IsNullOrEmpty(request.TimeZone))
                     entities = entities.Where(en => en.TimeZone.Contains(request.TimeZone));
+                if(!DocTools.IsNullOrEmpty(request.TimeZones))
+                    entities = entities.Where(en => en.TimeZone.In(request.TimeZones));
 
                 entities = ApplyFilters<DocEntityLocale,LocaleSearch>(request, entities);
 

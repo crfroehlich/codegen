@@ -146,6 +146,7 @@ namespace Services.Dto
         public List<string> NameNames { get; set; }
         public int? OwnerId { get; set; }
         public string OwnerType { get; set; }
+        public List<string> OwnerTypes { get; set; }
         public decimal? Value { get; set; }
     }
 

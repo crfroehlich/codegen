@@ -126,14 +126,18 @@ namespace Services.Dto
         public List<int> HistoriesIds { get; set; }
         public int? LegacyDocumentSetId { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public Reference ProjectTeam { get; set; }
         public List<int> ProjectTeamIds { get; set; }
         public List<int> ScopesIds { get; set; }
         public string Settings { get; set; }
+        public List<string> Settingss { get; set; }
         public List<int> StatsIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"Library",@"SERVE Portal",@"Therapeutic Area"})]
         public DocumentSetTypeEnm? Type { get; set; }
+        public List<DocumentSetTypeEnm> Types { get; set; }
         public List<int> UsersIds { get; set; }
     }
 

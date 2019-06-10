@@ -217,15 +217,20 @@ namespace Services.Dto
         public int? Id { get; set; }
         public List<int> AdminRolesIds { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public string Email { get; set; }
+        public List<string> Emails { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsInternal { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public List<int> ScopesIds { get; set; }
         public string Settings { get; set; }
+        public List<string> Settingss { get; set; }
         public string Slack { get; set; }
+        public List<string> Slacks { get; set; }
         public List<int> UpdatesIds { get; set; }
         public List<int> UsersIds { get; set; }
     }

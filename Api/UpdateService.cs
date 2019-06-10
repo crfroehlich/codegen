@@ -86,8 +86,12 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Body))
                     entities = entities.Where(en => en.Body.Contains(request.Body));
+                if(!DocTools.IsNullOrEmpty(request.Bodys))
+                    entities = entities.Where(en => en.Body.In(request.Bodys));
                 if(!DocTools.IsNullOrEmpty(request.DeliveryStatus))
                     entities = entities.Where(en => en.DeliveryStatus.Contains(request.DeliveryStatus));
+                if(!DocTools.IsNullOrEmpty(request.DeliveryStatuss))
+                    entities = entities.Where(en => en.DeliveryStatus.In(request.DeliveryStatuss));
                 if(request.EmailAttempts.HasValue)
                     entities = entities.Where(en => request.EmailAttempts.Value == en.EmailAttempts);
                 if(!DocTools.IsNullOrEmpty(request.EmailSent))
@@ -102,6 +106,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Link))
                     entities = entities.Where(en => en.Link.Contains(request.Link));
+                if(!DocTools.IsNullOrEmpty(request.Links))
+                    entities = entities.Where(en => en.Link.In(request.Links));
                 if(request.Priority.HasValue)
                     entities = entities.Where(en => request.Priority.Value == en.Priority);
                 if(!DocTools.IsNullOrEmpty(request.Read))
@@ -118,6 +124,8 @@ namespace Services.API
                     entities = entities.Where(en => en.SlackSent >= request.SlackSentAfter);
                 if(!DocTools.IsNullOrEmpty(request.Subject))
                     entities = entities.Where(en => en.Subject.Contains(request.Subject));
+                if(!DocTools.IsNullOrEmpty(request.Subjects))
+                    entities = entities.Where(en => en.Subject.In(request.Subjects));
                 if(!DocTools.IsNullOrEmpty(request.Team) && !DocTools.IsNullOrEmpty(request.Team.Id))
                 {
                     entities = entities.Where(en => en.Team.Id == request.Team.Id );

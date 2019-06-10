@@ -96,6 +96,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(!DocTools.IsNullOrEmpty(request.Ended))
                     entities = entities.Where(en => null != en.Ended && request.Ended.Value.Date == en.Ended.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.EndedBefore))
@@ -106,6 +108,8 @@ namespace Services.API
                     entities = entities.Where(en => request.EntityId.Value == en.EntityId);
                 if(!DocTools.IsNullOrEmpty(request.ExecutionTime))
                     entities = entities.Where(en => en.ExecutionTime.Contains(request.ExecutionTime));
+                if(!DocTools.IsNullOrEmpty(request.ExecutionTimes))
+                    entities = entities.Where(en => en.ExecutionTime.In(request.ExecutionTimes));
                 if(!DocTools.IsNullOrEmpty(request.Started))
                     entities = entities.Where(en => null != en.Started && request.Started.Value.Date == en.Started.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.StartedBefore))
@@ -114,6 +118,8 @@ namespace Services.API
                     entities = entities.Where(en => en.Started >= request.StartedAfter);
                 if(!DocTools.IsNullOrEmpty(request.Status))
                     entities = entities.Where(en => en.Status.Contains(request.Status));
+                if(!DocTools.IsNullOrEmpty(request.Statuss))
+                    entities = entities.Where(en => en.Status.In(request.Statuss));
                 if(true == request.Succeeded?.Any())
                 {
                     if(request.Succeeded.Any(v => v == null)) entities = entities.Where(en => en.Succeeded.In(request.Succeeded) || en.Succeeded == null);

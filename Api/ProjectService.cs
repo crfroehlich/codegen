@@ -104,6 +104,8 @@ namespace Services.API
                     entities = entities.Where(en => en.DatabaseDeadline >= request.DatabaseDeadlineAfter);
                 if(!DocTools.IsNullOrEmpty(request.DatabaseName))
                     entities = entities.Where(en => en.DatabaseName.Contains(request.DatabaseName));
+                if(!DocTools.IsNullOrEmpty(request.DatabaseNames))
+                    entities = entities.Where(en => en.DatabaseName.In(request.DatabaseNames));
                 if(!DocTools.IsNullOrEmpty(request.Dataset) && !DocTools.IsNullOrEmpty(request.Dataset.Id))
                 {
                     entities = entities.Where(en => en.Dataset.Id == request.Dataset.Id );
@@ -142,14 +144,24 @@ namespace Services.API
                     entities = entities.Where(en => request.LibraryPackageId.Value == en.LibraryPackageId);
                 if(!DocTools.IsNullOrEmpty(request.LibraryPackageName))
                     entities = entities.Where(en => en.LibraryPackageName.Contains(request.LibraryPackageName));
+                if(!DocTools.IsNullOrEmpty(request.LibraryPackageNames))
+                    entities = entities.Where(en => en.LibraryPackageName.In(request.LibraryPackageNames));
                 if(!DocTools.IsNullOrEmpty(request.Number))
                     entities = entities.Where(en => en.Number.Contains(request.Number));
+                if(!DocTools.IsNullOrEmpty(request.Numbers))
+                    entities = entities.Where(en => en.Number.In(request.Numbers));
                 if(!DocTools.IsNullOrEmpty(request.OperationsDeliverable))
                     entities = entities.Where(en => en.OperationsDeliverable.Contains(request.OperationsDeliverable));
+                if(!DocTools.IsNullOrEmpty(request.OperationsDeliverables))
+                    entities = entities.Where(en => en.OperationsDeliverable.In(request.OperationsDeliverables));
                 if(!DocTools.IsNullOrEmpty(request.OpportunityId))
                     entities = entities.Where(en => en.OpportunityId.Contains(request.OpportunityId));
+                if(!DocTools.IsNullOrEmpty(request.OpportunityIds))
+                    entities = entities.Where(en => en.OpportunityId.In(request.OpportunityIds));
                 if(!DocTools.IsNullOrEmpty(request.OpportunityName))
                     entities = entities.Where(en => en.OpportunityName.Contains(request.OpportunityName));
+                if(!DocTools.IsNullOrEmpty(request.OpportunityNames))
+                    entities = entities.Where(en => en.OpportunityName.In(request.OpportunityNames));
                 if(!DocTools.IsNullOrEmpty(request.Parent) && !DocTools.IsNullOrEmpty(request.Parent.Id))
                 {
                     entities = entities.Where(en => en.Parent.Id == request.Parent.Id );
@@ -160,12 +172,20 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.PICO))
                     entities = entities.Where(en => en.PICO.Contains(request.PICO));
+                if(!DocTools.IsNullOrEmpty(request.PICOs))
+                    entities = entities.Where(en => en.PICO.In(request.PICOs));
                 if(!DocTools.IsNullOrEmpty(request.ProjectId))
                     entities = entities.Where(en => en.ProjectId.Contains(request.ProjectId));
+                if(!DocTools.IsNullOrEmpty(request.ProjectIds))
+                    entities = entities.Where(en => en.ProjectId.In(request.ProjectIds));
                 if(!DocTools.IsNullOrEmpty(request.ProjectName))
                     entities = entities.Where(en => en.ProjectName.Contains(request.ProjectName));
+                if(!DocTools.IsNullOrEmpty(request.ProjectNames))
+                    entities = entities.Where(en => en.ProjectName.In(request.ProjectNames));
                 if(request.Status.HasValue)
                     entities = entities.Where(en => request.Status.Value == en.Status);
+                if(!DocTools.IsNullOrEmpty(request.Statuss))
+                    entities = entities.Where(en => en.Status.In(request.Statuss));
                 if(true == request.TimeCardsIds?.Any())
                 {
                     entities = entities.Where(en => en.TimeCards.Any(r => r.Id.In(request.TimeCardsIds)));

@@ -103,8 +103,12 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(!DocTools.IsNullOrEmpty(request.DisplayName))
                     entities = entities.Where(en => en.DisplayName.Contains(request.DisplayName));
+                if(!DocTools.IsNullOrEmpty(request.DisplayNames))
+                    entities = entities.Where(en => en.DisplayName.In(request.DisplayNames));
                 if(true == request.IsAllowAddInForm?.Any())
                 {
                     if(request.IsAllowAddInForm.Any(v => v == null)) entities = entities.Where(en => en.IsAllowAddInForm.In(request.IsAllowAddInForm) || en.IsAllowAddInForm == null);
@@ -202,6 +206,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.JsonType))
                     entities = entities.Where(en => en.JsonType.Contains(request.JsonType));
+                if(!DocTools.IsNullOrEmpty(request.JsonTypes))
+                    entities = entities.Where(en => en.JsonType.In(request.JsonTypes));
                 if(!DocTools.IsNullOrEmpty(request.LookupTableEnum) && !DocTools.IsNullOrEmpty(request.LookupTableEnum.Id))
                 {
                     entities = entities.Where(en => en.LookupTableEnum.Id == request.LookupTableEnum.Id );
@@ -216,6 +222,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(request.Order.HasValue)
                     entities = entities.Where(en => request.Order.Value == en.Order);
                 if(!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))
@@ -230,8 +238,12 @@ namespace Services.API
                     entities = entities.Where(en => request.Precision.Value == en.Precision);
                 if(request.RelationshipOnOwnerRemove.HasValue)
                     entities = entities.Where(en => request.RelationshipOnOwnerRemove.Value == en.RelationshipOnOwnerRemove);
+                if(!DocTools.IsNullOrEmpty(request.RelationshipOnOwnerRemoves))
+                    entities = entities.Where(en => en.RelationshipOnOwnerRemove.In(request.RelationshipOnOwnerRemoves));
                 if(request.RelationshipOnTargetRemove.HasValue)
                     entities = entities.Where(en => request.RelationshipOnTargetRemove.Value == en.RelationshipOnTargetRemove);
+                if(!DocTools.IsNullOrEmpty(request.RelationshipOnTargetRemoves))
+                    entities = entities.Where(en => en.RelationshipOnTargetRemove.In(request.RelationshipOnTargetRemoves));
                 if(!DocTools.IsNullOrEmpty(request.RelationshipPairTo) && !DocTools.IsNullOrEmpty(request.RelationshipPairTo.Id))
                 {
                     entities = entities.Where(en => en.RelationshipPairTo.Id == request.RelationshipPairTo.Id );
@@ -244,6 +256,8 @@ namespace Services.API
                     entities = entities.Where(en => request.Scale.Value == en.Scale);
                 if(!DocTools.IsNullOrEmpty(request.SetDefaultValue))
                     entities = entities.Where(en => en.SetDefaultValue.Contains(request.SetDefaultValue));
+                if(!DocTools.IsNullOrEmpty(request.SetDefaultValues))
+                    entities = entities.Where(en => en.SetDefaultValue.In(request.SetDefaultValues));
                 if(!DocTools.IsNullOrEmpty(request.Tab) && !DocTools.IsNullOrEmpty(request.Tab.Id))
                 {
                     entities = entities.Where(en => en.Tab.Id == request.Tab.Id );
@@ -262,10 +276,16 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.TargetAlias))
                     entities = entities.Where(en => en.TargetAlias.Contains(request.TargetAlias));
+                if(!DocTools.IsNullOrEmpty(request.TargetAliass))
+                    entities = entities.Where(en => en.TargetAlias.In(request.TargetAliass));
                 if(request.Type.HasValue)
                     entities = entities.Where(en => request.Type.Value == en.Type);
+                if(!DocTools.IsNullOrEmpty(request.Types))
+                    entities = entities.Where(en => en.Type.In(request.Types));
                 if(request.UIType.HasValue)
                     entities = entities.Where(en => request.UIType.Value == en.UIType);
+                if(!DocTools.IsNullOrEmpty(request.UITypes))
+                    entities = entities.Where(en => en.UIType.In(request.UITypes));
 
                 entities = ApplyFilters<DocEntityDataProperty,DataPropertySearch>(request, entities);
 

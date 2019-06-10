@@ -86,6 +86,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.IpAddress))
                     entities = entities.Where(en => en.IpAddress.Contains(request.IpAddress));
+                if(!DocTools.IsNullOrEmpty(request.IpAddresss))
+                    entities = entities.Where(en => en.IpAddress.In(request.IpAddresss));
                 if(!DocTools.IsNullOrEmpty(request.Locale) && !DocTools.IsNullOrEmpty(request.Locale.Id))
                 {
                     entities = entities.Where(en => en.Locale.Id == request.Locale.Id );

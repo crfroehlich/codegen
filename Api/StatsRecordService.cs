@@ -104,6 +104,8 @@ namespace Services.API
                     entities = entities.Where(en => request.OwnerId.Value == en.OwnerId);
                 if(!DocTools.IsNullOrEmpty(request.OwnerType))
                     entities = entities.Where(en => en.OwnerType.Contains(request.OwnerType));
+                if(!DocTools.IsNullOrEmpty(request.OwnerTypes))
+                    entities = entities.Where(en => en.OwnerType.In(request.OwnerTypes));
                 if(request.Value.HasValue)
                     entities = entities.Where(en => request.Value.Value == en.Value);
 

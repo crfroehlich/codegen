@@ -162,6 +162,7 @@ namespace Services.Dto
         public Reference CalendarDateStart { get; set; }
         public List<int> CalendarDateStartIds { get; set; }
         public string CalendarType { get; set; }
+        public List<string> CalendarTypes { get; set; }
         public Reference FollowUp { get; set; }
         public List<int> FollowUpIds { get; set; }
         public Reference TimeOfDay { get; set; }

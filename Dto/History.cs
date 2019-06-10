@@ -198,6 +198,7 @@ namespace Services.Dto
         public Reference Page { get; set; }
         public List<int> PageIds { get; set; }
         public string URL { get; set; }
+        public List<string> URLs { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
         public Reference UserSession { get; set; }

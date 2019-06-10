@@ -102,6 +102,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(true == request.ProjectsIds?.Any())
                 {
                     entities = entities.Where(en => en.Projects.Any(r => r.Id.In(request.ProjectsIds)));
@@ -116,6 +118,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.SalesforceAccountId))
                     entities = entities.Where(en => en.SalesforceAccountId.Contains(request.SalesforceAccountId));
+                if(!DocTools.IsNullOrEmpty(request.SalesforceAccountIds))
+                    entities = entities.Where(en => en.SalesforceAccountId.In(request.SalesforceAccountIds));
                 if(true == request.ScopesIds?.Any())
                 {
                     entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));

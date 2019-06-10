@@ -86,6 +86,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Definition))
                     entities = entities.Where(en => en.Definition.Contains(request.Definition));
+                if(!DocTools.IsNullOrEmpty(request.Definitions))
+                    entities = entities.Where(en => en.Definition.In(request.Definitions));
                 if(!DocTools.IsNullOrEmpty(request.Enum) && !DocTools.IsNullOrEmpty(request.Enum.Id))
                 {
                     entities = entities.Where(en => en.Enum.Id == request.Enum.Id );
@@ -100,6 +102,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Icon))
                     entities = entities.Where(en => en.Icon.Contains(request.Icon));
+                if(!DocTools.IsNullOrEmpty(request.Icons))
+                    entities = entities.Where(en => en.Icon.In(request.Icons));
                 if(!DocTools.IsNullOrEmpty(request.Page) && !DocTools.IsNullOrEmpty(request.Page.Id))
                 {
                     entities = entities.Where(en => en.Page.Id == request.Page.Id );

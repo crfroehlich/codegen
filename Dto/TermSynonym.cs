@@ -181,6 +181,7 @@ namespace Services.Dto
         public Reference Scope { get; set; }
         public List<int> ScopeIds { get; set; }
         public string Synonym { get; set; }
+        public List<string> Synonyms { get; set; }
     }
 
 

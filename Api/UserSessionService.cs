@@ -86,6 +86,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.ClientId))
                     entities = entities.Where(en => en.ClientId.Contains(request.ClientId));
+                if(!DocTools.IsNullOrEmpty(request.ClientIds))
+                    entities = entities.Where(en => en.ClientId.In(request.ClientIds));
                 if(request.Hits.HasValue)
                     entities = entities.Where(en => request.Hits.Value == en.Hits);
                 if(true == request.ImpersonationsIds?.Any())
@@ -94,14 +96,20 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.IpAddress))
                     entities = entities.Where(en => en.IpAddress.Contains(request.IpAddress));
+                if(!DocTools.IsNullOrEmpty(request.IpAddresss))
+                    entities = entities.Where(en => en.IpAddress.In(request.IpAddresss));
                 if(true == request.RequestsIds?.Any())
                 {
                     entities = entities.Where(en => en.Requests.Any(r => r.Id.In(request.RequestsIds)));
                 }
                 if(!DocTools.IsNullOrEmpty(request.SessionId))
                     entities = entities.Where(en => en.SessionId.Contains(request.SessionId));
+                if(!DocTools.IsNullOrEmpty(request.SessionIds))
+                    entities = entities.Where(en => en.SessionId.In(request.SessionIds));
                 if(!DocTools.IsNullOrEmpty(request.TemporarySessionId))
                     entities = entities.Where(en => en.TemporarySessionId.Contains(request.TemporarySessionId));
+                if(!DocTools.IsNullOrEmpty(request.TemporarySessionIds))
+                    entities = entities.Where(en => en.TemporarySessionId.In(request.TemporarySessionIds));
                 if(!DocTools.IsNullOrEmpty(request.User) && !DocTools.IsNullOrEmpty(request.User.Id))
                 {
                     entities = entities.Where(en => en.User.Id == request.User.Id );

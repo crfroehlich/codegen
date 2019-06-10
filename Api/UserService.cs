@@ -86,6 +86,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.ClientDepartment))
                     entities = entities.Where(en => en.ClientDepartment.Contains(request.ClientDepartment));
+                if(!DocTools.IsNullOrEmpty(request.ClientDepartments))
+                    entities = entities.Where(en => en.ClientDepartment.In(request.ClientDepartments));
                 if(!DocTools.IsNullOrEmpty(request.Division) && !DocTools.IsNullOrEmpty(request.Division.Id))
                 {
                     entities = entities.Where(en => en.Division.Id == request.Division.Id );
@@ -100,6 +102,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Email))
                     entities = entities.Where(en => en.Email.Contains(request.Email));
+                if(!DocTools.IsNullOrEmpty(request.Emails))
+                    entities = entities.Where(en => en.Email.In(request.Emails));
                 if(!DocTools.IsNullOrEmpty(request.ExpireDate))
                     entities = entities.Where(en => null != en.ExpireDate && request.ExpireDate.Value.Date == en.ExpireDate.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.ExpireDateBefore))
@@ -110,8 +114,12 @@ namespace Services.API
                     entities = entities.Where(en => request.FailedLoginCount.Value == en.FailedLoginCount);
                 if(!DocTools.IsNullOrEmpty(request.FirstName))
                     entities = entities.Where(en => en.FirstName.Contains(request.FirstName));
+                if(!DocTools.IsNullOrEmpty(request.FirstNames))
+                    entities = entities.Where(en => en.FirstName.In(request.FirstNames));
                 if(!DocTools.IsNullOrEmpty(request.Gravatar))
                     entities = entities.Where(en => en.Gravatar.Contains(request.Gravatar));
+                if(!DocTools.IsNullOrEmpty(request.Gravatars))
+                    entities = entities.Where(en => en.Gravatar.In(request.Gravatars));
                 if(true == request.HistoryIds?.Any())
                 {
                     entities = entities.Where(en => en.History.Any(r => r.Id.In(request.HistoryIds)));
@@ -131,6 +139,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.JobTitle))
                     entities = entities.Where(en => en.JobTitle.Contains(request.JobTitle));
+                if(!DocTools.IsNullOrEmpty(request.JobTitles))
+                    entities = entities.Where(en => en.JobTitle.In(request.JobTitles));
                 if(!DocTools.IsNullOrEmpty(request.LastLogin))
                     entities = entities.Where(en => null != en.LastLogin && request.LastLogin.Value.Date == en.LastLogin.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.LastLoginBefore))
@@ -139,8 +149,12 @@ namespace Services.API
                     entities = entities.Where(en => en.LastLogin >= request.LastLoginAfter);
                 if(!DocTools.IsNullOrEmpty(request.LastName))
                     entities = entities.Where(en => en.LastName.Contains(request.LastName));
+                if(!DocTools.IsNullOrEmpty(request.LastNames))
+                    entities = entities.Where(en => en.LastName.In(request.LastNames));
                 if(!DocTools.IsNullOrEmpty(request.LegacyUsername))
                     entities = entities.Where(en => en.LegacyUsername.Contains(request.LegacyUsername));
+                if(!DocTools.IsNullOrEmpty(request.LegacyUsernames))
+                    entities = entities.Where(en => en.LegacyUsername.In(request.LegacyUsernames));
                 if(!DocTools.IsNullOrEmpty(request.Locale) && !DocTools.IsNullOrEmpty(request.Locale.Id))
                 {
                     entities = entities.Where(en => en.Locale.Id == request.Locale.Id );
@@ -153,6 +167,8 @@ namespace Services.API
                     entities = entities.Where(en => request.LoginCount.Value == en.LoginCount);
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(true == request.RolesIds?.Any())
                 {
                     entities = entities.Where(en => en.Roles.Any(r => r.Id.In(request.RolesIds)));
@@ -167,6 +183,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Slack))
                     entities = entities.Where(en => en.Slack.Contains(request.Slack));
+                if(!DocTools.IsNullOrEmpty(request.Slacks))
+                    entities = entities.Where(en => en.Slack.In(request.Slacks));
                 if(!DocTools.IsNullOrEmpty(request.StartDate))
                     entities = entities.Where(en => null != en.StartDate && request.StartDate.Value.Date == en.StartDate.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.StartDateBefore))
@@ -175,6 +193,8 @@ namespace Services.API
                     entities = entities.Where(en => en.StartDate >= request.StartDateAfter);
                 if(request.Status.HasValue)
                     entities = entities.Where(en => request.Status.Value == en.Status);
+                if(!DocTools.IsNullOrEmpty(request.Statuss))
+                    entities = entities.Where(en => en.Status.In(request.Statuss));
                 if(true == request.TeamsIds?.Any())
                 {
                     entities = entities.Where(en => en.Teams.Any(r => r.Id.In(request.TeamsIds)));

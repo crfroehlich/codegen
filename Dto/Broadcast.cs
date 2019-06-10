@@ -194,7 +194,9 @@ namespace Services.Dto
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
         public string ConfluenceId { get; set; }
+        public List<string> ConfluenceIds { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> Reprocess { get; set; }
         public DateTime? Reprocessed { get; set; }

@@ -113,6 +113,8 @@ namespace Services.API
                     entities = entities.Where(en => request.LegacyDocumentSetId.Value == en.LegacyDocumentSetId);
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))
                 {
                     entities = entities.Where(en => en.Owner.Id == request.Owner.Id );
@@ -139,6 +141,8 @@ namespace Services.API
                 }
                 if(request.Type.HasValue)
                     entities = entities.Where(en => request.Type.Value == en.Type);
+                if(!DocTools.IsNullOrEmpty(request.Types))
+                    entities = entities.Where(en => en.Type.In(request.Types));
                 if(true == request.UsersIds?.Any())
                 {
                     entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));

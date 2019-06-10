@@ -254,6 +254,7 @@ namespace Services.Dto
         public Reference Channel { get; set; }
         public List<int> ChannelIds { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> Enabled { get; set; }
         public int? Frequency { get; set; }
@@ -262,15 +263,18 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> KeepHistory { get; set; }
         public string LastRunVersion { get; set; }
+        public List<string> LastRunVersions { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> LogError { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> LogInfo { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public int? RowsToProcessPerIteration { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> RunNow { get; set; }
         public string StartAt { get; set; }
+        public List<string> StartAts { get; set; }
         public List<int> TaskHistoryIds { get; set; }
     }
 

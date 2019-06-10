@@ -189,12 +189,16 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string ConfluenceId { get; set; }
+        public List<string> ConfluenceIds { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public string Icon { get; set; }
+        public List<string> Icons { get; set; }
         public int? Order { get; set; }
         public List<int> PagesIds { get; set; }
         public List<int> ScopesIds { get; set; }
         public string Title { get; set; }
+        public List<string> Titles { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Dialog",@"Manual",@"Section",@"Sidebar"})]

@@ -220,13 +220,16 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Body { get; set; }
+        public List<string> Bodys { get; set; }
         public string DeliveryStatus { get; set; }
+        public List<string> DeliveryStatuss { get; set; }
         public int? EmailAttempts { get; set; }
         public DateTime? EmailSent { get; set; }
         public DateTime? EmailSentAfter { get; set; }
         public DateTime? EmailSentBefore { get; set; }
         public List<int> EventsIds { get; set; }
         public string Link { get; set; }
+        public List<string> Links { get; set; }
         public int? Priority { get; set; }
         public DateTime? Read { get; set; }
         public DateTime? ReadAfter { get; set; }
@@ -235,6 +238,7 @@ namespace Services.Dto
         public DateTime? SlackSentAfter { get; set; }
         public DateTime? SlackSentBefore { get; set; }
         public string Subject { get; set; }
+        public List<string> Subjects { get; set; }
         public Reference Team { get; set; }
         public List<int> TeamIds { get; set; }
         public Reference User { get; set; }

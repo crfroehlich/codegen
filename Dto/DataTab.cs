@@ -144,7 +144,9 @@ namespace Services.Dto
         public Reference Class { get; set; }
         public List<int> ClassIds { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public int? Order { get; set; }
     }
 

@@ -99,6 +99,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(true == request.Durable?.Any())
                 {
                     if(request.Durable.Any(v => v == null)) entities = entities.Where(en => en.Durable.In(request.Durable) || en.Durable == null);
@@ -116,6 +118,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
 
                 entities = ApplyFilters<DocEntityQueueChannel,QueueChannelSearch>(request, entities);
 

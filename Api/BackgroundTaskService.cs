@@ -102,6 +102,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(true == request.Enabled?.Any())
                 {
                     if(request.Enabled.Any(v => v == null)) entities = entities.Where(en => en.Enabled.In(request.Enabled) || en.Enabled == null);
@@ -122,6 +124,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.LastRunVersion))
                     entities = entities.Where(en => en.LastRunVersion.Contains(request.LastRunVersion));
+                if(!DocTools.IsNullOrEmpty(request.LastRunVersions))
+                    entities = entities.Where(en => en.LastRunVersion.In(request.LastRunVersions));
                 if(true == request.LogError?.Any())
                 {
                     if(request.LogError.Any(v => v == null)) entities = entities.Where(en => en.LogError.In(request.LogError) || en.LogError == null);
@@ -134,6 +138,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(request.RowsToProcessPerIteration.HasValue)
                     entities = entities.Where(en => request.RowsToProcessPerIteration.Value == en.RowsToProcessPerIteration);
                 if(true == request.RunNow?.Any())
@@ -143,6 +149,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.StartAt))
                     entities = entities.Where(en => en.StartAt.Contains(request.StartAt));
+                if(!DocTools.IsNullOrEmpty(request.StartAts))
+                    entities = entities.Where(en => en.StartAt.In(request.StartAts));
                 if(true == request.TaskHistoryIds?.Any())
                 {
                     entities = entities.Where(en => en.TaskHistory.Any(r => r.Id.In(request.TaskHistoryIds)));

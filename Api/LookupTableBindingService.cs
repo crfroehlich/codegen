@@ -86,6 +86,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.BoundName))
                     entities = entities.Where(en => en.BoundName.Contains(request.BoundName));
+                if(!DocTools.IsNullOrEmpty(request.BoundNames))
+                    entities = entities.Where(en => en.BoundName.In(request.BoundNames));
                 if(!DocTools.IsNullOrEmpty(request.LookupTable) && !DocTools.IsNullOrEmpty(request.LookupTable.Id))
                 {
                     entities = entities.Where(en => en.LookupTable.Id == request.LookupTable.Id );

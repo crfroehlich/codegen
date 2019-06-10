@@ -94,6 +94,8 @@ namespace Services.API
                     entities = entities.Where(en => request.DesignCount.Value == en.DesignCount);
                 if(!DocTools.IsNullOrEmpty(request.DesignList))
                     entities = entities.Where(en => en.DesignList.Contains(request.DesignList));
+                if(!DocTools.IsNullOrEmpty(request.DesignLists))
+                    entities = entities.Where(en => en.DesignList.In(request.DesignLists));
                 if(!DocTools.IsNullOrEmpty(request.DocumentSet) && !DocTools.IsNullOrEmpty(request.DocumentSet.Id))
                 {
                     entities = entities.Where(en => en.DocumentSet.Id == request.DocumentSet.Id );
@@ -126,6 +128,8 @@ namespace Services.API
                     entities = entities.Where(en => request.TypeCount.Value == en.TypeCount);
                 if(!DocTools.IsNullOrEmpty(request.TypeList))
                     entities = entities.Where(en => en.TypeList.Contains(request.TypeList));
+                if(!DocTools.IsNullOrEmpty(request.TypeLists))
+                    entities = entities.Where(en => en.TypeList.In(request.TypeLists));
                 if(request.UnboundTerms.HasValue)
                     entities = entities.Where(en => request.UnboundTerms.Value == en.UnboundTerms);
 

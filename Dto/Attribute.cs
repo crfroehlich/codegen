@@ -190,6 +190,7 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
         public List<bool?> IsPositive { get; set; }
         public string UniqueKey { get; set; }
+        public List<string> UniqueKeys { get; set; }
     }
 
 

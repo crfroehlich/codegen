@@ -189,9 +189,11 @@ namespace Services.Dto
         public List<int> DefaultLocaleIds { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public Reference Role { get; set; }
         public List<int> RoleIds { get; set; }
         public string Settings { get; set; }
+        public List<string> Settingss { get; set; }
         public List<int> UsersIds { get; set; }
     }
 

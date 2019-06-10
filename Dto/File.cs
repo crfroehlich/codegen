@@ -184,12 +184,21 @@ namespace Services.Dto
         public int? Id { get; set; }
         public decimal? Cost { get; set; }
         public string FileLabel { get; set; }
+        public List<string> FileLabels { get; set; }
         public string FileName { get; set; }
+        public List<string> FileNames { get; set; }
         public string OriginalFileName { get; set; }
+        public List<string> OriginalFileNames { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Free",@"Restricted"})]
         public FileRightsEnm? Rights { get; set; }
+        public List<FileRightsEnm> Rightss { get; set; }
         public List<int> ScopesIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Client Supplied",@"Document Delivery",@"PMC/BMC",@"Publisher",@"Subscription",@"UCLA"})]
         public FileSourceEnm? Source { get; set; }
+        public List<FileSourceEnm> Sources { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Document Set",@"Errata",@"Full Text",@"Protocol",@"Supplemental"})]
         public FileTypeEnm? Type { get; set; }
+        public List<FileTypeEnm> Types { get; set; }
     }
 
 

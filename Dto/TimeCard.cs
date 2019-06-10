@@ -195,6 +195,7 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
         public DateTime? End { get; set; }

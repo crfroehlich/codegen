@@ -86,12 +86,16 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(true == request.ScopesIds?.Any())
                 {
                     entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
                 }
                 if(!DocTools.IsNullOrEmpty(request.URI))
                     entities = entities.Where(en => en.URI.Contains(request.URI));
+                if(!DocTools.IsNullOrEmpty(request.URIs))
+                    entities = entities.Where(en => en.URI.In(request.URIs));
 
                 entities = ApplyFilters<DocEntityTag,TagSearch>(request, entities);
 

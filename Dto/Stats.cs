@@ -161,8 +161,10 @@ namespace Services.Dto
         public List<int> AppIds { get; set; }
         public int? ExternalId { get; set; }
         public string ExternalType { get; set; }
+        public List<string> ExternalTypes { get; set; }
         public int? ObjectId { get; set; }
         public string ObjectType { get; set; }
+        public List<string> ObjectTypes { get; set; }
         public Reference StudySetStats { get; set; }
         public List<int> StudySetStatsIds { get; set; }
     }

@@ -94,6 +94,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(!DocTools.IsNullOrEmpty(request.Processed))
                     entities = entities.Where(en => null != en.Processed && request.Processed.Value.Date == en.Processed.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.ProcessedBefore))
@@ -102,6 +104,8 @@ namespace Services.API
                     entities = entities.Where(en => en.Processed >= request.ProcessedAfter);
                 if(!DocTools.IsNullOrEmpty(request.Status))
                     entities = entities.Where(en => en.Status.Contains(request.Status));
+                if(!DocTools.IsNullOrEmpty(request.Statuss))
+                    entities = entities.Where(en => en.Status.In(request.Statuss));
                 if(true == request.TeamsIds?.Any())
                 {
                     entities = entities.Where(en => en.Teams.Any(r => r.Id.In(request.TeamsIds)));

@@ -143,6 +143,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.UniqueKey))
                     entities = entities.Where(en => en.UniqueKey.Contains(request.UniqueKey));
+                if(!DocTools.IsNullOrEmpty(request.UniqueKeys))
+                    entities = entities.Where(en => en.UniqueKey.In(request.UniqueKeys));
                 if(!DocTools.IsNullOrEmpty(request.ValueType) && !DocTools.IsNullOrEmpty(request.ValueType.Id))
                 {
                     entities = entities.Where(en => en.ValueType.Id == request.ValueType.Id );

@@ -86,6 +86,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Action))
                     entities = entities.Where(en => en.Action.Contains(request.Action));
+                if(!DocTools.IsNullOrEmpty(request.Actions))
+                    entities = entities.Where(en => en.Action.In(request.Actions));
                 if(!DocTools.IsNullOrEmpty(request.BackgroundTask) && !DocTools.IsNullOrEmpty(request.BackgroundTask.Id))
                 {
                     entities = entities.Where(en => en.BackgroundTask.Id == request.BackgroundTask.Id );
@@ -102,6 +104,8 @@ namespace Services.API
                     entities = entities.Where(en => en.ChangedOnDate >= request.ChangedOnDateAfter);
                 if(!DocTools.IsNullOrEmpty(request.DatabaseSessionId))
                     entities = entities.Where(en => en.DatabaseSessionId.Contains(request.DatabaseSessionId));
+                if(!DocTools.IsNullOrEmpty(request.DatabaseSessionIds))
+                    entities = entities.Where(en => en.DatabaseSessionId.In(request.DatabaseSessionIds));
                 if(true == request.DeltasIds?.Any())
                 {
                     entities = entities.Where(en => en.Deltas.Any(r => r.Id.In(request.DeltasIds)));
@@ -110,6 +114,8 @@ namespace Services.API
                     entities = entities.Where(en => request.EntityId.Value == en.EntityId);
                 if(!DocTools.IsNullOrEmpty(request.EntityType))
                     entities = entities.Where(en => en.EntityType.Contains(request.EntityType));
+                if(!DocTools.IsNullOrEmpty(request.EntityTypes))
+                    entities = entities.Where(en => en.EntityType.In(request.EntityTypes));
                 if(request.EntityVersion.HasValue)
                     entities = entities.Where(en => request.EntityVersion.Value == en.EntityVersion);
                 if(true == request.EventsIds?.Any())
@@ -128,6 +134,8 @@ namespace Services.API
                     entities = entities.Where(en => request.TargetId.Value == en.TargetId);
                 if(!DocTools.IsNullOrEmpty(request.TargetType))
                     entities = entities.Where(en => en.TargetType.Contains(request.TargetType));
+                if(!DocTools.IsNullOrEmpty(request.TargetTypes))
+                    entities = entities.Where(en => en.TargetType.In(request.TargetTypes));
                 if(request.TargetVersion.HasValue)
                     entities = entities.Where(en => request.TargetVersion.Value == en.TargetVersion);
                 if(!DocTools.IsNullOrEmpty(request.User) && !DocTools.IsNullOrEmpty(request.User.Id))

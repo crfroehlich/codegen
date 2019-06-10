@@ -86,10 +86,16 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(!DocTools.IsNullOrEmpty(request.Release))
                     entities = entities.Where(en => en.Release.Contains(request.Release));
+                if(!DocTools.IsNullOrEmpty(request.Releases))
+                    entities = entities.Where(en => en.Release.In(request.Releases));
                 if(!DocTools.IsNullOrEmpty(request.VersionName))
                     entities = entities.Where(en => en.VersionName.Contains(request.VersionName));
+                if(!DocTools.IsNullOrEmpty(request.VersionNames))
+                    entities = entities.Where(en => en.VersionName.In(request.VersionNames));
 
                 entities = ApplyFilters<DocEntityDatabaseVersion,DatabaseVersionSearch>(request, entities);
 

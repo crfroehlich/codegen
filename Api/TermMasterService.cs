@@ -86,12 +86,16 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.BioPortal))
                     entities = entities.Where(en => en.BioPortal.Contains(request.BioPortal));
+                if(!DocTools.IsNullOrEmpty(request.BioPortals))
+                    entities = entities.Where(en => en.BioPortal.In(request.BioPortals));
                 if(true == request.CategoriesIds?.Any())
                 {
                     entities = entities.Where(en => en.Categories.Any(r => r.Id.In(request.CategoriesIds)));
                 }
                 if(!DocTools.IsNullOrEmpty(request.CUI))
                     entities = entities.Where(en => en.CUI.Contains(request.CUI));
+                if(!DocTools.IsNullOrEmpty(request.CUIs))
+                    entities = entities.Where(en => en.CUI.In(request.CUIs));
                 if(!DocTools.IsNullOrEmpty(request.Enum) && !DocTools.IsNullOrEmpty(request.Enum.Id))
                 {
                     entities = entities.Where(en => en.Enum.Id == request.Enum.Id );
@@ -106,20 +110,32 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.MedDRA))
                     entities = entities.Where(en => en.MedDRA.Contains(request.MedDRA));
+                if(!DocTools.IsNullOrEmpty(request.MedDRAs))
+                    entities = entities.Where(en => en.MedDRA.In(request.MedDRAs));
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(!DocTools.IsNullOrEmpty(request.RxNorm))
                     entities = entities.Where(en => en.RxNorm.Contains(request.RxNorm));
+                if(!DocTools.IsNullOrEmpty(request.RxNorms))
+                    entities = entities.Where(en => en.RxNorm.In(request.RxNorms));
                 if(!DocTools.IsNullOrEmpty(request.SNOWMED))
                     entities = entities.Where(en => en.SNOWMED.Contains(request.SNOWMED));
+                if(!DocTools.IsNullOrEmpty(request.SNOWMEDs))
+                    entities = entities.Where(en => en.SNOWMED.In(request.SNOWMEDs));
                 if(true == request.SynonymsIds?.Any())
                 {
                     entities = entities.Where(en => en.Synonyms.Any(r => r.Id.In(request.SynonymsIds)));
                 }
                 if(!DocTools.IsNullOrEmpty(request.TUI))
                     entities = entities.Where(en => en.TUI.Contains(request.TUI));
+                if(!DocTools.IsNullOrEmpty(request.TUIs))
+                    entities = entities.Where(en => en.TUI.In(request.TUIs));
                 if(!DocTools.IsNullOrEmpty(request.URI))
                     entities = entities.Where(en => en.URI.Contains(request.URI));
+                if(!DocTools.IsNullOrEmpty(request.URIs))
+                    entities = entities.Where(en => en.URI.In(request.URIs));
 
                 entities = ApplyFilters<DocEntityTermMaster,TermMasterSearch>(request, entities);
 

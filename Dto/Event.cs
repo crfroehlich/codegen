@@ -180,10 +180,12 @@ namespace Services.Dto
         public Reference AuditRecord { get; set; }
         public List<int> AuditRecordIds { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public DateTime? Processed { get; set; }
         public DateTime? ProcessedAfter { get; set; }
         public DateTime? ProcessedBefore { get; set; }
         public string Status { get; set; }
+        public List<string> Statuss { get; set; }
         public List<int> TeamsIds { get; set; }
         public List<int> UpdatesIds { get; set; }
         public List<int> UsersIds { get; set; }

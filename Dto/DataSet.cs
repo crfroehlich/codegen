@@ -345,35 +345,51 @@ namespace Services.Dto
         public List<int> HistoriesIds { get; set; }
         public int? LegacyDocumentSetId { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public Reference ProjectTeam { get; set; }
         public List<int> ProjectTeamIds { get; set; }
         public List<int> ScopesIds { get; set; }
         public string Settings { get; set; }
+        public List<string> Settingss { get; set; }
         public List<int> StatsIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"Library",@"SERVE Portal",@"Therapeutic Area"})]
         public DocumentSetTypeEnm? Type { get; set; }
+        public List<DocumentSetTypeEnm> Types { get; set; }
         public List<int> UsersIds { get; set; }
         public string AdditionalCriteria { get; set; }
+        public List<string> AdditionalCriterias { get; set; }
         public List<int> CharacteristicsIds { get; set; }
         public List<int> ComparatorsIds { get; set; }
         public string DataCollection { get; set; }
+        public List<string> DataCollections { get; set; }
         public int? EvidencePortalId { get; set; }
         public string ExtractionProtocol { get; set; }
+        public List<string> ExtractionProtocols { get; set; }
         public int? FqId { get; set; }
         public int? FramedQuestionId { get; set; }
         public string GeneralScope { get; set; }
+        public List<string> GeneralScopes { get; set; }
         public List<int> ImportsIds { get; set; }
         public string Indications { get; set; }
+        public List<string> Indicationss { get; set; }
         public List<int> InterventionsIds { get; set; }
         public string Notes { get; set; }
+        public List<string> Notess { get; set; }
         public string OriginalComparators { get; set; }
+        public List<string> OriginalComparatorss { get; set; }
         public string OriginalDatabase { get; set; }
+        public List<string> OriginalDatabases { get; set; }
         public string OriginalDesigns { get; set; }
+        public List<string> OriginalDesignss { get; set; }
         public string OriginalInterventions { get; set; }
+        public List<string> OriginalInterventionss { get; set; }
         public string OriginalOutcomes { get; set; }
+        public List<string> OriginalOutcomess { get; set; }
         public List<int> OutcomesIds { get; set; }
         public string Participants { get; set; }
+        public List<string> Participantss { get; set; }
         public Reference PrismaWorkflow { get; set; }
         public List<int> PrismaWorkflowIds { get; set; }
         public List<int> ProjectsIds { get; set; }

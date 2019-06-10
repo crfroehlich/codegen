@@ -118,6 +118,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.URL))
                     entities = entities.Where(en => en.URL.Contains(request.URL));
+                if(!DocTools.IsNullOrEmpty(request.URLs))
+                    entities = entities.Where(en => en.URL.In(request.URLs));
                 if(!DocTools.IsNullOrEmpty(request.User) && !DocTools.IsNullOrEmpty(request.User.Id))
                 {
                     entities = entities.Where(en => en.User.Id == request.User.Id );

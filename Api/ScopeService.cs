@@ -161,6 +161,8 @@ namespace Services.API
                 }
                 if(request.Type.HasValue)
                     entities = entities.Where(en => request.Type.Value == en.Type);
+                if(!DocTools.IsNullOrEmpty(request.Types))
+                    entities = entities.Where(en => en.Type.In(request.Types));
                 if(!DocTools.IsNullOrEmpty(request.User) && !DocTools.IsNullOrEmpty(request.User.Id))
                 {
                     entities = entities.Where(en => en.User.Id == request.User.Id );

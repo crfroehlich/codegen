@@ -96,10 +96,14 @@ namespace Services.API
                     entities = entities.Where(en => request.ExternalId.Value == en.ExternalId);
                 if(!DocTools.IsNullOrEmpty(request.ExternalType))
                     entities = entities.Where(en => en.ExternalType.Contains(request.ExternalType));
+                if(!DocTools.IsNullOrEmpty(request.ExternalTypes))
+                    entities = entities.Where(en => en.ExternalType.In(request.ExternalTypes));
                 if(request.ObjectId.HasValue)
                     entities = entities.Where(en => request.ObjectId.Value == en.ObjectId);
                 if(!DocTools.IsNullOrEmpty(request.ObjectType))
                     entities = entities.Where(en => en.ObjectType.Contains(request.ObjectType));
+                if(!DocTools.IsNullOrEmpty(request.ObjectTypes))
+                    entities = entities.Where(en => en.ObjectType.In(request.ObjectTypes));
                 if(!DocTools.IsNullOrEmpty(request.StudySetStats) && !DocTools.IsNullOrEmpty(request.StudySetStats.Id))
                 {
                     entities = entities.Where(en => en.StudySetStats.Id == request.StudySetStats.Id );

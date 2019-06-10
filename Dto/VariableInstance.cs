@@ -156,6 +156,7 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
         public Reference Rule { get; set; }

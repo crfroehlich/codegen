@@ -174,6 +174,7 @@ namespace Services.Dto
         public Reference BackgroundTask { get; set; }
         public List<int> BackgroundTaskIds { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> Durable { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
@@ -181,6 +182,7 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> Exclusive { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
     }
 
 

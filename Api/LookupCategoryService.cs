@@ -86,6 +86,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Category))
                     entities = entities.Where(en => en.Category.Contains(request.Category));
+                if(!DocTools.IsNullOrEmpty(request.Categorys))
+                    entities = entities.Where(en => en.Category.In(request.Categorys));
                 if(!DocTools.IsNullOrEmpty(request.Enum) && !DocTools.IsNullOrEmpty(request.Enum.Id))
                 {
                     entities = entities.Where(en => en.Enum.Id == request.Enum.Id );

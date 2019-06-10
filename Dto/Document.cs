@@ -487,14 +487,23 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Abstract { get; set; }
+        public List<string> Abstracts { get; set; }
         public string AccessionID { get; set; }
+        public List<string> AccessionIDs { get; set; }
         public string Acronym { get; set; }
+        public List<string> Acronyms { get; set; }
         public string ArticleId { get; set; }
+        public List<string> ArticleIds { get; set; }
         public string Authors { get; set; }
+        public List<string> Authorss { get; set; }
         public string CochraneID { get; set; }
+        public List<string> CochraneIDs { get; set; }
         public string CorporateAuthor { get; set; }
+        public List<string> CorporateAuthors { get; set; }
         public string Country { get; set; }
+        public List<string> Countrys { get; set; }
         public string CustomData { get; set; }
+        public List<string> CustomDatas { get; set; }
         public Reference DatabaseType { get; set; }
         public List<int> DatabaseTypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"ASCO",@"ClinicalTrials.gov",@"Cochrane",@"Embase",@"IOVS",@"Manual Entry",@"MEDLINE",@"Northern Light"})]
@@ -505,11 +514,17 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"CTG",@"Data Hub",@"DOC Extract",@"DOC Library",@"PubMed"})]
         public List<string> DocumentTypeNames { get; set; }
         public string DOI { get; set; }
+        public List<string> DOIs { get; set; }
         public string EmbaseAccessionNumber { get; set; }
+        public List<string> EmbaseAccessionNumbers { get; set; }
         public string Emtree { get; set; }
+        public List<string> Emtrees { get; set; }
         public string ErrataText { get; set; }
+        public List<string> ErrataTexts { get; set; }
         public string FullText { get; set; }
+        public List<string> FullTexts { get; set; }
         public string FullTextURL { get; set; }
+        public List<string> FullTextURLs { get; set; }
         public Reference Import { get; set; }
         public List<int> ImportIds { get; set; }
         public Reference ImportType { get; set; }
@@ -517,31 +532,46 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
         public List<string> ImportTypeNames { get; set; }
         public string Institution { get; set; }
+        public List<string> Institutions { get; set; }
         public string ISSN { get; set; }
+        public List<string> ISSNs { get; set; }
         public string Issue { get; set; }
+        public List<string> Issues { get; set; }
         public string JournalTitle { get; set; }
+        public List<string> JournalTitles { get; set; }
         public DateTime? LegacySync { get; set; }
         public DateTime? LegacySyncAfter { get; set; }
         public DateTime? LegacySyncBefore { get; set; }
         public List<int> LookupTablesIds { get; set; }
         public int? MedlineID { get; set; }
         public string MeSH { get; set; }
+        public List<string> MeSHs { get; set; }
         public string Pages { get; set; }
+        public List<string> Pagess { get; set; }
         public char? ParentChildStatus { get; set; }
         public int? ParentID { get; set; }
         public string PublicationDate { get; set; }
+        public List<string> PublicationDates { get; set; }
         public int? PublicationYear { get; set; }
         public string PubType { get; set; }
+        public List<string> PubTypes { get; set; }
         public int? ReferenceStudy { get; set; }
         public string SecondarySourceID { get; set; }
+        public List<string> SecondarySourceIDs { get; set; }
         public string Source { get; set; }
+        public List<string> Sources { get; set; }
         public string StorageModel { get; set; }
+        public List<string> StorageModels { get; set; }
         public string SupplementalFiles { get; set; }
+        public List<string> SupplementalFiless { get; set; }
         public string TaStudyDesign { get; set; }
+        public List<string> TaStudyDesigns { get; set; }
         public string Title { get; set; }
+        public List<string> Titles { get; set; }
         public short? TrialOutcome { get; set; }
         public List<int> VariableDataIds { get; set; }
         public string Volume { get; set; }
+        public List<string> Volumes { get; set; }
     }
 
 

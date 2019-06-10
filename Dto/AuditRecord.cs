@@ -254,22 +254,27 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Action { get; set; }
+        public List<string> Actions { get; set; }
         public Reference BackgroundTask { get; set; }
         public List<int> BackgroundTaskIds { get; set; }
         public DateTime? ChangedOnDate { get; set; }
         public DateTime? ChangedOnDateAfter { get; set; }
         public DateTime? ChangedOnDateBefore { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public string DatabaseSessionId { get; set; }
+        public List<string> DatabaseSessionIds { get; set; }
         public List<int> DeltasIds { get; set; }
         public int? EntityId { get; set; }
         public string EntityType { get; set; }
+        public List<string> EntityTypes { get; set; }
         public int? EntityVersion { get; set; }
         public List<int> EventsIds { get; set; }
         public Reference Impersonation { get; set; }
         public List<int> ImpersonationIds { get; set; }
         public int? TargetId { get; set; }
         public string TargetType { get; set; }
+        public List<string> TargetTypes { get; set; }
         public int? TargetVersion { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }

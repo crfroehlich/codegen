@@ -197,8 +197,10 @@ namespace Services.Dto
         public int? Id { get; set; }
         public List<int> ChildrenIds { get; set; }
         public string Definition { get; set; }
+        public List<string> Definitions { get; set; }
         public List<int> InstancesIds { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public Reference Rule { get; set; }

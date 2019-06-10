@@ -116,6 +116,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Synonym))
                     entities = entities.Where(en => en.Synonym.Contains(request.Synonym));
+                if(!DocTools.IsNullOrEmpty(request.Synonyms))
+                    entities = entities.Where(en => en.Synonym.In(request.Synonyms));
 
                 entities = ApplyFilters<DocEntityTermSynonym,TermSynonymSearch>(request, entities);
 

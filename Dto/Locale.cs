@@ -136,8 +136,11 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Country { get; set; }
+        public List<string> Countrys { get; set; }
         public string Language { get; set; }
+        public List<string> Languages { get; set; }
         public string TimeZone { get; set; }
+        public List<string> TimeZones { get; set; }
     }
 
 

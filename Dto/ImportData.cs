@@ -289,7 +289,9 @@ namespace Services.Dto
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
         public string ErrorData { get; set; }
+        public List<string> ErrorDatas { get; set; }
         public string ExtractUrl { get; set; }
+        public List<string> ExtractUrls { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> HighPriority { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]

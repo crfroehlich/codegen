@@ -168,22 +168,31 @@ namespace Services.Dto
         public Reference Assignee { get; set; }
         public List<int> AssigneeIds { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public DateTime? DueDate { get; set; }
         public DateTime? DueDateAfter { get; set; }
         public DateTime? DueDateBefore { get; set; }
         public Reference Reporter { get; set; }
         public List<int> ReporterIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Document Adjudication",@"Document Rating",@"Document Search Reconciliation",@"Evidence on Demand"})]
         public TaskTypeEnm? Type { get; set; }
+        public List<TaskTypeEnm> Types { get; set; }
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
         public string ArticleId { get; set; }
+        public List<string> ArticleIds { get; set; }
         public string ArticleLink { get; set; }
+        public List<string> ArticleLinks { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
         public int? Matches { get; set; }
         public string SearchLink { get; set; }
+        public List<string> SearchLinks { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Matched",@"Multiple Matches",@"No Match",@"One Match"})]
         public ReconciliationStatusEnm? Status { get; set; }
+        public List<ReconciliationStatusEnm> Statuss { get; set; }
     }
 
 

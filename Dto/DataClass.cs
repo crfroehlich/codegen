@@ -296,15 +296,19 @@ namespace Services.Dto
         public List<bool> AllowDelete { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> AllSelectByDefault { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"AdjudicatedRating",@"App",@"Attribute",@"AttributeInterval",@"AuditDelta",@"AuditRecord",@"BackgroundTask",@"BackgroundTaskHistory",@"BackgroundTaskItem",@"Broadcast",@"Client",@"Comment",@"DatabaseVersion",@"DataClass",@"DataProperty",@"DataSet",@"DataTab",@"DateTime",@"Default",@"DiseaseStateSet",@"Division",@"Document",@"DocumentSet",@"DocumentSetHistory",@"Entities",@"EoD",@"Event",@"Favorite",@"FeatureSet",@"File",@"Glossary",@"Help",@"History",@"Impersonation",@"ImportData",@"Interval",@"Junction",@"LibrarySet",@"Locale",@"LocaleLookup",@"LookupCategory",@"LookupTable",@"LookupTableBinding",@"LookupTableEnum",@"MeanRanges",@"MeanRangeValue",@"MeanVariances",@"MeanVarianceValue",@"Page",@"Project",@"QueueChannel",@"Rating",@"ReconcileDocument",@"Role",@"Scope",@"ServePortalSet",@"Stats",@"StatsRecord",@"StatsStudySet",@"StudyDesign",@"StudyType",@"Tag",@"Task",@"Team",@"TermCategory",@"TermMaster",@"TermSynonym",@"TherapeuticAreaSet",@"TimeCard",@"TimePoint",@"UnitConversionRules",@"UnitOfMeasure",@"Units",@"UnitValue",@"Update",@"User",@"UserRequest",@"UserSession",@"UserType",@"ValueType",@"VariableInstance",@"VariableRule",@"Workflow"})]
         public ModelNameEnm? Base { get; set; }
+        public List<ModelNameEnm?> Bases { get; set; }
         public int? CacheDuration { get; set; }
         public int? ClassId { get; set; }
         public List<int> CustomCollectionsIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> DELETE { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public List<int> DontFlattenPropertiesIds { get; set; }
         public string DtoSuffix { get; set; }
+        public List<string> DtoSuffixs { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> FlattenReferences { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
@@ -315,6 +319,7 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsReadOnly { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> PATCH { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]

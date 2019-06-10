@@ -164,19 +164,27 @@ namespace Services.Dto
         public Reference Assignee { get; set; }
         public List<int> AssigneeIds { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public DateTime? DueDate { get; set; }
         public DateTime? DueDateAfter { get; set; }
         public DateTime? DueDateBefore { get; set; }
         public Reference Reporter { get; set; }
         public List<int> ReporterIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Document Adjudication",@"Document Rating",@"Document Search Reconciliation",@"Evidence on Demand"})]
         public TaskTypeEnm? Type { get; set; }
+        public List<TaskTypeEnm> Types { get; set; }
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Maybe Relevant",@"Not Rated",@"Not Relevant",@"Relevant"})]
         public RatingEnm? Rating { get; set; }
+        public List<RatingEnm> Ratings { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Abstract with Insufficient Information",@"Animal study",@"Does not meet protocol",@"Duplicate Publication",@"Erroneous Data",@"In vitro study",@"Missing Characteristic(s)",@"Missing Outcome(s)",@"Not a Clinical Study",@"Not English",@"Not a treatment Study",@"Relevant misclassified reference",@"Study fits protocol, to be possibly added later",@"Wrong Comparison",@"Wrong Intervention",@"Wrong Number of Participants",@"Wrong Outcome Stratification",@"Wrong Outcome(s)",@"Wrong Population",@"Wrong Publication Date Cutoff",@"Wrong Setting",@"Wrong Study Design",@"Wrong Timing"})]
         public ReasonRejectedEnm? ReasonRejected { get; set; }
+        public List<ReasonRejectedEnm?> ReasonRejecteds { get; set; }
     }
 
 

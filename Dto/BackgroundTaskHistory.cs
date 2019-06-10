@@ -199,16 +199,20 @@ namespace Services.Dto
         public int? Id { get; set; }
         public int? Completed { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public DateTime? Ended { get; set; }
         public DateTime? EndedAfter { get; set; }
         public DateTime? EndedBefore { get; set; }
         public string Errors { get; set; }
+        public List<string> Errorss { get; set; }
         public int? Failed { get; set; }
         public List<int> ItemsIds { get; set; }
         public string Logs { get; set; }
+        public List<string> Logss { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
         public List<bool?> Succeeded { get; set; }
         public string Summary { get; set; }
+        public List<string> Summarys { get; set; }
         public Reference Task { get; set; }
         public List<int> TaskIds { get; set; }
     }

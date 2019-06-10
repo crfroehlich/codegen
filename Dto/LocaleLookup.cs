@@ -138,7 +138,9 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public string IpAddress { get; set; }
+        public List<string> IpAddresss { get; set; }
         public Reference Locale { get; set; }
         public List<int> LocaleIds { get; set; }
     }

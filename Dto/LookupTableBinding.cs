@@ -174,7 +174,9 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Binding { get; set; }
+        public List<string> Bindings { get; set; }
         public string BoundName { get; set; }
+        public List<string> BoundNames { get; set; }
         public Reference LookupTable { get; set; }
         public List<int> LookupTableIds { get; set; }
         public List<string> LookupTableNames { get; set; }

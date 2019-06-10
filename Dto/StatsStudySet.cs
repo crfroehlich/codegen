@@ -232,6 +232,7 @@ namespace Services.Dto
         public int? DataPoints { get; set; }
         public int? DesignCount { get; set; }
         public string DesignList { get; set; }
+        public List<string> DesignLists { get; set; }
         public Reference DocumentSet { get; set; }
         public List<int> DocumentSetIds { get; set; }
         public int? Interventions { get; set; }
@@ -242,6 +243,7 @@ namespace Services.Dto
         public int? Studies { get; set; }
         public int? TypeCount { get; set; }
         public string TypeList { get; set; }
+        public List<string> TypeLists { get; set; }
         public int? UnboundTerms { get; set; }
     }
 

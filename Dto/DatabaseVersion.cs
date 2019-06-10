@@ -140,9 +140,13 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string DatabaseState { get; set; }
+        public List<string> DatabaseStates { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public string Release { get; set; }
+        public List<string> Releases { get; set; }
         public string VersionName { get; set; }
+        public List<string> VersionNames { get; set; }
     }
 
 

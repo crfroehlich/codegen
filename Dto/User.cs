@@ -395,40 +395,52 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string ClientDepartment { get; set; }
+        public List<string> ClientDepartments { get; set; }
         public Reference Division { get; set; }
         public List<int> DivisionIds { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public string Email { get; set; }
+        public List<string> Emails { get; set; }
         public DateTime? ExpireDate { get; set; }
         public DateTime? ExpireDateAfter { get; set; }
         public DateTime? ExpireDateBefore { get; set; }
         public int? FailedLoginCount { get; set; }
         public string FirstName { get; set; }
+        public List<string> FirstNames { get; set; }
         public string Gravatar { get; set; }
+        public List<string> Gravatars { get; set; }
         public List<int> HistoryIds { get; set; }
         public List<int> ImpersonatedIds { get; set; }
         public List<int> ImpersonatingIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
         public List<bool?> IsSystemUser { get; set; }
         public string JobTitle { get; set; }
+        public List<string> JobTitles { get; set; }
         public DateTime? LastLogin { get; set; }
         public DateTime? LastLoginAfter { get; set; }
         public DateTime? LastLoginBefore { get; set; }
         public string LastName { get; set; }
+        public List<string> LastNames { get; set; }
         public string LegacyUsername { get; set; }
+        public List<string> LegacyUsernames { get; set; }
         public Reference Locale { get; set; }
         public List<int> LocaleIds { get; set; }
         public int? LoginCount { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public List<int> RolesIds { get; set; }
         public List<int> ScopesIds { get; set; }
         public List<int> SessionsIds { get; set; }
         public string Settings { get; set; }
+        public List<string> Settingss { get; set; }
         public string Slack { get; set; }
+        public List<string> Slacks { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? StartDateAfter { get; set; }
         public DateTime? StartDateBefore { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Disabled",@"Inactive"})]
         public StatusEnm? Status { get; set; }
+        public List<StatusEnm> Statuss { get; set; }
         public List<int> TeamsIds { get; set; }
         public List<int> TimeCardsIds { get; set; }
         public List<int> UpdatesIds { get; set; }

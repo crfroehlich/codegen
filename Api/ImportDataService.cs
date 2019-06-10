@@ -104,8 +104,12 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.ErrorData))
                     entities = entities.Where(en => en.ErrorData.Contains(request.ErrorData));
+                if(!DocTools.IsNullOrEmpty(request.ErrorDatas))
+                    entities = entities.Where(en => en.ErrorData.In(request.ErrorDatas));
                 if(!DocTools.IsNullOrEmpty(request.ExtractUrl))
                     entities = entities.Where(en => en.ExtractUrl.Contains(request.ExtractUrl));
+                if(!DocTools.IsNullOrEmpty(request.ExtractUrls))
+                    entities = entities.Where(en => en.ExtractUrl.In(request.ExtractUrls));
                 if(true == request.HighPriority?.Any())
                 {
                     if(request.HighPriority.Any(v => v == null)) entities = entities.Where(en => en.HighPriority.In(request.HighPriority) || en.HighPriority == null);

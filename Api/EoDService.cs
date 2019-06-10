@@ -94,6 +94,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(!DocTools.IsNullOrEmpty(request.DueDate))
                     entities = entities.Where(en => null != en.DueDate && request.DueDate.Value.Date == en.DueDate.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.DueDateBefore))
@@ -110,6 +112,8 @@ namespace Services.API
                 }
                 if(request.Type.HasValue)
                     entities = entities.Where(en => request.Type.Value == en.Type);
+                if(!DocTools.IsNullOrEmpty(request.Types))
+                    entities = entities.Where(en => en.Type.In(request.Types));
                 if(!DocTools.IsNullOrEmpty(request.Workflow) && !DocTools.IsNullOrEmpty(request.Workflow.Id))
                 {
                     entities = entities.Where(en => en.Workflow.Id == request.Workflow.Id );
@@ -128,6 +132,8 @@ namespace Services.API
                 }
                 if(request.Status.HasValue)
                     entities = entities.Where(en => request.Status.Value == en.Status);
+                if(!DocTools.IsNullOrEmpty(request.Statuss))
+                    entities = entities.Where(en => en.Status.In(request.Statuss));
 
                 entities = ApplyFilters<DocEntityEoD,EoDSearch>(request, entities);
 

@@ -164,10 +164,13 @@ namespace Services.Dto
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
         public string Method { get; set; }
+        public List<string> Methods { get; set; }
         public Reference Page { get; set; }
         public List<int> PageIds { get; set; }
         public string Path { get; set; }
+        public List<string> Paths { get; set; }
         public string URL { get; set; }
+        public List<string> URLs { get; set; }
         public Reference UserSession { get; set; }
         public List<int> UserSessionIds { get; set; }
     }

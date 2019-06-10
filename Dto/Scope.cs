@@ -319,7 +319,9 @@ namespace Services.Dto
         public List<int> SynonymsIds { get; set; }
         public Reference Team { get; set; }
         public List<int> TeamIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"App",@"Client",@"Compound",@"DocumentSet",@"Global",@"Team",@"User"})]
         public ScopeEnm? Type { get; set; }
+        public List<ScopeEnm> Types { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
         public List<int> VariableRulesIds { get; set; }

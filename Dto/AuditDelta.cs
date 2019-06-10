@@ -132,6 +132,7 @@ namespace Services.Dto
         public Reference Audit { get; set; }
         public List<int> AuditIds { get; set; }
         public string Delta { get; set; }
+        public List<string> Deltas { get; set; }
     }
 
 

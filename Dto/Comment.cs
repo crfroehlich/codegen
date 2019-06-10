@@ -147,6 +147,7 @@ namespace Services.Dto
         public int? Id { get; set; }
         public List<int> ScopesIds { get; set; }
         public string Text { get; set; }
+        public List<string> Texts { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
     }

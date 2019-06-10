@@ -92,6 +92,8 @@ namespace Services.API
                     entities = entities.Where(en => request.OwnerId.Value == en.OwnerId);
                 if(!DocTools.IsNullOrEmpty(request.OwnerType))
                     entities = entities.Where(en => en.OwnerType.Contains(request.OwnerType));
+                if(!DocTools.IsNullOrEmpty(request.OwnerTypes))
+                    entities = entities.Where(en => en.OwnerType.In(request.OwnerTypes));
                 if(!DocTools.IsNullOrEmpty(request.Parent) && !DocTools.IsNullOrEmpty(request.Parent.Id))
                 {
                     entities = entities.Where(en => en.Parent.Id == request.Parent.Id );
@@ -104,6 +106,8 @@ namespace Services.API
                     entities = entities.Where(en => request.TargetId.Value == en.TargetId);
                 if(!DocTools.IsNullOrEmpty(request.TargetType))
                     entities = entities.Where(en => en.TargetType.Contains(request.TargetType));
+                if(!DocTools.IsNullOrEmpty(request.TargetTypes))
+                    entities = entities.Where(en => en.TargetType.In(request.TargetTypes));
                 if(!DocTools.IsNullOrEmpty(request.Type) && !DocTools.IsNullOrEmpty(request.Type.Id))
                 {
                     entities = entities.Where(en => en.Type.Id == request.Type.Id );

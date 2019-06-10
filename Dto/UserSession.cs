@@ -194,12 +194,16 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string ClientId { get; set; }
+        public List<string> ClientIds { get; set; }
         public int? Hits { get; set; }
         public List<int> ImpersonationsIds { get; set; }
         public string IpAddress { get; set; }
+        public List<string> IpAddresss { get; set; }
         public List<int> RequestsIds { get; set; }
         public string SessionId { get; set; }
+        public List<string> SessionIds { get; set; }
         public string TemporarySessionId { get; set; }
+        public List<string> TemporarySessionIds { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
         public List<int> UserHistoryIds { get; set; }

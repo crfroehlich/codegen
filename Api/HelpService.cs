@@ -86,10 +86,16 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.ConfluenceId))
                     entities = entities.Where(en => en.ConfluenceId.Contains(request.ConfluenceId));
+                if(!DocTools.IsNullOrEmpty(request.ConfluenceIds))
+                    entities = entities.Where(en => en.ConfluenceId.In(request.ConfluenceIds));
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(!DocTools.IsNullOrEmpty(request.Icon))
                     entities = entities.Where(en => en.Icon.Contains(request.Icon));
+                if(!DocTools.IsNullOrEmpty(request.Icons))
+                    entities = entities.Where(en => en.Icon.In(request.Icons));
                 if(request.Order.HasValue)
                     entities = entities.Where(en => request.Order.Value == en.Order);
                 if(true == request.PagesIds?.Any())
@@ -102,6 +108,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Title))
                     entities = entities.Where(en => en.Title.Contains(request.Title));
+                if(!DocTools.IsNullOrEmpty(request.Titles))
+                    entities = entities.Where(en => en.Title.In(request.Titles));
                 if(!DocTools.IsNullOrEmpty(request.Type) && !DocTools.IsNullOrEmpty(request.Type.Id))
                 {
                     entities = entities.Where(en => en.Type.Id == request.Type.Id );

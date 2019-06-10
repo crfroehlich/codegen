@@ -315,6 +315,7 @@ namespace Services.Dto
         public DateTime? DatabaseDeadlineAfter { get; set; }
         public DateTime? DatabaseDeadlineBefore { get; set; }
         public string DatabaseName { get; set; }
+        public List<string> DatabaseNames { get; set; }
         public Reference Dataset { get; set; }
         public List<int> DatasetIds { get; set; }
         public DateTime? DeliverableDeadline { get; set; }
@@ -328,16 +329,26 @@ namespace Services.Dto
         public List<int> LibraryIds { get; set; }
         public int? LibraryPackageId { get; set; }
         public string LibraryPackageName { get; set; }
+        public List<string> LibraryPackageNames { get; set; }
         public string Number { get; set; }
+        public List<string> Numbers { get; set; }
         public string OperationsDeliverable { get; set; }
+        public List<string> OperationsDeliverables { get; set; }
         public string OpportunityId { get; set; }
+        public List<string> OpportunityIds { get; set; }
         public string OpportunityName { get; set; }
+        public List<string> OpportunityNames { get; set; }
         public Reference Parent { get; set; }
         public List<int> ParentIds { get; set; }
         public string PICO { get; set; }
+        public List<string> PICOs { get; set; }
         public string ProjectId { get; set; }
+        public List<string> ProjectIds { get; set; }
         public string ProjectName { get; set; }
+        public List<string> ProjectNames { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
         public ForeignKeyStatusEnm? Status { get; set; }
+        public List<ForeignKeyStatusEnm?> Statuss { get; set; }
         public List<int> TimeCardsIds { get; set; }
     }
 

@@ -453,7 +453,9 @@ namespace Services.Dto
         public Reference Class { get; set; }
         public List<int> ClassIds { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public string DisplayName { get; set; }
+        public List<string> DisplayNames { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsAllowAddInForm { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
@@ -493,28 +495,36 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsVirtual { get; set; }
         public string JsonType { get; set; }
+        public List<string> JsonTypes { get; set; }
         public Reference LookupTableEnum { get; set; }
         public List<int> LookupTableEnumIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"AmPersonCount",@"App",@"ArmPopulationAge",@"ArmPopulationN",@"AssociationMeasure",@"AttributeCategory",@"AttributeType",@"BroadcastStatus",@"BroadcastType",@"ConfidenceInterval",@"Conjunction",@"DatabaseType",@"DataHubSearchCategory",@"DataHubSource",@"DefaultTimeUnit",@"DefaultUnitType",@"Directionality",@"DocumentSetType",@"DocumentType",@"DosageProtocol",@"DosageType",@"EoDStatus",@"EqualityOperator",@"ErrorMessage",@"ExternalKey",@"Feature",@"FieldType",@"FileRights",@"FileSource",@"FileType",@"ForeignKeyStatus",@"FqReferenceStatus",@"Help",@"ImportStatus",@"IncidenceRateType",@"InstitutionType",@"IntegrationName",@"IntegrationPropertyName",@"InterventionLineOfTreatment",@"InterventionMedium",@"InterventionProvider",@"InterventionRoute",@"InterventionSchedule",@"InterventionStageSetting",@"InterventionType",@"Job",@"JunctionType",@"LookupTable",@"LookupType",@"ManualizedTreatment",@"MeanCalculationType",@"MeanRangeType",@"MeanVariableType",@"MeanVarianceType",@"MethodOfAnalysis",@"ModelName",@"OutcomeCategory",@"OutcomeType",@"Permission",@"PopulationType",@"PrevalenceType",@"ProtocolFilterOwner",@"ProtocolFilterType",@"ProtocolType",@"PublicationPoolStudies",@"PubType",@"Question",@"QuestionCategory",@"QuestionType",@"QueueChannel",@"Randomization",@"RangeType",@"Rating",@"ReasonRejected",@"ReconciliationStatus",@"RecruitmentMethod",@"RepresentativeSample",@"ResponsesCollectedBy",@"ResultsCategory",@"RiskOfBiasAssessment",@"Scope",@"SettingType",@"StatisticalSignificance",@"StatisticalTest",@"StatsRecordName",@"Status",@"StratificationType",@"StudyAllocattionMethod",@"StudyBias",@"StudyBlindingMethod",@"StudyCompliance",@"StudyDesign",@"StudyDocumentType",@"StudyFunding",@"StudyGroupType",@"StudyImportLocation",@"StudyImportType",@"StudyNGA",@"StudyObjective",@"StudyPhaseNames",@"StudyPurpose",@"StudyRandomizationMethod",@"StudyType",@"StudyTypeHarmEtiology",@"StudyTypeTherapy",@"StudyYears",@"TaskType",@"TermClassification",@"TermSection",@"TimeCardStatus",@"TimepointType",@"UnitsOfMeasure",@"UnitType",@"UserEmployeeType",@"UserPayrollStatus",@"UserPayrollType",@"UserType",@"ValueStatus",@"ValueType",@"VariableRule",@"VariableType",@"Workflow",@"WorkflowStatus",@"YesNoNa"})]
         public List<string> LookupTableEnumNames { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public int? Order { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public int? Precision { get; set; }
         public OnRemoveAction? RelationshipOnOwnerRemove { get; set; }
+        public List<OnRemoveAction?> RelationshipOnOwnerRemoves { get; set; }
         public OnRemoveAction? RelationshipOnTargetRemove { get; set; }
+        public List<OnRemoveAction?> RelationshipOnTargetRemoves { get; set; }
         public Reference RelationshipPairTo { get; set; }
         public List<int> RelationshipPairToIds { get; set; }
         public int? Scale { get; set; }
         public string SetDefaultValue { get; set; }
+        public List<string> SetDefaultValues { get; set; }
         public Reference Tab { get; set; }
         public List<int> TabIds { get; set; }
         public Reference Target { get; set; }
         public List<int> TargetIds { get; set; }
         public string TargetAlias { get; set; }
+        public List<string> TargetAliass { get; set; }
         public DataType? Type { get; set; }
+        public List<DataType> Types { get; set; }
         public UiType? UIType { get; set; }
+        public List<UiType?> UITypes { get; set; }
     }
 
 

@@ -138,6 +138,7 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsGlobal { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
     }
 
 

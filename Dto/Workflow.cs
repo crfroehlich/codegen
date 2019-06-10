@@ -241,15 +241,22 @@ namespace Services.Dto
         public int? Id { get; set; }
         public List<int> BindingsIds { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public List<int> DocumentsIds { get; set; }
         public string Name { get; set; }
+        public List<string> Names { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public List<int> ScopesIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
         public WorkflowStatusEnm? Status { get; set; }
+        public List<WorkflowStatusEnm?> Statuss { get; set; }
         public List<int> TasksIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"Default Filter",@"Default Nameset",@"DIA Report",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"FAQ",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Library Ratings",@"Direct Meta Analysis",@"Nameset",@"PICO Rating",@"R Snippet",@"Rapid Review",@"Reconciliation",@"Response Letter",@"Risk of Bias",@"RMD Snippet",@"Systematic Review",@"View"})]
         public WorkflowEnm? Type { get; set; }
+        public List<WorkflowEnm> Types { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
         public List<int> VariablesIds { get; set; }

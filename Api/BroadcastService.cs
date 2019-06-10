@@ -94,8 +94,12 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.ConfluenceId))
                     entities = entities.Where(en => en.ConfluenceId.Contains(request.ConfluenceId));
+                if(!DocTools.IsNullOrEmpty(request.ConfluenceIds))
+                    entities = entities.Where(en => en.ConfluenceId.In(request.ConfluenceIds));
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(true == request.Reprocess?.Any())
                 {
                     if(request.Reprocess.Any(v => v == null)) entities = entities.Where(en => en.Reprocess.In(request.Reprocess) || en.Reprocess == null);

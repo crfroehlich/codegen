@@ -86,20 +86,36 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Abstract))
                     entities = entities.Where(en => en.Abstract.Contains(request.Abstract));
+                if(!DocTools.IsNullOrEmpty(request.Abstracts))
+                    entities = entities.Where(en => en.Abstract.In(request.Abstracts));
                 if(!DocTools.IsNullOrEmpty(request.AccessionID))
                     entities = entities.Where(en => en.AccessionID.Contains(request.AccessionID));
+                if(!DocTools.IsNullOrEmpty(request.AccessionIDs))
+                    entities = entities.Where(en => en.AccessionID.In(request.AccessionIDs));
                 if(!DocTools.IsNullOrEmpty(request.Acronym))
                     entities = entities.Where(en => en.Acronym.Contains(request.Acronym));
+                if(!DocTools.IsNullOrEmpty(request.Acronyms))
+                    entities = entities.Where(en => en.Acronym.In(request.Acronyms));
                 if(!DocTools.IsNullOrEmpty(request.ArticleId))
                     entities = entities.Where(en => en.ArticleId.Contains(request.ArticleId));
+                if(!DocTools.IsNullOrEmpty(request.ArticleIds))
+                    entities = entities.Where(en => en.ArticleId.In(request.ArticleIds));
                 if(!DocTools.IsNullOrEmpty(request.Authors))
                     entities = entities.Where(en => en.Authors.Contains(request.Authors));
+                if(!DocTools.IsNullOrEmpty(request.Authorss))
+                    entities = entities.Where(en => en.Authors.In(request.Authorss));
                 if(!DocTools.IsNullOrEmpty(request.CochraneID))
                     entities = entities.Where(en => en.CochraneID.Contains(request.CochraneID));
+                if(!DocTools.IsNullOrEmpty(request.CochraneIDs))
+                    entities = entities.Where(en => en.CochraneID.In(request.CochraneIDs));
                 if(!DocTools.IsNullOrEmpty(request.CorporateAuthor))
                     entities = entities.Where(en => en.CorporateAuthor.Contains(request.CorporateAuthor));
+                if(!DocTools.IsNullOrEmpty(request.CorporateAuthors))
+                    entities = entities.Where(en => en.CorporateAuthor.In(request.CorporateAuthors));
                 if(!DocTools.IsNullOrEmpty(request.Country))
                     entities = entities.Where(en => en.Country.Contains(request.Country));
+                if(!DocTools.IsNullOrEmpty(request.Countrys))
+                    entities = entities.Where(en => en.Country.In(request.Countrys));
                 if(!DocTools.IsNullOrEmpty(request.DatabaseType) && !DocTools.IsNullOrEmpty(request.DatabaseType.Id))
                 {
                     entities = entities.Where(en => en.DatabaseType.Id == request.DatabaseType.Id );
@@ -138,16 +154,28 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.DOI))
                     entities = entities.Where(en => en.DOI.Contains(request.DOI));
+                if(!DocTools.IsNullOrEmpty(request.DOIs))
+                    entities = entities.Where(en => en.DOI.In(request.DOIs));
                 if(!DocTools.IsNullOrEmpty(request.EmbaseAccessionNumber))
                     entities = entities.Where(en => en.EmbaseAccessionNumber.Contains(request.EmbaseAccessionNumber));
+                if(!DocTools.IsNullOrEmpty(request.EmbaseAccessionNumbers))
+                    entities = entities.Where(en => en.EmbaseAccessionNumber.In(request.EmbaseAccessionNumbers));
                 if(!DocTools.IsNullOrEmpty(request.Emtree))
                     entities = entities.Where(en => en.Emtree.Contains(request.Emtree));
+                if(!DocTools.IsNullOrEmpty(request.Emtrees))
+                    entities = entities.Where(en => en.Emtree.In(request.Emtrees));
                 if(!DocTools.IsNullOrEmpty(request.ErrataText))
                     entities = entities.Where(en => en.ErrataText.Contains(request.ErrataText));
+                if(!DocTools.IsNullOrEmpty(request.ErrataTexts))
+                    entities = entities.Where(en => en.ErrataText.In(request.ErrataTexts));
                 if(!DocTools.IsNullOrEmpty(request.FullText))
                     entities = entities.Where(en => en.FullText.Contains(request.FullText));
+                if(!DocTools.IsNullOrEmpty(request.FullTexts))
+                    entities = entities.Where(en => en.FullText.In(request.FullTexts));
                 if(!DocTools.IsNullOrEmpty(request.FullTextURL))
                     entities = entities.Where(en => en.FullTextURL.Contains(request.FullTextURL));
+                if(!DocTools.IsNullOrEmpty(request.FullTextURLs))
+                    entities = entities.Where(en => en.FullTextURL.In(request.FullTextURLs));
                 if(!DocTools.IsNullOrEmpty(request.Import) && !DocTools.IsNullOrEmpty(request.Import.Id))
                 {
                     entities = entities.Where(en => en.Import.Id == request.Import.Id );
@@ -174,12 +202,20 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Institution))
                     entities = entities.Where(en => en.Institution.Contains(request.Institution));
+                if(!DocTools.IsNullOrEmpty(request.Institutions))
+                    entities = entities.Where(en => en.Institution.In(request.Institutions));
                 if(!DocTools.IsNullOrEmpty(request.ISSN))
                     entities = entities.Where(en => en.ISSN.Contains(request.ISSN));
+                if(!DocTools.IsNullOrEmpty(request.ISSNs))
+                    entities = entities.Where(en => en.ISSN.In(request.ISSNs));
                 if(!DocTools.IsNullOrEmpty(request.Issue))
                     entities = entities.Where(en => en.Issue.Contains(request.Issue));
+                if(!DocTools.IsNullOrEmpty(request.Issues))
+                    entities = entities.Where(en => en.Issue.In(request.Issues));
                 if(!DocTools.IsNullOrEmpty(request.JournalTitle))
                     entities = entities.Where(en => en.JournalTitle.Contains(request.JournalTitle));
+                if(!DocTools.IsNullOrEmpty(request.JournalTitles))
+                    entities = entities.Where(en => en.JournalTitle.In(request.JournalTitles));
                 if(!DocTools.IsNullOrEmpty(request.LegacySync))
                     entities = entities.Where(en => null != en.LegacySync && request.LegacySync.Value.Date == en.LegacySync.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.LegacySyncBefore))
@@ -194,28 +230,44 @@ namespace Services.API
                     entities = entities.Where(en => request.MedlineID.Value == en.MedlineID);
                 if(!DocTools.IsNullOrEmpty(request.MeSH))
                     entities = entities.Where(en => en.MeSH.Contains(request.MeSH));
+                if(!DocTools.IsNullOrEmpty(request.MeSHs))
+                    entities = entities.Where(en => en.MeSH.In(request.MeSHs));
                 if(!DocTools.IsNullOrEmpty(request.Pages))
                     entities = entities.Where(en => en.Pages.Contains(request.Pages));
+                if(!DocTools.IsNullOrEmpty(request.Pagess))
+                    entities = entities.Where(en => en.Pages.In(request.Pagess));
                 if(request.ParentChildStatus.HasValue)
                     entities = entities.Where(en => request.ParentChildStatus.Value == en.ParentChildStatus);
                 if(request.ParentID.HasValue)
                     entities = entities.Where(en => request.ParentID.Value == en.ParentID);
                 if(!DocTools.IsNullOrEmpty(request.PublicationDate))
                     entities = entities.Where(en => en.PublicationDate.Contains(request.PublicationDate));
+                if(!DocTools.IsNullOrEmpty(request.PublicationDates))
+                    entities = entities.Where(en => en.PublicationDate.In(request.PublicationDates));
                 if(request.PublicationYear.HasValue)
                     entities = entities.Where(en => request.PublicationYear.Value == en.PublicationYear);
                 if(!DocTools.IsNullOrEmpty(request.PubType))
                     entities = entities.Where(en => en.PubType.Contains(request.PubType));
+                if(!DocTools.IsNullOrEmpty(request.PubTypes))
+                    entities = entities.Where(en => en.PubType.In(request.PubTypes));
                 if(request.ReferenceStudy.HasValue)
                     entities = entities.Where(en => request.ReferenceStudy.Value == en.ReferenceStudy);
                 if(!DocTools.IsNullOrEmpty(request.SecondarySourceID))
                     entities = entities.Where(en => en.SecondarySourceID.Contains(request.SecondarySourceID));
+                if(!DocTools.IsNullOrEmpty(request.SecondarySourceIDs))
+                    entities = entities.Where(en => en.SecondarySourceID.In(request.SecondarySourceIDs));
                 if(!DocTools.IsNullOrEmpty(request.Source))
                     entities = entities.Where(en => en.Source.Contains(request.Source));
+                if(!DocTools.IsNullOrEmpty(request.Sources))
+                    entities = entities.Where(en => en.Source.In(request.Sources));
                 if(!DocTools.IsNullOrEmpty(request.TaStudyDesign))
                     entities = entities.Where(en => en.TaStudyDesign.Contains(request.TaStudyDesign));
+                if(!DocTools.IsNullOrEmpty(request.TaStudyDesigns))
+                    entities = entities.Where(en => en.TaStudyDesign.In(request.TaStudyDesigns));
                 if(!DocTools.IsNullOrEmpty(request.Title))
                     entities = entities.Where(en => en.Title.Contains(request.Title));
+                if(!DocTools.IsNullOrEmpty(request.Titles))
+                    entities = entities.Where(en => en.Title.In(request.Titles));
                 if(request.TrialOutcome.HasValue)
                     entities = entities.Where(en => request.TrialOutcome.Value == en.TrialOutcome);
                 if(true == request.VariableDataIds?.Any())
@@ -224,6 +276,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Volume))
                     entities = entities.Where(en => en.Volume.Contains(request.Volume));
+                if(!DocTools.IsNullOrEmpty(request.Volumes))
+                    entities = entities.Where(en => en.Volume.In(request.Volumes));
 
                 entities = ApplyFilters<DocEntityDocument,DocumentSearch>(request, entities);
 

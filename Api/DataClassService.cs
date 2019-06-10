@@ -96,6 +96,8 @@ namespace Services.API
                 }
                 if(request.Base.HasValue)
                     entities = entities.Where(en => request.Base.Value == en.Base);
+                if(!DocTools.IsNullOrEmpty(request.Bases))
+                    entities = entities.Where(en => en.Base.In(request.Bases));
                 if(request.CacheDuration.HasValue)
                     entities = entities.Where(en => request.CacheDuration.Value == en.CacheDuration);
                 if(request.ClassId.HasValue)
@@ -111,12 +113,16 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Descriptions))
+                    entities = entities.Where(en => en.Description.In(request.Descriptions));
                 if(true == request.DontFlattenPropertiesIds?.Any())
                 {
                     entities = entities.Where(en => en.DontFlattenProperties.Any(r => r.Id.In(request.DontFlattenPropertiesIds)));
                 }
                 if(!DocTools.IsNullOrEmpty(request.DtoSuffix))
                     entities = entities.Where(en => en.DtoSuffix.Contains(request.DtoSuffix));
+                if(!DocTools.IsNullOrEmpty(request.DtoSuffixs))
+                    entities = entities.Where(en => en.DtoSuffix.In(request.DtoSuffixs));
                 if(true == request.FlattenReferences?.Any())
                 {
                     if(request.FlattenReferences.Any(v => v == null)) entities = entities.Where(en => en.FlattenReferences.In(request.FlattenReferences) || en.FlattenReferences == null);
@@ -143,6 +149,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
                 if(true == request.PATCH?.Any())
                 {
                     if(request.PATCH.Any(v => v == null)) entities = entities.Where(en => en.PATCH.In(request.PATCH) || en.PATCH == null);

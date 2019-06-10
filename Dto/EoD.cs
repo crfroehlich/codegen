@@ -136,18 +136,24 @@ namespace Services.Dto
         public Reference Assignee { get; set; }
         public List<int> AssigneeIds { get; set; }
         public string Data { get; set; }
+        public List<string> Datas { get; set; }
         public string Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public DateTime? DueDate { get; set; }
         public DateTime? DueDateAfter { get; set; }
         public DateTime? DueDateBefore { get; set; }
         public Reference Reporter { get; set; }
         public List<int> ReporterIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Document Adjudication",@"Document Rating",@"Document Search Reconciliation",@"Evidence on Demand"})]
         public TaskTypeEnm? Type { get; set; }
+        public List<TaskTypeEnm> Types { get; set; }
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
         public EoDStatusEnm? Status { get; set; }
+        public List<EoDStatusEnm> Statuss { get; set; }
     }
 
 
