@@ -160,7 +160,7 @@ namespace Services.API
             var pFileName = request.FileName;
             var pOriginalFileName = request.OriginalFileName;
             var pRights = request.Rights;
-            var pScopes = request.Scopes?.ToList();
+            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSource = request.Source;
             var pType = request.Type;
 

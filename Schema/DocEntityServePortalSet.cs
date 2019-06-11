@@ -83,6 +83,16 @@ namespace Services.Schema
         }
 
         [Field]
+        public DocEntitySet<DocEntityTermCategory> DrugClasses { get; private set; }
+
+
+        public List<int> DrugClassesIds => DrugClasses.Select(e => e.Id).ToList();
+
+
+        public int? DrugClassesCount { get { return DrugClasses.Count(); } private set { var noid = value; } }
+
+
+        [Field]
         public DocEntitySet<DocEntityTermMaster> Interventions { get; private set; }
 
 

@@ -37,11 +37,19 @@ namespace Services.Dto
 
         public ServePortalSetBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public ServePortalSetBase(int? pId, List<Reference> pInterventions, int? pInterventionsCount) : this(DocConvert.ToInt(pId)) 
+        public ServePortalSetBase(int? pId, List<Reference> pDrugClasses, int? pDrugClassesCount, List<Reference> pInterventions, int? pInterventionsCount) : this(DocConvert.ToInt(pId)) 
         {
+            DrugClasses = pDrugClasses;
+            DrugClassesCount = pDrugClassesCount;
             Interventions = pInterventions;
             InterventionsCount = pInterventionsCount;
         }
+
+        [ApiMember(Name = nameof(DrugClasses), Description = "TermCategory", IsRequired = false)]
+        public List<Reference> DrugClasses { get; set; }
+        public List<int> DrugClassesIds { get; set; }
+        public int? DrugClassesCount { get; set; }
+
 
         [ApiMember(Name = nameof(Interventions), Description = "TermMaster", IsRequired = false)]
         public List<Reference> Interventions { get; set; }
@@ -50,15 +58,17 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out List<Reference> pInterventions, out int? pInterventionsCount)
+        public void Deconstruct(out List<Reference> pDrugClasses, out int? pDrugClassesCount, out List<Reference> pInterventions, out int? pInterventionsCount)
         {
+            pDrugClasses = DrugClasses;
+            pDrugClassesCount = DrugClassesCount;
             pInterventions = Interventions;
             pInterventionsCount = InterventionsCount;
         }
 
         //Not ready until C# v8.?
-        //public ServePortalSetBase With(int? pId = Id, List<Reference> pInterventions = Interventions, int? pInterventionsCount = InterventionsCount) => 
-        //	new ServePortalSetBase(pId, pInterventions, pInterventionsCount);
+        //public ServePortalSetBase With(int? pId = Id, List<Reference> pDrugClasses = DrugClasses, int? pDrugClassesCount = DrugClassesCount, List<Reference> pInterventions = Interventions, int? pInterventionsCount = InterventionsCount) => 
+        //	new ServePortalSetBase(pId, pDrugClasses, pDrugClassesCount, pInterventions, pInterventionsCount);
 
     }
 
@@ -72,14 +82,14 @@ namespace Services.Dto
 
         public ServePortalSet(int? id) : base(DocConvert.ToInt(id)) {}
         public ServePortalSet(int id) : base(id) {}
-        public ServePortalSet(int? pId, List<Reference> pInterventions, int? pInterventionsCount) :
-            base(pId, pInterventions, pInterventionsCount) { }
+        public ServePortalSet(int? pId, List<Reference> pDrugClasses, int? pDrugClassesCount, List<Reference> pInterventions, int? pInterventionsCount) :
+            base(pId, pDrugClasses, pDrugClassesCount, pInterventions, pInterventionsCount) { }
 
         public static List<string> Fields => DocTools.Fields<ServePortalSet>();
 
         private List<string> _Select;
         [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Interventions),nameof(InterventionsCount),nameof(Locked),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(DrugClasses),nameof(DrugClassesCount),nameof(Gestalt),nameof(Interventions),nameof(InterventionsCount),nameof(Locked),nameof(Updated),nameof(VersionNo)})]
         public override List<string> Select
         {
             get
@@ -111,7 +121,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Interventions), nameof(InterventionsCount), nameof(InterventionsIds)
+            nameof(DrugClasses), nameof(DrugClassesCount), nameof(DrugClassesIds), nameof(Interventions), nameof(InterventionsCount), nameof(InterventionsIds)
         };
         private List<string> collections { get { return _collections; } }
 
@@ -152,6 +162,7 @@ namespace Services.Dto
         public DocumentSetTypeEnm? Type { get; set; }
         public List<DocumentSetTypeEnm> Types { get; set; }
         public List<int> UsersIds { get; set; }
+        public List<int> DrugClassesIds { get; set; }
         public List<int> InterventionsIds { get; set; }
     }
 
@@ -178,6 +189,7 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ServePortalSet.Created))); }
         public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ServePortalSet.Updated))); }
 
+        public bool doDrugClasses { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ServePortalSet.DrugClasses))); }
         public bool doInterventions { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ServePortalSet.Interventions))); }
     }
 

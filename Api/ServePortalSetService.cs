@@ -168,6 +168,10 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
                 }
+                if(true == request.DrugClassesIds?.Any())
+                {
+                    entities = entities.Where(en => en.DrugClasses.Any(r => r.Id.In(request.DrugClassesIds)));
+                }
                 if(true == request.HistoriesIds?.Any())
                 {
                     entities = entities.Where(en => en.Histories.Any(r => r.Id.In(request.HistoriesIds)));
@@ -260,6 +264,7 @@ namespace Services.API
             var pDivisions = GetVariable<Reference>(request.Divisions?.ToList(), request.DivisionsIds?.ToList());
             var pDocuments = GetVariable<Reference>(request.Documents?.ToList(), request.DocumentsIds?.ToList());
             var pDocumentSets = GetVariable<Reference>(request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
+            var pDrugClasses = GetVariable<Reference>(request.DrugClasses?.ToList(), request.DrugClassesIds?.ToList());
             var pHistories = GetVariable<Reference>(request.Histories?.ToList(), request.HistoriesIds?.ToList());
             var pInterventions = GetVariable<Reference>(request.Interventions?.ToList(), request.InterventionsIds?.ToList());
             var pLegacyDocumentSetId = request.LegacyDocumentSetId;
@@ -560,6 +565,50 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.Select.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.DocumentSets));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDrugClasses, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.DrugClasses)))
+            {
+                if (true == pDrugClasses?.Any() )
+                {
+                    var requestedDrugClasses = pDrugClasses.Select(p => p.Id).Distinct().ToList();
+                    var existsDrugClasses = Execute.SelectAll<DocEntityTermCategory>().Where(e => e.Id.In(requestedDrugClasses)).Select( e => e.Id ).ToList();
+                    if (existsDrugClasses.Count != requestedDrugClasses.Count)
+                    {
+                        var nonExists = requestedDrugClasses.Where(id => existsDrugClasses.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection DrugClasses with objects that do not exist. No matching DrugClasses(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedDrugClasses.Where(id => entity.DrugClasses.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityTermCategory.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(ServePortalSet), columnName: nameof(request.DrugClasses)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DrugClasses)} to {nameof(ServePortalSet)}");
+                        entity.DrugClasses.Add(target);
+                    });
+                    var toRemove = entity.DrugClasses.Where(e => requestedDrugClasses.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityTermCategory.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ServePortalSet), columnName: nameof(request.DrugClasses)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DrugClasses)} from {nameof(ServePortalSet)}");
+                        entity.DrugClasses.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.DrugClasses.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityTermCategory.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ServePortalSet), columnName: nameof(request.DrugClasses)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DrugClasses)} from {nameof(ServePortalSet)}");
+                        entity.DrugClasses.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDrugClasses, nameof(request.DrugClasses)) && !request.Select.Matches(nameof(request.DrugClasses), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.DrugClasses));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pHistories, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.Histories)))
@@ -877,6 +926,7 @@ namespace Services.API
                     var pDivisions = entity.Divisions.ToList();
                     var pDocuments = entity.Documents.ToList();
                     var pDocumentSets = entity.DocumentSets.ToList();
+                    var pDrugClasses = entity.DrugClasses.ToList();
                     var pHistories = entity.Histories.ToList();
                     var pInterventions = entity.Interventions.ToList();
                     var pLegacyDocumentSetId = entity.LegacyDocumentSetId;
@@ -919,6 +969,11 @@ namespace Services.API
                             foreach(var item in pDocumentSets)
                             {
                                 entity.DocumentSets.Add(item);
+                            }
+
+                            foreach(var item in pDrugClasses)
+                            {
+                                entity.DrugClasses.Add(item);
                             }
 
                             foreach(var item in pHistories)
@@ -1123,6 +1178,8 @@ namespace Services.API
                         return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
                     case "documentset":
                         return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "termcategory":
+                        return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "DrugClasses", request, (ss) => HostContext.ResolveService<TermCategoryService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "documentsethistory":
@@ -1155,6 +1212,8 @@ namespace Services.API
                         return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
                     case "document":
                         return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "termcategory":
+                        return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "DrugClasses", request);
                     case "favorite":
                         return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "termmaster":
@@ -1182,6 +1241,8 @@ namespace Services.API
                         return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
                     case "document":
                         return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "termcategory":
+                        return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "DrugClasses", request);
                     case "favorite":
                         return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "termmaster":
