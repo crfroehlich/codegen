@@ -173,4 +173,10 @@ namespace Services.Dto
     public partial class DiseaseStateSetBatch : List<DiseaseStateSet> { }
 
 
+    [Route("/diseasestateset/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/diseasestateset/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class DiseaseStateSetJunction : DiseaseStateSetSearchBase {}
+
+
+
 }

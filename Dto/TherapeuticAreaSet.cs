@@ -173,4 +173,10 @@ namespace Services.Dto
     public partial class TherapeuticAreaSetBatch : List<TherapeuticAreaSet> { }
 
 
+    [Route("/therapeuticareaset/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/therapeuticareaset/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class TherapeuticAreaSetJunction : TherapeuticAreaSetSearchBase {}
+
+
+
 }
