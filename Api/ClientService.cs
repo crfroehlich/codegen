@@ -166,13 +166,13 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pDefaultLocale = (request.DefaultLocale?.Id > 0) ? DocEntityLocale.Get(request.DefaultLocale.Id) : null;
-            var pDivisions = request.Divisions?.ToList();
-            var pDocumentSets = request.DocumentSets?.ToList();
+            var pDivisions = GetVariable<Reference>(request.Divisions?.ToList(), request.DivisionsIds?.ToList());
+            var pDocumentSets = GetVariable<Reference>(request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
             var pName = request.Name;
-            var pProjects = request.Projects?.ToList();
+            var pProjects = GetVariable<Reference>(request.Projects?.ToList(), request.ProjectsIds?.ToList());
             var pRole = (request.Role?.Id > 0) ? DocEntityRole.Get(request.Role.Id) : null;
             var pSalesforceAccountId = request.SalesforceAccountId;
-            var pScopes = request.Scopes?.ToList();
+            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSettings = request.Settings;
 
             DocEntityClient entity = null;

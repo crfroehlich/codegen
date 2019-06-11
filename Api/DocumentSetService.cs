@@ -188,21 +188,21 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<DocumentSet>(DocConstantModelName.DOCUMENTSET, nameof(DocumentSet), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pClients = request.Clients?.ToList();
+            var pClients = GetVariable<Reference>(request.Clients?.ToList(), request.ClientsIds?.ToList());
             var pConfidential = request.Confidential;
-            var pDivisions = request.Divisions?.ToList();
-            var pDocuments = request.Documents?.ToList();
-            var pDocumentSets = request.DocumentSets?.ToList();
-            var pHistories = request.Histories?.ToList();
+            var pDivisions = GetVariable<Reference>(request.Divisions?.ToList(), request.DivisionsIds?.ToList());
+            var pDocuments = GetVariable<Reference>(request.Documents?.ToList(), request.DocumentsIds?.ToList());
+            var pDocumentSets = GetVariable<Reference>(request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
+            var pHistories = GetVariable<Reference>(request.Histories?.ToList(), request.HistoriesIds?.ToList());
             var pLegacyDocumentSetId = request.LegacyDocumentSetId;
             var pName = request.Name;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityDocumentSet.Get(request.Owner.Id) : null;
             var pProjectTeam = (request.ProjectTeam?.Id > 0) ? DocEntityTeam.Get(request.ProjectTeam.Id) : null;
-            var pScopes = request.Scopes?.ToList();
+            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSettings = request.Settings;
-            var pStats = request.Stats?.ToList();
+            var pStats = GetVariable<Reference>(request.Stats?.ToList(), request.StatsIds?.ToList());
             var pType = request.Type;
-            var pUsers = request.Users?.ToList();
+            var pUsers = GetVariable<Reference>(request.Users?.ToList(), request.UsersIds?.ToList());
 
             DocEntityDocumentSet entity = null;
             if(permission == DocConstantPermission.ADD)

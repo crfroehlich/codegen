@@ -138,7 +138,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pName = request.Name;
-            var pScopes = request.Scopes?.ToList();
+            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pURI = request.URI;
 
             DocEntityTag entity = null;

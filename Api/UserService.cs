@@ -262,15 +262,15 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pClientDepartment = request.ClientDepartment;
             var pDivision = (request.Division?.Id > 0) ? DocEntityDivision.Get(request.Division.Id) : null;
-            var pDocumentSets = request.DocumentSets?.ToList();
+            var pDocumentSets = GetVariable<Reference>(request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
             var pEmail = request.Email;
             var pExpireDate = request.ExpireDate;
             var pFailedLoginCount = request.FailedLoginCount;
             var pFirstName = request.FirstName;
             var pGravatar = request.Gravatar;
-            var pHistory = request.History?.ToList();
-            var pImpersonated = request.Impersonated?.ToList();
-            var pImpersonating = request.Impersonating?.ToList();
+            var pHistory = GetVariable<Reference>(request.History?.ToList(), request.HistoryIds?.ToList());
+            var pImpersonated = GetVariable<Reference>(request.Impersonated?.ToList(), request.ImpersonatedIds?.ToList());
+            var pImpersonating = GetVariable<Reference>(request.Impersonating?.ToList(), request.ImpersonatingIds?.ToList());
             var pIsSystemUser = request.IsSystemUser;
             var pJobTitle = request.JobTitle;
             var pLastLogin = request.LastLogin;
@@ -279,18 +279,18 @@ namespace Services.API
             var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.Get(request.Locale.Id) : null;
             var pLoginCount = request.LoginCount;
             var pName = request.Name;
-            var pRoles = request.Roles?.ToList();
-            var pScopes = request.Scopes?.ToList();
-            var pSessions = request.Sessions?.ToList();
+            var pRoles = GetVariable<Role>(request.Roles?.ToList(), request.RolesIds?.ToList());
+            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
+            var pSessions = GetVariable<Reference>(request.Sessions?.ToList(), request.SessionsIds?.ToList());
             var pSettings = request.Settings;
             var pSlack = request.Slack;
             var pStartDate = request.StartDate;
             var pStatus = request.Status;
-            var pTeams = request.Teams?.ToList();
-            var pTimeCards = request.TimeCards?.ToList();
-            var pUpdates = request.Updates?.ToList();
+            var pTeams = GetVariable<Reference>(request.Teams?.ToList(), request.TeamsIds?.ToList());
+            var pTimeCards = GetVariable<Reference>(request.TimeCards?.ToList(), request.TimeCardsIds?.ToList());
+            var pUpdates = GetVariable<Reference>(request.Updates?.ToList(), request.UpdatesIds?.ToList());
             var pUserType = (request.UserType?.Id > 0) ? DocEntityUserType.Get(request.UserType.Id) : null;
-            var pWorkflows = request.Workflows?.ToList();
+            var pWorkflows = GetVariable<Reference>(request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
 
             DocEntityUser entity = null;
             if(permission == DocConstantPermission.ADD)

@@ -155,7 +155,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pCategory = request.Category;
             var pEnum = DocEntityLookupTableEnum.Get(request.Enum);
-            var pLookups = request.Lookups?.ToList();
+            var pLookups = GetVariable<Reference>(request.Lookups?.ToList(), request.LookupsIds?.ToList());
             var pParentCategory = (request.ParentCategory?.Id > 0) ? DocEntityLookupCategory.Get(request.ParentCategory.Id) : null;
 
             DocEntityLookupCategory entity = null;

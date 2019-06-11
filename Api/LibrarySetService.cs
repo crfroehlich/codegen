@@ -283,11 +283,11 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pAdditionalCriteria = request.AdditionalCriteria;
-            var pCharacteristics = request.Characteristics?.ToList();
-            var pComparators = request.Comparators?.ToList();
+            var pCharacteristics = GetVariable<Reference>(request.Characteristics?.ToList(), request.CharacteristicsIds?.ToList());
+            var pComparators = GetVariable<Reference>(request.Comparators?.ToList(), request.ComparatorsIds?.ToList());
             var pGeneralScope = request.GeneralScope;
             var pIndications = request.Indications;
-            var pInterventions = request.Interventions?.ToList();
+            var pInterventions = GetVariable<Reference>(request.Interventions?.ToList(), request.InterventionsIds?.ToList());
             var pLibraryPackageId = request.LibraryPackageId;
             var pNotes = request.Notes;
             var pOriginalComparators = request.OriginalComparators;
@@ -295,15 +295,15 @@ namespace Services.API
             var pOriginalInterventions = request.OriginalInterventions;
             var pOriginalOutcomes = request.OriginalOutcomes;
             var pOriginalSearch = request.OriginalSearch;
-            var pOutcomes = request.Outcomes?.ToList();
+            var pOutcomes = GetVariable<Reference>(request.Outcomes?.ToList(), request.OutcomesIds?.ToList());
             var pParticipants = request.Participants;
-            var pProjects = request.Projects?.ToList();
+            var pProjects = GetVariable<Reference>(request.Projects?.ToList(), request.ProjectsIds?.ToList());
             var pSearchEnd = request.SearchEnd;
             var pSearchStart = request.SearchStart;
             var pSearchStrategy = request.SearchStrategy;
             var pSearchUpdated = request.SearchUpdated;
             var pSelectionCriteria = request.SelectionCriteria;
-            var pStudyDesigns = request.StudyDesigns?.ToList();
+            var pStudyDesigns = GetVariable<Reference>(request.StudyDesigns?.ToList(), request.StudyDesignsIds?.ToList());
             var pUpdateFrequency = request.UpdateFrequency;
 
             DocEntityLibrarySet entity = null;

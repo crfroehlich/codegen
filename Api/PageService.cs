@@ -149,12 +149,12 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Page>(DocConstantModelName.PAGE, nameof(Page), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pApps = request.Apps?.ToList();
+            var pApps = GetVariable<Reference>(request.Apps?.ToList(), request.AppsIds?.ToList());
             var pDescription = request.Description;
-            var pGlossary = request.Glossary?.ToList();
-            var pHelp = request.Help?.ToList();
+            var pGlossary = GetVariable<Reference>(request.Glossary?.ToList(), request.GlossaryIds?.ToList());
+            var pHelp = GetVariable<Reference>(request.Help?.ToList(), request.HelpIds?.ToList());
             var pName = request.Name;
-            var pRoles = request.Roles?.ToList();
+            var pRoles = GetVariable<Reference>(request.Roles?.ToList(), request.RolesIds?.ToList());
 
             DocEntityPage entity = null;
             if(permission == DocConstantPermission.ADD)

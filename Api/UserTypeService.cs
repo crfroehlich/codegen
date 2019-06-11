@@ -180,7 +180,7 @@ namespace Services.API
             DocEntityLookupTable pPayrollStatus = GetLookup(DocConstantLookupTable.USERPAYROLLSTATUS, request.PayrollStatus?.Name, request.PayrollStatus?.Id);
             DocEntityLookupTable pPayrollType = GetLookup(DocConstantLookupTable.USERPAYROLLTYPE, request.PayrollType?.Name, request.PayrollType?.Id);
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.USEREMPLOYEETYPE, request.Type?.Name, request.Type?.Id);
-            var pUsers = request.Users?.ToList();
+            var pUsers = GetVariable<Reference>(request.Users?.ToList(), request.UsersIds?.ToList());
 
             DocEntityUserType entity = null;
             if(permission == DocConstantPermission.ADD)

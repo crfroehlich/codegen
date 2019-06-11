@@ -171,8 +171,8 @@ namespace Services.API
             var pDescription = request.Description;
             var pIcon = request.Icon;
             var pOrder = request.Order;
-            var pPages = request.Pages?.ToList();
-            var pScopes = request.Scopes?.ToList();
+            var pPages = GetVariable<Reference>(request.Pages?.ToList(), request.PagesIds?.ToList());
+            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pTitle = request.Title;
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.HELP, request.Type?.Name, request.Type?.Id);
 

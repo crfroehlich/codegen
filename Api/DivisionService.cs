@@ -163,11 +163,11 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pClient = (request.Client?.Id > 0) ? DocEntityClient.Get(request.Client.Id) : null;
             var pDefaultLocale = (request.DefaultLocale?.Id > 0) ? DocEntityLocale.Get(request.DefaultLocale.Id) : null;
-            var pDocumentSets = request.DocumentSets?.ToList();
+            var pDocumentSets = GetVariable<Reference>(request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
             var pName = request.Name;
             var pRole = (request.Role?.Id > 0) ? DocEntityRole.Get(request.Role.Id) : null;
             var pSettings = request.Settings;
-            var pUsers = request.Users?.ToList();
+            var pUsers = GetVariable<Reference>(request.Users?.ToList(), request.UsersIds?.ToList());
 
             DocEntityDivision entity = null;
             if(permission == DocConstantPermission.ADD)

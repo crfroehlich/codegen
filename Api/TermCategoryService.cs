@@ -164,7 +164,7 @@ namespace Services.API
             DocEntityLookupTable pName = GetLookup(DocConstantLookupTable.TERMCATEGORY, request.Name?.Name, request.Name?.Id);
             var pParentCategory = (request.ParentCategory?.Id > 0) ? DocEntityTermCategory.Get(request.ParentCategory.Id) : null;
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
-            var pTerms = request.Terms?.ToList();
+            var pTerms = GetVariable<Reference>(request.Terms?.ToList(), request.TermsIds?.ToList());
 
             DocEntityTermCategory entity = null;
             if(permission == DocConstantPermission.ADD)

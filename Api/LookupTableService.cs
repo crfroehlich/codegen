@@ -153,9 +153,9 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<LookupTable>(DocConstantModelName.LOOKUPTABLE, nameof(LookupTable), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pBindings = request.Bindings?.ToList();
-            var pCategories = request.Categories?.ToList();
-            var pDocuments = request.Documents?.ToList();
+            var pBindings = GetVariable<Reference>(request.Bindings?.ToList(), request.BindingsIds?.ToList());
+            var pCategories = GetVariable<Reference>(request.Categories?.ToList(), request.CategoriesIds?.ToList());
+            var pDocuments = GetVariable<Reference>(request.Documents?.ToList(), request.DocumentsIds?.ToList());
             var pEnum = DocEntityLookupTableEnum.Get(request.Enum);
             var pName = request.Name;
 

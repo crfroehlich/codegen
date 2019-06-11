@@ -181,19 +181,19 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Workflow>(DocConstantModelName.WORKFLOW, nameof(Workflow), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pBindings = request.Bindings?.ToList();
+            var pBindings = GetVariable<Reference>(request.Bindings?.ToList(), request.BindingsIds?.ToList());
             var pData = request.Data;
             var pDescription = request.Description;
-            var pDocuments = request.Documents?.ToList();
+            var pDocuments = GetVariable<Reference>(request.Documents?.ToList(), request.DocumentsIds?.ToList());
             var pName = request.Name;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityWorkflow.Get(request.Owner.Id) : null;
-            var pScopes = request.Scopes?.ToList();
+            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pStatus = request.Status;
-            var pTasks = request.Tasks?.ToList();
+            var pTasks = GetVariable<Reference>(request.Tasks?.ToList(), request.TasksIds?.ToList());
             var pType = request.Type;
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
-            var pVariables = request.Variables?.ToList();
-            var pWorkflows = request.Workflows?.ToList();
+            var pVariables = GetVariable<Reference>(request.Variables?.ToList(), request.VariablesIds?.ToList());
+            var pWorkflows = GetVariable<Reference>(request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
 
             DocEntityWorkflow entity = null;
             if(permission == DocConstantPermission.ADD)

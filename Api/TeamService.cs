@@ -170,17 +170,17 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Team>(DocConstantModelName.TEAM, nameof(Team), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pAdminRoles = request.AdminRoles?.ToList();
+            var pAdminRoles = GetVariable<Reference>(request.AdminRoles?.ToList(), request.AdminRolesIds?.ToList());
             var pDescription = request.Description;
             var pEmail = request.Email;
             var pIsInternal = request.IsInternal;
             var pName = request.Name;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityUser.Get(request.Owner.Id) : null;
-            var pScopes = request.Scopes?.ToList();
+            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSettings = request.Settings;
             var pSlack = request.Slack;
-            var pUpdates = request.Updates?.ToList();
-            var pUsers = request.Users?.ToList();
+            var pUpdates = GetVariable<Reference>(request.Updates?.ToList(), request.UpdatesIds?.ToList());
+            var pUsers = GetVariable<Reference>(request.Users?.ToList(), request.UsersIds?.ToList());
 
             DocEntityTeam entity = null;
             if(permission == DocConstantPermission.ADD)

@@ -254,7 +254,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pCompletedOn = request.CompletedOn;
-            var pDataSets = request.DataSets?.ToList();
+            var pDataSets = GetVariable<Reference>(request.DataSets?.ToList(), request.DataSetsIds?.ToList());
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
             var pErrorData = request.ErrorData;
             var pExtractUrl = request.ExtractUrl;

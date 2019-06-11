@@ -165,8 +165,8 @@ namespace Services.API
             var pBoundName = request.BoundName;
             DocEntityLookupTable pLookupTable = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.LookupTable?.Name, request.LookupTable?.Id);
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
-            var pSynonyms = request.Synonyms?.ToList();
-            var pWorkflows = request.Workflows?.ToList();
+            var pSynonyms = GetVariable<Reference>(request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
+            var pWorkflows = GetVariable<Reference>(request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
 
             DocEntityLookupTableBinding entity = null;
             if(permission == DocConstantPermission.ADD)

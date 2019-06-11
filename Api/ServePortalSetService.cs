@@ -192,7 +192,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<ServePortalSet>(DocConstantModelName.SERVEPORTALSET, nameof(ServePortalSet), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pInterventions = request.Interventions?.ToList();
+            var pInterventions = GetVariable<Reference>(request.Interventions?.ToList(), request.InterventionsIds?.ToList());
 
             DocEntityServePortalSet entity = null;
             if(permission == DocConstantPermission.ADD)

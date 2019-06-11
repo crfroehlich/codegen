@@ -285,30 +285,30 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pAdditionalCriteria = request.AdditionalCriteria;
-            var pCharacteristics = request.Characteristics?.ToList();
-            var pComparators = request.Comparators?.ToList();
+            var pCharacteristics = GetVariable<Reference>(request.Characteristics?.ToList(), request.CharacteristicsIds?.ToList());
+            var pComparators = GetVariable<Reference>(request.Comparators?.ToList(), request.ComparatorsIds?.ToList());
             var pDataCollection = request.DataCollection;
             var pEvidencePortalId = request.EvidencePortalId;
             var pExtractionProtocol = request.ExtractionProtocol;
             var pFqId = request.FqId;
             var pFramedQuestionId = request.FramedQuestionId;
             var pGeneralScope = request.GeneralScope;
-            var pImports = request.Imports?.ToList();
+            var pImports = GetVariable<Reference>(request.Imports?.ToList(), request.ImportsIds?.ToList());
             var pIndications = request.Indications;
-            var pInterventions = request.Interventions?.ToList();
+            var pInterventions = GetVariable<Reference>(request.Interventions?.ToList(), request.InterventionsIds?.ToList());
             var pNotes = request.Notes;
             var pOriginalComparators = request.OriginalComparators;
             var pOriginalDatabase = request.OriginalDatabase;
             var pOriginalDesigns = request.OriginalDesigns;
             var pOriginalInterventions = request.OriginalInterventions;
             var pOriginalOutcomes = request.OriginalOutcomes;
-            var pOutcomes = request.Outcomes?.ToList();
+            var pOutcomes = GetVariable<Reference>(request.Outcomes?.ToList(), request.OutcomesIds?.ToList());
             var pParticipants = request.Participants;
             var pPrismaWorkflow = (request.PrismaWorkflow?.Id > 0) ? DocEntityWorkflow.Get(request.PrismaWorkflow.Id) : null;
-            var pProjects = request.Projects?.ToList();
+            var pProjects = GetVariable<Reference>(request.Projects?.ToList(), request.ProjectsIds?.ToList());
             var pShowEtw = request.ShowEtw;
             var pShowPublicationType = request.ShowPublicationType;
-            var pStudyDesigns = request.StudyDesigns?.ToList();
+            var pStudyDesigns = GetVariable<Reference>(request.StudyDesigns?.ToList(), request.StudyDesignsIds?.ToList());
 
             DocEntityDataSet entity = null;
             if(permission == DocConstantPermission.ADD)

@@ -220,22 +220,22 @@ namespace Services.API
             var pBase = request.Base;
             var pCacheDuration = request.CacheDuration;
             var pClassId = request.ClassId;
-            var pCustomCollections = request.CustomCollections?.ToList();
+            var pCustomCollections = GetVariable<Reference>(request.CustomCollections?.ToList(), request.CustomCollectionsIds?.ToList());
             var pDELETE = request.DELETE;
             var pDescription = request.Description;
-            var pDontFlattenProperties = request.DontFlattenProperties?.ToList();
+            var pDontFlattenProperties = GetVariable<Reference>(request.DontFlattenProperties?.ToList(), request.DontFlattenPropertiesIds?.ToList());
             var pDtoSuffix = request.DtoSuffix;
             var pFlattenReferences = request.FlattenReferences;
             var pGET = request.GET;
-            var pIgnoreProps = request.IgnoreProps?.ToList();
+            var pIgnoreProps = GetVariable<Reference>(request.IgnoreProps?.ToList(), request.IgnorePropsIds?.ToList());
             var pIsInsertOnly = request.IsInsertOnly;
             var pIsReadOnly = request.IsReadOnly;
             var pName = request.Name;
             var pPATCH = request.PATCH;
             var pPOST = request.POST;
-            var pProperties = request.Properties?.ToList();
+            var pProperties = GetVariable<DataProperty>(request.Properties?.ToList(), request.PropertiesIds?.ToList());
             var pPUT = request.PUT;
-            var pTabs = request.Tabs?.ToList();
+            var pTabs = GetVariable<DataTab>(request.Tabs?.ToList(), request.TabsIds?.ToList());
 
             DocEntityDataClass entity = null;
             if(permission == DocConstantPermission.ADD)

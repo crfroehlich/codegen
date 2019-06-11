@@ -202,7 +202,7 @@ namespace Services.API
             var pEnabled = request.Enabled;
             var pFrequency = request.Frequency;
             var pHistoryRetention = request.HistoryRetention;
-            var pItems = request.Items?.ToList();
+            var pItems = GetVariable<Reference>(request.Items?.ToList(), request.ItemsIds?.ToList());
             var pKeepHistory = request.KeepHistory;
             var pLastRunVersion = request.LastRunVersion;
             var pLogError = request.LogError;
@@ -211,7 +211,7 @@ namespace Services.API
             var pRowsToProcessPerIteration = request.RowsToProcessPerIteration;
             var pRunNow = request.RunNow;
             var pStartAt = request.StartAt;
-            var pTaskHistory = request.TaskHistory?.ToList();
+            var pTaskHistory = GetVariable<Reference>(request.TaskHistory?.ToList(), request.TaskHistoryIds?.ToList());
 
             DocEntityBackgroundTask entity = null;
             if(permission == DocConstantPermission.ADD)
