@@ -122,7 +122,8 @@ namespace Services.Dto
     }
 
 
-    [Route("/file/{Id}", "GET")]
+    [Route("/file", "POST")]
+    [Route("/file/{Id}", "GET, PATCH, PUT, DELETE")]
 
     public partial class File : FileBase, IReturn<File>, IDto, ICloneable
     {
@@ -179,6 +180,9 @@ namespace Services.Dto
     }
     
 
+    [Route("/file/{Id}/copy", "POST")]
+    public partial class FileCopy : File {}
+
     public partial class FileSearchBase : Search<File>
     {
         public int? Id { get; set; }
@@ -234,6 +238,8 @@ namespace Services.Dto
         public bool doType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(File.Type))); }
     }
 
+
+    [Route("/file/batch", "DELETE, PATCH, POST, PUT")]
 
     public partial class FileBatch : List<File> { }
 

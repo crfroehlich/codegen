@@ -137,9 +137,474 @@ namespace Services.API
 
 
 
+        private File _AssignValues(File request, DocConstantPermission permission, Session session)
+        {
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+                throw new HttpError(HttpStatusCode.NotFound, $"No record");
+
+            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "File"))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+
+            request.Select = request.Select ?? new List<string>();
+
+            File ret = null;
+            request = _InitAssignValues<File>(request, permission, session);
+            //In case init assign handles create for us, return it
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<File>(DocConstantModelName.FILE, nameof(File), request);
+            
+            //First, assign all the variables, do database lookups and conversions
+            var pCost = request.Cost;
+            var pFileLabel = request.FileLabel;
+            var pFileName = request.FileName;
+            var pOriginalFileName = request.OriginalFileName;
+            var pRights = request.Rights;
+            var pScopes = request.Scopes?.ToList();
+            var pSource = request.Source;
+            var pType = request.Type;
+
+            DocEntityFile entity = null;
+            if(permission == DocConstantPermission.ADD)
+            {
+                var now = DateTime.UtcNow;
+                entity = new DocEntityFile(session)
+                {
+                    Created = now,
+                    Updated = now
+                };
+            }
+            else
+            {
+                entity = DocEntityFile.Get(request.Id);
+                if(null == entity)
+                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
+            }
+
+            //Special case for Archived
+            var pArchived = true == request.Archived;
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.FILE, nameof(request.Archived)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
+                    entity.Archived = pArchived;
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.Archived));
+                }
+            }
+
+            if (DocPermissionFactory.IsRequestedHasPermission<decimal?>(currentUser, request, pCost, permission, DocConstantModelName.FILE, nameof(request.Cost)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pCost, entity.Cost, nameof(request.Cost)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Cost)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Cost)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pCost) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Cost))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Cost)} requires a value.");
+                    entity.Cost = pCost;
+                if(DocPermissionFactory.IsRequested<decimal?>(request, pCost, nameof(request.Cost)) && !request.Select.Matches(nameof(request.Cost), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.Cost));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pFileLabel, permission, DocConstantModelName.FILE, nameof(request.FileLabel)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pFileLabel, entity.FileLabel, nameof(request.FileLabel)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.FileLabel)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FileLabel)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pFileLabel) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.FileLabel))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.FileLabel)} requires a value.");
+                    entity.FileLabel = pFileLabel;
+                if(DocPermissionFactory.IsRequested<string>(request, pFileLabel, nameof(request.FileLabel)) && !request.Select.Matches(nameof(request.FileLabel), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.FileLabel));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pFileName, permission, DocConstantModelName.FILE, nameof(request.FileName)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pFileName, entity.FileName, nameof(request.FileName)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.FileName)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FileName)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pFileName) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.FileName))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.FileName)} requires a value.");
+                    entity.FileName = pFileName;
+                if(DocPermissionFactory.IsRequested<string>(request, pFileName, nameof(request.FileName)) && !request.Select.Matches(nameof(request.FileName), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.FileName));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pOriginalFileName, permission, DocConstantModelName.FILE, nameof(request.OriginalFileName)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pOriginalFileName, entity.OriginalFileName, nameof(request.OriginalFileName)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.OriginalFileName)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.OriginalFileName)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pOriginalFileName) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.OriginalFileName))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.OriginalFileName)} requires a value.");
+                    entity.OriginalFileName = pOriginalFileName;
+                if(DocPermissionFactory.IsRequested<string>(request, pOriginalFileName, nameof(request.OriginalFileName)) && !request.Select.Matches(nameof(request.OriginalFileName), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.OriginalFileName));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<FileRightsEnm?>(currentUser, request, pRights, permission, DocConstantModelName.FILE, nameof(request.Rights)))
+            {
+                if(DocPermissionFactory.IsRequested(request, (int?) pRights, (int) entity.Rights, nameof(request.Rights)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Rights)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Rights)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pRights) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Rights))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Rights)} requires a value.");
+                    if(null != pRights)
+                        entity.Rights = pRights.Value;
+                if(DocPermissionFactory.IsRequested<FileRightsEnm?>(request, pRights, nameof(request.Rights)) && !request.Select.Matches(nameof(request.Rights), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.Rights));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<FileSourceEnm?>(currentUser, request, pSource, permission, DocConstantModelName.FILE, nameof(request.Source)))
+            {
+                if(DocPermissionFactory.IsRequested(request, (int?) pSource, (int) entity.Source, nameof(request.Source)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Source)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Source)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pSource) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Source))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Source)} requires a value.");
+                    if(null != pSource)
+                        entity.Source = pSource.Value;
+                if(DocPermissionFactory.IsRequested<FileSourceEnm?>(request, pSource, nameof(request.Source)) && !request.Select.Matches(nameof(request.Source), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.Source));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<FileTypeEnm?>(currentUser, request, pType, permission, DocConstantModelName.FILE, nameof(request.Type)))
+            {
+                if(DocPermissionFactory.IsRequested(request, (int?) pType, (int) entity.Type, nameof(request.Type)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
+                    if(null != pType)
+                        entity.Type = pType.Value;
+                if(DocPermissionFactory.IsRequested<FileTypeEnm?>(request, pType, nameof(request.Type)) && !request.Select.Matches(nameof(request.Type), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.Type));
+                }
+            }
+
+            if (request.Locked) entity.Locked = request.Locked;
+
+            entity.SaveChanges(permission);
+
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopes, permission, DocConstantModelName.FILE, nameof(request.Scopes)))
+            {
+                if (true == pScopes?.Any() )
+                {
+                    var requestedScopes = pScopes.Select(p => p.Id).Distinct().ToList();
+                    var existsScopes = Execute.SelectAll<DocEntityScope>().Where(e => e.Id.In(requestedScopes)).Select( e => e.Id ).ToList();
+                    if (existsScopes.Count != requestedScopes.Count)
+                    {
+                        var nonExists = requestedScopes.Where(id => existsScopes.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Scopes with objects that do not exist. No matching Scopes(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedScopes.Where(id => entity.Scopes.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityScope.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(File), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(File)}");
+                        entity.Scopes.Add(target);
+                    });
+                    var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityScope.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(File), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(File)}");
+                        entity.Scopes.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.Scopes.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityScope.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(File), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(File)}");
+                        entity.Scopes.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pScopes, nameof(request.Scopes)) && !request.Select.Matches(nameof(request.Scopes), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.Scopes));
+                }
+            }
+            DocPermissionFactory.SetSelect<File>(currentUser, nameof(File), request.Select);
+            ret = entity.ToDto();
+
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.FILE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FILE, cacheExpires);
+
+            return ret;
+        }
+
+
+        public File Post(File request)
+        {
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+
+            request.Select = request.Select ?? new List<string>();
+
+            File ret = null;
+
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "File")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
+            return ret;
+        }
+   
+        public List<File> Post(FileBatch request)
+        {
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+
+            var ret = new List<File>();
+            var errors = new List<ResponseError>();
+            var errorMap = new Dictionary<string, string>();
+            var i = 0;
+            request.ForEach(dto =>
+            {
+                try
+                {
+                    var obj = Post(dto) as File;
+                    ret.Add(obj);
+                    errorMap[$"{i}"] = $"{obj.Id}";
+                }
+                catch (Exception ex)
+                {
+                    errorMap[$"{i}"] = null;
+                    errors.Add(new ResponseError()
+                    {
+                        Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
+                        ErrorCode = $"{i}"
+                    });
+                }
+                i += 1;
+            });
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{ret.Count} succeeded");
+            if (errors.Any())
+            {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
+                            ErrorCode = nameof(HttpError),
+                            Meta = errorMap,
+                            Message = "Incomplete request",
+                            Errors = errors
+                        }
+                    }
+                };
+            }
+            return ret;
+        }
+
+        public File Post(FileCopy request)
+        {
+            File ret = null;
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityFile.Get(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+
+                    var pCost = entity.Cost;
+                    var pFileLabel = entity.FileLabel;
+                    if(!DocTools.IsNullOrEmpty(pFileLabel))
+                        pFileLabel += " (Copy)";
+                    var pFileName = entity.FileName;
+                    if(!DocTools.IsNullOrEmpty(pFileName))
+                        pFileName += " (Copy)";
+                    var pOriginalFileName = entity.OriginalFileName;
+                    if(!DocTools.IsNullOrEmpty(pOriginalFileName))
+                        pOriginalFileName += " (Copy)";
+                    var pRights = entity.Rights;
+                    var pScopes = entity.Scopes.ToList();
+                    var pSource = entity.Source;
+                    var pType = entity.Type;
+                    var copy = new DocEntityFile(ssn)
+                    {
+                        Hash = Guid.NewGuid()
+                                , Cost = pCost
+                                , FileLabel = pFileLabel
+                                , FileName = pFileName
+                                , OriginalFileName = pOriginalFileName
+                                , Rights = pRights
+                                , Source = pSource
+                                , Type = pType
+                    };
+                            foreach(var item in pScopes)
+                            {
+                                entity.Scopes.Add(item);
+                            }
+
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
+            return ret;
+        }
 
 
 
+        public List<File> Put(FileBatch request)
+        {
+            return Patch(request);
+        }
+
+        public File Put(File request)
+        {
+            return Patch(request);
+        }
+
+
+        public List<File> Patch(FileBatch request)
+        {
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+
+            var ret = new List<File>();
+            var errors = new List<ResponseError>();
+            var errorMap = new Dictionary<string, string>();
+            var i = 0;
+            request.ForEach(dto =>
+            {
+                try
+                {
+                    var obj = Patch(dto) as File;
+                    ret.Add(obj);
+                    errorMap[$"{i}"] = $"true";
+                }
+                catch (Exception ex)
+                {
+                    errorMap[$"{i}"] = $"false";
+                    errors.Add(new ResponseError()
+                    {
+                        Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
+                        ErrorCode = $"{i}"
+                    });
+                }
+                i += 1;
+            });
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{ret.Count} succeeded");
+            if (errors.Any())
+            {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
+                            ErrorCode = nameof(HttpError),
+                            Meta = errorMap,
+                            Message = "Incomplete request",
+                            Errors = errors
+                        }
+                    }
+                };
+            }
+            return ret;
+        }
+
+        public File Patch(File request)
+        {
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the File to patch.");
+            
+            request.Select = request.Select ?? new List<string>();
+            
+            File ret = null;
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
+            return ret;
+        }
+
+
+        public void Delete(FileBatch request)
+        {
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+
+            var errors = new List<ResponseError>();
+            var errorMap = new Dictionary<string, string>();
+            var i = 0;
+            request.ForEach(dto =>
+            {
+                try
+                {
+                    Delete(dto);
+                    errorMap[$"{i}"] = $"true";
+                }
+                catch (Exception ex)
+                {
+                    errorMap[$"{i}"] = $"false";
+                    errors.Add(new ResponseError()
+                    {
+                        Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
+                        ErrorCode = $"{i}"
+                    });
+                }
+                i += 1;
+            });
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{request.Count-errors.Count} succeeded");
+            if (errors.Any())
+            {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
+                            ErrorCode = nameof(HttpError),
+                            Meta = errorMap,
+                            Message = "Incomplete request",
+                            Errors = errors
+                        }
+                    }
+                };
+            }
+        }
+
+        public void Delete(File request)
+        {
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                    var en = DocEntityFile.Get(request?.Id);
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No File could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
+                
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                
+                    en.Remove();
+
+                    DocCacheClient.RemoveSearch(DocConstantModelName.FILE);
+                    DocCacheClient.RemoveById(request.Id);
+                });
+            }
+        }
+
+        public void Delete(FileSearch request)
+        {
+            var matches = Get(request) as List<File>;
+            if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
+        }
 
 
         public object Get(FileJunction request)
@@ -159,6 +624,40 @@ namespace Services.API
             }
         }
 
+
+        public object Post(FileJunction request)
+        {
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
+                    case "comment":
+                        return AddJunction<File, DocEntityFile, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "favorite":
+                        return AddJunction<File, DocEntityFile, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "scope":
+                        return AddJunction<File, DocEntityFile, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<File, DocEntityFile, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for file/{request.Id}/{request.Junction} was not found");
+            }
+        }
+
+        public object Delete(FileJunction request)
+        {    
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
+                    case "comment":
+                        return RemoveJunction<File, DocEntityFile, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "favorite":
+                        return RemoveJunction<File, DocEntityFile, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "scope":
+                        return RemoveJunction<File, DocEntityFile, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<File, DocEntityFile, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for file/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
 
         private File GetFile(File request)

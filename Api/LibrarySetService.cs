@@ -1140,6 +1140,8 @@ namespace Services.API
                         return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
+                    case "file":
+                        return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "Files", request, (ss) => HostContext.ResolveService<FileService>(Request)?.Get(ss));
                     case "documentsethistory":
                         return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityDocumentSetHistory, DocumentSetHistory, DocumentSetHistorySearch>((int)request.Id, DocConstantModelName.DOCUMENTSETHISTORY, "Histories", request, (ss) => HostContext.ResolveService<DocumentSetHistoryService>(Request)?.Get(ss));
                     case "interventions":
@@ -1182,6 +1184,8 @@ namespace Services.API
                         return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
                         return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "file":
+                        return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "Files", request);
                     case "interventions":
                         return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Interventions", request);
                     case "outcomes":
@@ -1217,6 +1221,8 @@ namespace Services.API
                         return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
                         return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "file":
+                        return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "Files", request);
                     case "interventions":
                         return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Interventions", request);
                     case "outcomes":
