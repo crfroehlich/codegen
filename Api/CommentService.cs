@@ -141,7 +141,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Comment>(DocConstantModelName.COMMENT, nameof(Comment), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
+            var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pText = request.Text;
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityBase.Get(request.Owner.Id) : null;

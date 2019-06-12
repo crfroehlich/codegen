@@ -140,7 +140,7 @@ namespace Services.API
             var pDescription = request.Description;
             var pName = request.Name;
             var pPermissionTemplate = request.PermissionTemplate;
-            var pRoles = GetVariable<Reference>(request.Roles?.ToList(), request.RolesIds?.ToList());
+            var pRoles = GetVariable<Reference>(request, nameof(request.Roles), request.Roles?.ToList(), request.RolesIds?.ToList());
 
             DocEntityFeatureSet entity = null;
             if(permission == DocConstantPermission.ADD)

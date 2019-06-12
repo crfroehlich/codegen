@@ -148,7 +148,7 @@ namespace Services.API
             var pData = request.Data;
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
             var pRule = (request.Rule?.Id > 0) ? DocEntityVariableRule.Get(request.Rule.Id) : null;
-            var pWorkflows = GetVariable<Reference>(request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
+            var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
 
             DocEntityVariableInstance entity = null;
             if(permission == DocConstantPermission.ADD)

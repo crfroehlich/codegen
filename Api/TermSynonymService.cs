@@ -160,7 +160,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pApproved = request.Approved;
-            var pBindings = GetVariable<Reference>(request.Bindings?.ToList(), request.BindingsIds?.ToList());
+            var pBindings = GetVariable<Reference>(request, nameof(request.Bindings), request.Bindings?.ToList(), request.BindingsIds?.ToList());
             var pMaster = (request.Master?.Id > 0) ? DocEntityTermMaster.Get(request.Master.Id) : null;
             var pPreferred = request.Preferred;
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;

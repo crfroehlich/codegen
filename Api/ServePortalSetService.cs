@@ -259,23 +259,23 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<ServePortalSet>(DocConstantModelName.SERVEPORTALSET, nameof(ServePortalSet), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pClients = GetVariable<Reference>(request.Clients?.ToList(), request.ClientsIds?.ToList());
+            var pClients = GetVariable<Reference>(request, nameof(request.Clients), request.Clients?.ToList(), request.ClientsIds?.ToList());
             var pConfidential = request.Confidential;
-            var pDivisions = GetVariable<Reference>(request.Divisions?.ToList(), request.DivisionsIds?.ToList());
-            var pDocuments = GetVariable<Reference>(request.Documents?.ToList(), request.DocumentsIds?.ToList());
-            var pDocumentSets = GetVariable<Reference>(request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
-            var pDrugClasses = GetVariable<Reference>(request.DrugClasses?.ToList(), request.DrugClassesIds?.ToList());
-            var pHistories = GetVariable<Reference>(request.Histories?.ToList(), request.HistoriesIds?.ToList());
-            var pInterventions = GetVariable<Reference>(request.Interventions?.ToList(), request.InterventionsIds?.ToList());
+            var pDivisions = GetVariable<Reference>(request, nameof(request.Divisions), request.Divisions?.ToList(), request.DivisionsIds?.ToList());
+            var pDocuments = GetVariable<Reference>(request, nameof(request.Documents), request.Documents?.ToList(), request.DocumentsIds?.ToList());
+            var pDocumentSets = GetVariable<Reference>(request, nameof(request.DocumentSets), request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
+            var pDrugClasses = GetVariable<Reference>(request, nameof(request.DrugClasses), request.DrugClasses?.ToList(), request.DrugClassesIds?.ToList());
+            var pHistories = GetVariable<Reference>(request, nameof(request.Histories), request.Histories?.ToList(), request.HistoriesIds?.ToList());
+            var pInterventions = GetVariable<Reference>(request, nameof(request.Interventions), request.Interventions?.ToList(), request.InterventionsIds?.ToList());
             var pLegacyDocumentSetId = request.LegacyDocumentSetId;
             var pName = request.Name;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityDocumentSet.Get(request.Owner.Id) : null;
             var pProjectTeam = (request.ProjectTeam?.Id > 0) ? DocEntityTeam.Get(request.ProjectTeam.Id) : null;
-            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
+            var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSettings = request.Settings;
-            var pStats = GetVariable<Reference>(request.Stats?.ToList(), request.StatsIds?.ToList());
+            var pStats = GetVariable<Reference>(request, nameof(request.Stats), request.Stats?.ToList(), request.StatsIds?.ToList());
             var pType = request.Type;
-            var pUsers = GetVariable<Reference>(request.Users?.ToList(), request.UsersIds?.ToList());
+            var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
 
             DocEntityServePortalSet entity = null;
             if(permission == DocConstantPermission.ADD)

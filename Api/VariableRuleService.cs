@@ -181,13 +181,13 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<VariableRule>(DocConstantModelName.VARIABLERULE, nameof(VariableRule), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pChildren = GetVariable<Reference>(request.Children?.ToList(), request.ChildrenIds?.ToList());
+            var pChildren = GetVariable<Reference>(request, nameof(request.Children), request.Children?.ToList(), request.ChildrenIds?.ToList());
             var pDefinition = request.Definition;
-            var pInstances = GetVariable<Reference>(request.Instances?.ToList(), request.InstancesIds?.ToList());
+            var pInstances = GetVariable<Reference>(request, nameof(request.Instances), request.Instances?.ToList(), request.InstancesIds?.ToList());
             var pName = request.Name;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityVariableRule.Get(request.Owner.Id) : null;
             DocEntityLookupTable pRule = GetLookup(DocConstantLookupTable.VARIABLERULE, request.Rule?.Name, request.Rule?.Id);
-            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
+            var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.VARIABLETYPE, request.Type?.Name, request.Type?.Id);
 
             DocEntityVariableRule entity = null;

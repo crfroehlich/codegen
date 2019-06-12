@@ -178,14 +178,14 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pBioPortal = request.BioPortal;
-            var pCategories = GetVariable<TermCategory>(request.Categories?.ToList(), request.CategoriesIds?.ToList());
+            var pCategories = GetVariable<TermCategory>(request, nameof(request.Categories), request.Categories?.ToList(), request.CategoriesIds?.ToList());
             var pCUI = request.CUI;
             var pEnum = DocEntityLookupTableEnum.Get(request.Enum);
             var pMedDRA = request.MedDRA;
             var pName = request.Name;
             var pRxNorm = request.RxNorm;
             var pSNOWMED = request.SNOWMED;
-            var pSynonyms = GetVariable<Reference>(request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
+            var pSynonyms = GetVariable<Reference>(request, nameof(request.Synonyms), request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
             var pTUI = request.TUI;
             var pURI = request.URI;
 

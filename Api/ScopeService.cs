@@ -226,24 +226,24 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pApp = (request.App?.Id > 0) ? DocEntityApp.Get(request.App.Id) : null;
-            var pBindings = GetVariable<Reference>(request.Bindings?.ToList(), request.BindingsIds?.ToList());
-            var pBroadcasts = GetVariable<Reference>(request.Broadcasts?.ToList(), request.BroadcastsIds?.ToList());
+            var pBindings = GetVariable<Reference>(request, nameof(request.Bindings), request.Bindings?.ToList(), request.BindingsIds?.ToList());
+            var pBroadcasts = GetVariable<Reference>(request, nameof(request.Broadcasts), request.Broadcasts?.ToList(), request.BroadcastsIds?.ToList());
             var pClient = (request.Client?.Id > 0) ? DocEntityClient.Get(request.Client.Id) : null;
             var pDelete = request.Delete;
             var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.Get(request.DocumentSet.Id) : null;
             var pEdit = request.Edit;
-            var pFiles = GetVariable<Reference>(request.Files?.ToList(), request.FilesIds?.ToList());
-            var pHelp = GetVariable<Reference>(request.Help?.ToList(), request.HelpIds?.ToList());
+            var pFiles = GetVariable<Reference>(request, nameof(request.Files), request.Files?.ToList(), request.FilesIds?.ToList());
+            var pHelp = GetVariable<Reference>(request, nameof(request.Help), request.Help?.ToList(), request.HelpIds?.ToList());
             var pIsGlobal = request.IsGlobal;
-            var pScopedComments = GetVariable<Reference>(request.ScopedComments?.ToList(), request.ScopedCommentsIds?.ToList());
-            var pScopedTags = GetVariable<Reference>(request.ScopedTags?.ToList(), request.ScopedTagsIds?.ToList());
-            var pSynonyms = GetVariable<Reference>(request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
+            var pScopedComments = GetVariable<Reference>(request, nameof(request.ScopedComments), request.ScopedComments?.ToList(), request.ScopedCommentsIds?.ToList());
+            var pScopedTags = GetVariable<Reference>(request, nameof(request.ScopedTags), request.ScopedTags?.ToList(), request.ScopedTagsIds?.ToList());
+            var pSynonyms = GetVariable<Reference>(request, nameof(request.Synonyms), request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
             var pTeam = (request.Team?.Id > 0) ? DocEntityTeam.Get(request.Team.Id) : null;
             var pType = request.Type;
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
-            var pVariableRules = GetVariable<Reference>(request.VariableRules?.ToList(), request.VariableRulesIds?.ToList());
+            var pVariableRules = GetVariable<Reference>(request, nameof(request.VariableRules), request.VariableRules?.ToList(), request.VariableRulesIds?.ToList());
             var pView = request.View;
-            var pWorkflows = GetVariable<Reference>(request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
+            var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
 
             DocEntityScope entity = null;
             if(permission == DocConstantPermission.ADD)

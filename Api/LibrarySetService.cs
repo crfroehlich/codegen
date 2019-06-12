@@ -346,17 +346,17 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pAdditionalCriteria = request.AdditionalCriteria;
-            var pCharacteristics = GetVariable<Reference>(request.Characteristics?.ToList(), request.CharacteristicsIds?.ToList());
-            var pClients = GetVariable<Reference>(request.Clients?.ToList(), request.ClientsIds?.ToList());
-            var pComparators = GetVariable<Reference>(request.Comparators?.ToList(), request.ComparatorsIds?.ToList());
+            var pCharacteristics = GetVariable<Reference>(request, nameof(request.Characteristics), request.Characteristics?.ToList(), request.CharacteristicsIds?.ToList());
+            var pClients = GetVariable<Reference>(request, nameof(request.Clients), request.Clients?.ToList(), request.ClientsIds?.ToList());
+            var pComparators = GetVariable<Reference>(request, nameof(request.Comparators), request.Comparators?.ToList(), request.ComparatorsIds?.ToList());
             var pConfidential = request.Confidential;
-            var pDivisions = GetVariable<Reference>(request.Divisions?.ToList(), request.DivisionsIds?.ToList());
-            var pDocuments = GetVariable<Reference>(request.Documents?.ToList(), request.DocumentsIds?.ToList());
-            var pDocumentSets = GetVariable<Reference>(request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
+            var pDivisions = GetVariable<Reference>(request, nameof(request.Divisions), request.Divisions?.ToList(), request.DivisionsIds?.ToList());
+            var pDocuments = GetVariable<Reference>(request, nameof(request.Documents), request.Documents?.ToList(), request.DocumentsIds?.ToList());
+            var pDocumentSets = GetVariable<Reference>(request, nameof(request.DocumentSets), request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
             var pGeneralScope = request.GeneralScope;
-            var pHistories = GetVariable<Reference>(request.Histories?.ToList(), request.HistoriesIds?.ToList());
+            var pHistories = GetVariable<Reference>(request, nameof(request.Histories), request.Histories?.ToList(), request.HistoriesIds?.ToList());
             var pIndications = request.Indications;
-            var pInterventions = GetVariable<Reference>(request.Interventions?.ToList(), request.InterventionsIds?.ToList());
+            var pInterventions = GetVariable<Reference>(request, nameof(request.Interventions), request.Interventions?.ToList(), request.InterventionsIds?.ToList());
             var pLegacyDocumentSetId = request.LegacyDocumentSetId;
             var pLibraryPackageId = request.LibraryPackageId;
             var pName = request.Name;
@@ -366,23 +366,23 @@ namespace Services.API
             var pOriginalInterventions = request.OriginalInterventions;
             var pOriginalOutcomes = request.OriginalOutcomes;
             var pOriginalSearch = request.OriginalSearch;
-            var pOutcomes = GetVariable<Reference>(request.Outcomes?.ToList(), request.OutcomesIds?.ToList());
+            var pOutcomes = GetVariable<Reference>(request, nameof(request.Outcomes), request.Outcomes?.ToList(), request.OutcomesIds?.ToList());
             var pOwner = (request.Owner?.Id > 0) ? DocEntityDocumentSet.Get(request.Owner.Id) : null;
             var pParticipants = request.Participants;
-            var pProjects = GetVariable<Reference>(request.Projects?.ToList(), request.ProjectsIds?.ToList());
+            var pProjects = GetVariable<Reference>(request, nameof(request.Projects), request.Projects?.ToList(), request.ProjectsIds?.ToList());
             var pProjectTeam = (request.ProjectTeam?.Id > 0) ? DocEntityTeam.Get(request.ProjectTeam.Id) : null;
-            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
+            var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSearchEnd = request.SearchEnd;
             var pSearchStart = request.SearchStart;
             var pSearchStrategy = request.SearchStrategy;
             var pSearchUpdated = request.SearchUpdated;
             var pSelectionCriteria = request.SelectionCriteria;
             var pSettings = request.Settings;
-            var pStats = GetVariable<Reference>(request.Stats?.ToList(), request.StatsIds?.ToList());
-            var pStudyDesigns = GetVariable<Reference>(request.StudyDesigns?.ToList(), request.StudyDesignsIds?.ToList());
+            var pStats = GetVariable<Reference>(request, nameof(request.Stats), request.Stats?.ToList(), request.StatsIds?.ToList());
+            var pStudyDesigns = GetVariable<Reference>(request, nameof(request.StudyDesigns), request.StudyDesigns?.ToList(), request.StudyDesignsIds?.ToList());
             var pType = request.Type;
             var pUpdateFrequency = request.UpdateFrequency;
-            var pUsers = GetVariable<Reference>(request.Users?.ToList(), request.UsersIds?.ToList());
+            var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
 
             DocEntityLibrarySet entity = null;
             if(permission == DocConstantPermission.ADD)

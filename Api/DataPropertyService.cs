@@ -328,7 +328,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pAutoCreateMissing = request.AutoCreateMissing;
-            var pChildren = GetVariable<Reference>(request.Children?.ToList(), request.ChildrenIds?.ToList());
+            var pChildren = GetVariable<Reference>(request, nameof(request.Children), request.Children?.ToList(), request.ChildrenIds?.ToList());
             var pClass = (request.Class?.Id > 0) ? DocEntityDataClass.Get(request.Class.Id) : null;
             var pDescription = request.Description;
             var pDisplayName = request.DisplayName;

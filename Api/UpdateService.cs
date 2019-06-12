@@ -187,7 +187,7 @@ namespace Services.API
             var pDeliveryStatus = request.DeliveryStatus;
             var pEmailAttempts = request.EmailAttempts;
             var pEmailSent = request.EmailSent;
-            var pEvents = GetVariable<Reference>(request.Events?.ToList(), request.EventsIds?.ToList());
+            var pEvents = GetVariable<Reference>(request, nameof(request.Events), request.Events?.ToList(), request.EventsIds?.ToList());
             var pLink = request.Link;
             var pPriority = request.Priority;
             var pRead = request.Read;

@@ -173,7 +173,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Junction>(DocConstantModelName.JUNCTION, nameof(Junction), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pChildren = GetVariable<Reference>(request.Children?.ToList(), request.ChildrenIds?.ToList());
+            var pChildren = GetVariable<Reference>(request, nameof(request.Children), request.Children?.ToList(), request.ChildrenIds?.ToList());
             var pData = request.Data;
             var pOwnerId = request.OwnerId;
             var pOwnerType = request.OwnerType;

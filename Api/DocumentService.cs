@@ -329,7 +329,7 @@ namespace Services.API
             var pCountry = request.Country;
             var pCustomData = request.CustomData;
             DocEntityLookupTable pDatabaseType = GetLookup(DocConstantLookupTable.DATABASETYPE, request.DatabaseType?.Name, request.DatabaseType?.Id);
-            var pDocumentSets = GetVariable<Reference>(request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
+            var pDocumentSets = GetVariable<Reference>(request, nameof(request.DocumentSets), request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
             DocEntityLookupTable pDocumentType = GetLookup(DocConstantLookupTable.DOCUMENTTYPE, request.DocumentType?.Name, request.DocumentType?.Id);
             var pDOI = request.DOI;
             var pEmbaseAccessionNumber = request.EmbaseAccessionNumber;
@@ -344,7 +344,7 @@ namespace Services.API
             var pIssue = request.Issue;
             var pJournalTitle = request.JournalTitle;
             var pLegacySync = request.LegacySync;
-            var pLookupTables = GetVariable<Reference>(request.LookupTables?.ToList(), request.LookupTablesIds?.ToList());
+            var pLookupTables = GetVariable<Reference>(request, nameof(request.LookupTables), request.LookupTables?.ToList(), request.LookupTablesIds?.ToList());
             var pMedlineID = request.MedlineID;
             var pMeSH = request.MeSH;
             var pPages = request.Pages;
@@ -361,7 +361,7 @@ namespace Services.API
             var pTaStudyDesign = request.TaStudyDesign;
             var pTitle = request.Title;
             var pTrialOutcome = request.TrialOutcome;
-            var pVariableData = GetVariable<Reference>(request.VariableData?.ToList(), request.VariableDataIds?.ToList());
+            var pVariableData = GetVariable<Reference>(request, nameof(request.VariableData), request.VariableData?.ToList(), request.VariableDataIds?.ToList());
             var pVolume = request.Volume;
 
             DocEntityDocument entity = null;

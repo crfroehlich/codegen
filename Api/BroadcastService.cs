@@ -193,7 +193,7 @@ namespace Services.API
             var pName = request.Name;
             var pReprocess = request.Reprocess;
             var pReprocessed = request.Reprocessed;
-            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
+            var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.BROADCASTSTATUS, request.Status?.Name, request.Status?.Id);
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.BROADCASTTYPE, request.Type?.Name, request.Type?.Id);
 

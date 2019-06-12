@@ -147,9 +147,9 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pDescription = request.Description;
             var pName = request.Name;
-            var pPages = GetVariable<Reference>(request.Pages?.ToList(), request.PagesIds?.ToList());
-            var pRoles = GetVariable<Reference>(request.Roles?.ToList(), request.RolesIds?.ToList());
-            var pScopes = GetVariable<Reference>(request.Scopes?.ToList(), request.ScopesIds?.ToList());
+            var pPages = GetVariable<Reference>(request, nameof(request.Pages), request.Pages?.ToList(), request.PagesIds?.ToList());
+            var pRoles = GetVariable<Reference>(request, nameof(request.Roles), request.Roles?.ToList(), request.RolesIds?.ToList());
+            var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
 
             DocEntityApp entity = null;
             if(permission == DocConstantPermission.ADD)

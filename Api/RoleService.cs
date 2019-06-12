@@ -168,16 +168,16 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pAdminTeam = (request.AdminTeam?.Id > 0) ? DocEntityTeam.Get(request.AdminTeam.Id) : null;
-            var pApps = GetVariable<Reference>(request.Apps?.ToList(), request.AppsIds?.ToList());
+            var pApps = GetVariable<Reference>(request, nameof(request.Apps), request.Apps?.ToList(), request.AppsIds?.ToList());
             var pDescription = request.Description;
             var pFeatures = request.Features;
-            var pFeatureSets = GetVariable<Reference>(request.FeatureSets?.ToList(), request.FeatureSetsIds?.ToList());
+            var pFeatureSets = GetVariable<Reference>(request, nameof(request.FeatureSets), request.FeatureSets?.ToList(), request.FeatureSetsIds?.ToList());
             var pIsInternal = request.IsInternal;
             var pIsSuperAdmin = request.IsSuperAdmin;
             var pName = request.Name;
-            var pPages = GetVariable<Reference>(request.Pages?.ToList(), request.PagesIds?.ToList());
+            var pPages = GetVariable<Reference>(request, nameof(request.Pages), request.Pages?.ToList(), request.PagesIds?.ToList());
             var pPermissions = request.Permissions;
-            var pUsers = GetVariable<Reference>(request.Users?.ToList(), request.UsersIds?.ToList());
+            var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
 
             DocEntityRole entity = null;
             if(permission == DocConstantPermission.ADD)

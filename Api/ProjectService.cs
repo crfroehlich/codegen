@@ -231,7 +231,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Project>(DocConstantModelName.PROJECT, nameof(Project), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pChildren = GetVariable<Reference>(request.Children?.ToList(), request.ChildrenIds?.ToList());
+            var pChildren = GetVariable<Reference>(request, nameof(request.Children), request.Children?.ToList(), request.ChildrenIds?.ToList());
             var pClient = (request.Client?.Id > 0) ? DocEntityClient.Get(request.Client.Id) : null;
             var pDatabaseDeadline = request.DatabaseDeadline;
             var pDatabaseName = request.DatabaseName;
@@ -252,7 +252,7 @@ namespace Services.API
             var pProjectId = request.ProjectId;
             var pProjectName = request.ProjectName;
             var pStatus = request.Status;
-            var pTimeCards = GetVariable<Reference>(request.TimeCards?.ToList(), request.TimeCardsIds?.ToList());
+            var pTimeCards = GetVariable<Reference>(request, nameof(request.TimeCards), request.TimeCards?.ToList(), request.TimeCardsIds?.ToList());
 
             DocEntityProject entity = null;
             if(permission == DocConstantPermission.ADD)
