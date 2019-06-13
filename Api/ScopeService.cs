@@ -126,10 +126,6 @@ namespace Services.API
                     if(request.Edit.Any(v => v == null)) entities = entities.Where(en => en.Edit.In(request.Edit) || en.Edit == null);
                     else entities = entities.Where(en => en.Edit.In(request.Edit));
                 }
-                if(true == request.FilesIds?.Any())
-                {
-                    entities = entities.Where(en => en.Files.Any(r => r.Id.In(request.FilesIds)));
-                }
                 if(true == request.HelpIds?.Any())
                 {
                     entities = entities.Where(en => en.Help.Any(r => r.Id.In(request.HelpIds)));
@@ -142,6 +138,10 @@ namespace Services.API
                 if(true == request.ScopedCommentsIds?.Any())
                 {
                     entities = entities.Where(en => en.ScopedComments.Any(r => r.Id.In(request.ScopedCommentsIds)));
+                }
+                if(true == request.ScopedFilesIds?.Any())
+                {
+                    entities = entities.Where(en => en.ScopedFiles.Any(r => r.Id.In(request.ScopedFilesIds)));
                 }
                 if(true == request.ScopedTagsIds?.Any())
                 {
@@ -232,10 +232,10 @@ namespace Services.API
             var pDelete = request.Delete;
             var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.Get(request.DocumentSet.Id) : null;
             var pEdit = request.Edit;
-            var pFiles = GetVariable<Reference>(request, nameof(request.Files), request.Files?.ToList(), request.FilesIds?.ToList());
             var pHelp = GetVariable<Reference>(request, nameof(request.Help), request.Help?.ToList(), request.HelpIds?.ToList());
             var pIsGlobal = request.IsGlobal;
             var pScopedComments = GetVariable<Reference>(request, nameof(request.ScopedComments), request.ScopedComments?.ToList(), request.ScopedCommentsIds?.ToList());
+            var pScopedFiles = GetVariable<Reference>(request, nameof(request.ScopedFiles), request.ScopedFiles?.ToList(), request.ScopedFilesIds?.ToList());
             var pScopedTags = GetVariable<Reference>(request, nameof(request.ScopedTags), request.ScopedTags?.ToList(), request.ScopedTagsIds?.ToList());
             var pSynonyms = GetVariable<Reference>(request, nameof(request.Synonyms), request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
             var pTeam = (request.Team?.Id > 0) ? DocEntityTeam.Get(request.Team.Id) : null;
@@ -395,9 +395,9 @@ namespace Services.API
             var idsToInvalidate = new List<int>();
             idsToInvalidate.AddRange(PatchCollection<Scope, DocEntityScope, Reference, DocEntityLookupTableBinding>(request, entity, pBindings, permission, nameof(request.Bindings)));
             idsToInvalidate.AddRange(PatchCollection<Scope, DocEntityScope, Reference, DocEntityBroadcast>(request, entity, pBroadcasts, permission, nameof(request.Broadcasts)));
-            idsToInvalidate.AddRange(PatchCollection<Scope, DocEntityScope, Reference, DocEntityFile>(request, entity, pFiles, permission, nameof(request.Files)));
             idsToInvalidate.AddRange(PatchCollection<Scope, DocEntityScope, Reference, DocEntityHelp>(request, entity, pHelp, permission, nameof(request.Help)));
             idsToInvalidate.AddRange(PatchCollection<Scope, DocEntityScope, Reference, DocEntityComment>(request, entity, pScopedComments, permission, nameof(request.ScopedComments)));
+            idsToInvalidate.AddRange(PatchCollection<Scope, DocEntityScope, Reference, DocEntityFile>(request, entity, pScopedFiles, permission, nameof(request.ScopedFiles)));
             idsToInvalidate.AddRange(PatchCollection<Scope, DocEntityScope, Reference, DocEntityTag>(request, entity, pScopedTags, permission, nameof(request.ScopedTags)));
             idsToInvalidate.AddRange(PatchCollection<Scope, DocEntityScope, Reference, DocEntityTermSynonym>(request, entity, pSynonyms, permission, nameof(request.Synonyms)));
             idsToInvalidate.AddRange(PatchCollection<Scope, DocEntityScope, Reference, DocEntityVariableRule>(request, entity, pVariableRules, permission, nameof(request.VariableRules)));
@@ -506,10 +506,10 @@ namespace Services.API
                     var pDelete = entity.Delete;
                     var pDocumentSet = entity.DocumentSet;
                     var pEdit = entity.Edit;
-                    var pFiles = entity.Files.ToList();
                     var pHelp = entity.Help.ToList();
                     var pIsGlobal = entity.IsGlobal;
                     var pScopedComments = entity.ScopedComments.ToList();
+                    var pScopedFiles = entity.ScopedFiles.ToList();
                     var pScopedTags = entity.ScopedTags.ToList();
                     var pSynonyms = entity.Synonyms.ToList();
                     var pTeam = entity.Team;
@@ -542,11 +542,6 @@ namespace Services.API
                                 entity.Broadcasts.Add(item);
                             }
 
-                            foreach(var item in pFiles)
-                            {
-                                entity.Files.Add(item);
-                            }
-
                             foreach(var item in pHelp)
                             {
                                 entity.Help.Add(item);
@@ -555,6 +550,11 @@ namespace Services.API
                             foreach(var item in pScopedComments)
                             {
                                 entity.ScopedComments.Add(item);
+                            }
+
+                            foreach(var item in pScopedFiles)
+                            {
+                                entity.ScopedFiles.Add(item);
                             }
 
                             foreach(var item in pScopedTags)
@@ -752,10 +752,10 @@ namespace Services.API
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
-                    case "file":
-                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "Files", request, (ss) => HostContext.ResolveService<FileService>(Request)?.Get(ss));
                     case "help":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request, (ss) => HostContext.ResolveService<HelpService>(Request)?.Get(ss));
+                    case "file":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "ScopedFiles", request, (ss) => HostContext.ResolveService<FileService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "ScopedTags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "termsynonym":
@@ -782,10 +782,10 @@ namespace Services.API
                         return AddJunction<Scope, DocEntityScope, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return AddJunction<Scope, DocEntityScope, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                    case "file":
-                        return AddJunction<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "Files", request);
                     case "help":
                         return AddJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
+                    case "file":
+                        return AddJunction<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "ScopedFiles", request);
                     case "tag":
                         return AddJunction<Scope, DocEntityScope, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "ScopedTags", request);
                     case "termsynonym":
@@ -811,10 +811,10 @@ namespace Services.API
                         return RemoveJunction<Scope, DocEntityScope, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                    case "file":
-                        return RemoveJunction<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "Files", request);
                     case "help":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
+                    case "file":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "ScopedFiles", request);
                     case "tag":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "ScopedTags", request);
                     case "termsynonym":

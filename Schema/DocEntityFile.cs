@@ -86,7 +86,7 @@ namespace Services.Schema
         public decimal? Cost { get; set; }
 
 
-        [Field(Nullable = false, Length = 200)]
+        [Field(Length = 200)]
         public string FileLabel { get; set; }
 
 
@@ -94,16 +94,16 @@ namespace Services.Schema
         public string FileName { get; set; }
 
 
-        [Field(Nullable = false, Length = 200)]
+        [Field(Length = 200)]
         public string OriginalFileName { get; set; }
 
 
-        [Field(Nullable = false, DefaultValue = FileRightsEnm.RESTRICTED)]
+        [Field(DefaultValue = FileRightsEnm.RESTRICTED)]
         public FileRightsEnm Rights { get; set; }
 
 
         [Field]
-        [Association(PairTo = nameof(DocEntityScope.Files), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association(PairTo = nameof(DocEntityScope.ScopedFiles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
@@ -113,7 +113,7 @@ namespace Services.Schema
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
-        [Field(Nullable = false, DefaultValue = FileSourceEnm.PUBLISHER)]
+        [Field(DefaultValue = FileSourceEnm.PUBLISHER)]
         public FileSourceEnm Source { get; set; }
 
 
@@ -195,30 +195,10 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(FileLabel))
-                {
-                    isValid = false;
-                    message += " FileLabel is a required property.";
-                }
                 if(DocTools.IsNullOrEmpty(FileName))
                 {
                     isValid = false;
                     message += " FileName is a required property.";
-                }
-                if(DocTools.IsNullOrEmpty(OriginalFileName))
-                {
-                    isValid = false;
-                    message += " OriginalFileName is a required property.";
-                }
-                if(DocTools.IsNullOrEmpty(Rights))
-                {
-                    isValid = false;
-                    message += " Rights is a required property.";
-                }
-                if(DocTools.IsNullOrEmpty(Source))
-                {
-                    isValid = false;
-                    message += " Source is a required property.";
                 }
                 if(DocTools.IsNullOrEmpty(Type))
                 {

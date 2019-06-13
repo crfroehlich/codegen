@@ -56,7 +56,7 @@ namespace Services.Dto
         public int? CostCount { get; set; }
 
 
-        [ApiMember(Name = nameof(FileLabel), Description = "string", IsRequired = true)]
+        [ApiMember(Name = nameof(FileLabel), Description = "string", IsRequired = false)]
         public string FileLabel { get; set; }
         public List<int> FileLabelIds { get; set; }
         public int? FileLabelCount { get; set; }
@@ -68,7 +68,7 @@ namespace Services.Dto
         public int? FileNameCount { get; set; }
 
 
-        [ApiMember(Name = nameof(OriginalFileName), Description = "string", IsRequired = true)]
+        [ApiMember(Name = nameof(OriginalFileName), Description = "string", IsRequired = false)]
         public string OriginalFileName { get; set; }
         public List<int> OriginalFileNameIds { get; set; }
         public int? OriginalFileNameCount { get; set; }
