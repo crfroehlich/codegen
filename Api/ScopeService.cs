@@ -126,10 +126,6 @@ namespace Services.API
                     if(request.Edit.Any(v => v == null)) entities = entities.Where(en => en.Edit.In(request.Edit) || en.Edit == null);
                     else entities = entities.Where(en => en.Edit.In(request.Edit));
                 }
-                if(true == request.FilesIds?.Any())
-                {
-                    entities = entities.Where(en => en.Files.Any(r => r.Id.In(request.FilesIds)));
-                }
                 if(true == request.HelpIds?.Any())
                 {
                     entities = entities.Where(en => en.Help.Any(r => r.Id.In(request.HelpIds)));
@@ -142,6 +138,10 @@ namespace Services.API
                 if(true == request.ScopedCommentsIds?.Any())
                 {
                     entities = entities.Where(en => en.ScopedComments.Any(r => r.Id.In(request.ScopedCommentsIds)));
+                }
+                if(true == request.ScopedFilesIds?.Any())
+                {
+                    entities = entities.Where(en => en.ScopedFiles.Any(r => r.Id.In(request.ScopedFilesIds)));
                 }
                 if(true == request.ScopedTagsIds?.Any())
                 {
@@ -232,10 +232,10 @@ namespace Services.API
             var pDelete = request.Delete;
             var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.Get(request.DocumentSet.Id) : null;
             var pEdit = request.Edit;
-            var pFiles = GetVariable<Reference>(request, nameof(request.Files), request.Files?.ToList(), request.FilesIds?.ToList());
             var pHelp = GetVariable<Reference>(request, nameof(request.Help), request.Help?.ToList(), request.HelpIds?.ToList());
             var pIsGlobal = request.IsGlobal;
             var pScopedComments = GetVariable<Reference>(request, nameof(request.ScopedComments), request.ScopedComments?.ToList(), request.ScopedCommentsIds?.ToList());
+            var pScopedFiles = GetVariable<Reference>(request, nameof(request.ScopedFiles), request.ScopedFiles?.ToList(), request.ScopedFilesIds?.ToList());
             var pScopedTags = GetVariable<Reference>(request, nameof(request.ScopedTags), request.ScopedTags?.ToList(), request.ScopedTagsIds?.ToList());
             var pSynonyms = GetVariable<Reference>(request, nameof(request.Synonyms), request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
             var pTeam = (request.Team?.Id > 0) ? DocEntityTeam.Get(request.Team.Id) : null;
@@ -480,50 +480,6 @@ namespace Services.API
                     request.Select.Add(nameof(request.Broadcasts));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pFiles, permission, DocConstantModelName.SCOPE, nameof(request.Files)))
-            {
-                if (true == pFiles?.Any() )
-                {
-                    var requestedFiles = pFiles.Select(p => p.Id).Distinct().ToList();
-                    var existsFiles = Execute.SelectAll<DocEntityFile>().Where(e => e.Id.In(requestedFiles)).Select( e => e.Id ).ToList();
-                    if (existsFiles.Count != requestedFiles.Count)
-                    {
-                        var nonExists = requestedFiles.Where(id => existsFiles.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Files with objects that do not exist. No matching Files(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedFiles.Where(id => entity.Files.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityFile.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Scope), columnName: nameof(request.Files)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Files)} to {nameof(Scope)}");
-                        entity.Files.Add(target);
-                    });
-                    var toRemove = entity.Files.Where(e => requestedFiles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityFile.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Scope), columnName: nameof(request.Files)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Files)} from {nameof(Scope)}");
-                        entity.Files.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Files.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityFile.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Scope), columnName: nameof(request.Files)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Files)} from {nameof(Scope)}");
-                        entity.Files.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pFiles, nameof(request.Files)) && !request.Select.Matches(nameof(request.Files), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Files));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pHelp, permission, DocConstantModelName.SCOPE, nameof(request.Help)))
             {
                 if (true == pHelp?.Any() )
@@ -610,6 +566,50 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<List<Reference>>(request, pScopedComments, nameof(request.ScopedComments)) && !request.Select.Matches(nameof(request.ScopedComments), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.ScopedComments));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopedFiles, permission, DocConstantModelName.SCOPE, nameof(request.ScopedFiles)))
+            {
+                if (true == pScopedFiles?.Any() )
+                {
+                    var requestedScopedFiles = pScopedFiles.Select(p => p.Id).Distinct().ToList();
+                    var existsScopedFiles = Execute.SelectAll<DocEntityFile>().Where(e => e.Id.In(requestedScopedFiles)).Select( e => e.Id ).ToList();
+                    if (existsScopedFiles.Count != requestedScopedFiles.Count)
+                    {
+                        var nonExists = requestedScopedFiles.Where(id => existsScopedFiles.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection ScopedFiles with objects that do not exist. No matching ScopedFiles(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedScopedFiles.Where(id => entity.ScopedFiles.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityFile.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Scope), columnName: nameof(request.ScopedFiles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.ScopedFiles)} to {nameof(Scope)}");
+                        entity.ScopedFiles.Add(target);
+                    });
+                    var toRemove = entity.ScopedFiles.Where(e => requestedScopedFiles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityFile.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Scope), columnName: nameof(request.ScopedFiles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.ScopedFiles)} from {nameof(Scope)}");
+                        entity.ScopedFiles.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.ScopedFiles.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityFile.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Scope), columnName: nameof(request.ScopedFiles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.ScopedFiles)} from {nameof(Scope)}");
+                        entity.ScopedFiles.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pScopedFiles, nameof(request.ScopedFiles)) && !request.Select.Matches(nameof(request.ScopedFiles), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.ScopedFiles));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopedTags, permission, DocConstantModelName.SCOPE, nameof(request.ScopedTags)))
@@ -885,10 +885,10 @@ namespace Services.API
                     var pDelete = entity.Delete;
                     var pDocumentSet = entity.DocumentSet;
                     var pEdit = entity.Edit;
-                    var pFiles = entity.Files.ToList();
                     var pHelp = entity.Help.ToList();
                     var pIsGlobal = entity.IsGlobal;
                     var pScopedComments = entity.ScopedComments.ToList();
+                    var pScopedFiles = entity.ScopedFiles.ToList();
                     var pScopedTags = entity.ScopedTags.ToList();
                     var pSynonyms = entity.Synonyms.ToList();
                     var pTeam = entity.Team;
@@ -921,11 +921,6 @@ namespace Services.API
                                 entity.Broadcasts.Add(item);
                             }
 
-                            foreach(var item in pFiles)
-                            {
-                                entity.Files.Add(item);
-                            }
-
                             foreach(var item in pHelp)
                             {
                                 entity.Help.Add(item);
@@ -934,6 +929,11 @@ namespace Services.API
                             foreach(var item in pScopedComments)
                             {
                                 entity.ScopedComments.Add(item);
+                            }
+
+                            foreach(var item in pScopedFiles)
+                            {
+                                entity.ScopedFiles.Add(item);
                             }
 
                             foreach(var item in pScopedTags)
@@ -1131,10 +1131,10 @@ namespace Services.API
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
-                    case "file":
-                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "Files", request, (ss) => HostContext.ResolveService<FileService>(Request)?.Get(ss));
                     case "help":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request, (ss) => HostContext.ResolveService<HelpService>(Request)?.Get(ss));
+                    case "file":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "ScopedFiles", request, (ss) => HostContext.ResolveService<FileService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "ScopedTags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "termsynonym":
@@ -1161,10 +1161,10 @@ namespace Services.API
                         return AddJunction<Scope, DocEntityScope, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return AddJunction<Scope, DocEntityScope, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                    case "file":
-                        return AddJunction<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "Files", request);
                     case "help":
                         return AddJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
+                    case "file":
+                        return AddJunction<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "ScopedFiles", request);
                     case "tag":
                         return AddJunction<Scope, DocEntityScope, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "ScopedTags", request);
                     case "termsynonym":
@@ -1190,10 +1190,10 @@ namespace Services.API
                         return RemoveJunction<Scope, DocEntityScope, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                    case "file":
-                        return RemoveJunction<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "Files", request);
                     case "help":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
+                    case "file":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityFile, File, FileSearch>((int)request.Id, DocConstantModelName.FILE, "ScopedFiles", request);
                     case "tag":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "ScopedTags", request);
                     case "termsynonym":
