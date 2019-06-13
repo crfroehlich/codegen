@@ -194,6 +194,14 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
+            var idsToInvalidate = new List<int>();
+
+            if (idsToInvalidate.Any())
+            {
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.FAVORITE);
+            }
 
             DocPermissionFactory.SetSelect<Favorite>(currentUser, nameof(Favorite), request.Select);
             ret = entity.ToDto();

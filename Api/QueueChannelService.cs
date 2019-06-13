@@ -282,6 +282,14 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
+            var idsToInvalidate = new List<int>();
+
+            if (idsToInvalidate.Any())
+            {
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.QUEUECHANNEL);
+            }
 
             DocPermissionFactory.SetSelect<QueueChannel>(currentUser, nameof(QueueChannel), request.Select);
             ret = entity.ToDto();

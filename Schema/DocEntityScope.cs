@@ -128,6 +128,16 @@ namespace Services.Schema
 
 
         [Field]
+        public DocEntitySet<DocEntityFile> Files { get; private set; }
+
+
+        public List<int> FilesIds => Files.Select(e => e.Id).ToList();
+
+
+        public int? FilesCount { get { return Files.Count(); } private set { var noid = value; } }
+
+
+        [Field]
         [Association(PairTo = nameof(DocEntityHelp.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityHelp> Help { get; private set; }
 
@@ -150,16 +160,6 @@ namespace Services.Schema
 
 
         public int? ScopedCommentsCount { get { return ScopedComments.Count(); } private set { var noid = value; } }
-
-
-        [Field]
-        public DocEntitySet<DocEntityFile> ScopedFiles { get; private set; }
-
-
-        public List<int> ScopedFilesIds => ScopedFiles.Select(e => e.Id).ToList();
-
-
-        public int? ScopedFilesCount { get { return ScopedFiles.Count(); } private set { var noid = value; } }
 
 
         [Field]

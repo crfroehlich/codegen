@@ -180,6 +180,14 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
+            var idsToInvalidate = new List<int>();
+
+            if (idsToInvalidate.Any())
+            {
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.LOOKUPTABLEENUM);
+            }
 
             DocPermissionFactory.SetSelect<LookupTableEnum>(currentUser, nameof(LookupTableEnum), request.Select);
             ret = entity.ToDto();

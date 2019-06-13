@@ -508,50 +508,15 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDataSets, permission, DocConstantModelName.IMPORTDATA, nameof(request.DataSets)))
+            var idsToInvalidate = new List<int>();
+            idsToInvalidate.AddRange(PatchCollection<ImportData, DocEntityImportData, Reference, DocEntityDataSet>(request, entity, pDataSets, permission, nameof(request.DataSets)));
+            if (idsToInvalidate.Any())
             {
-                if (true == pDataSets?.Any() )
-                {
-                    var requestedDataSets = pDataSets.Select(p => p.Id).Distinct().ToList();
-                    var existsDataSets = Execute.SelectAll<DocEntityDataSet>().Where(e => e.Id.In(requestedDataSets)).Select( e => e.Id ).ToList();
-                    if (existsDataSets.Count != requestedDataSets.Count)
-                    {
-                        var nonExists = requestedDataSets.Where(id => existsDataSets.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection DataSets with objects that do not exist. No matching DataSets(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedDataSets.Where(id => entity.DataSets.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityDataSet.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DataSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DataSets)} to {nameof(ImportData)}");
-                        entity.DataSets.Add(target);
-                    });
-                    var toRemove = entity.DataSets.Where(e => requestedDataSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDataSet.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DataSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DataSets)} from {nameof(ImportData)}");
-                        entity.DataSets.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.DataSets.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDataSet.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DataSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DataSets)} from {nameof(ImportData)}");
-                        entity.DataSets.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDataSets, nameof(request.DataSets)) && !request.Select.Matches(nameof(request.DataSets), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.DataSets));
-                }
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.IMPORTDATA);
             }
+
             DocPermissionFactory.SetSelect<ImportData>(currentUser, nameof(ImportData), request.Select);
             ret = entity.ToDto();
 

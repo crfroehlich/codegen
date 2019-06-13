@@ -852,138 +852,17 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocumentSets, permission, DocConstantModelName.DOCUMENT, nameof(request.DocumentSets)))
+            var idsToInvalidate = new List<int>();
+            idsToInvalidate.AddRange(PatchCollection<Document, DocEntityDocument, Reference, DocEntityDocumentSet>(request, entity, pDocumentSets, permission, nameof(request.DocumentSets)));
+            idsToInvalidate.AddRange(PatchCollection<Document, DocEntityDocument, Reference, DocEntityLookupTable>(request, entity, pLookupTables, permission, nameof(request.LookupTables)));
+            idsToInvalidate.AddRange(PatchCollection<Document, DocEntityDocument, Reference, DocEntityVariableInstance>(request, entity, pVariableData, permission, nameof(request.VariableData)));
+            if (idsToInvalidate.Any())
             {
-                if (true == pDocumentSets?.Any() )
-                {
-                    var requestedDocumentSets = pDocumentSets.Select(p => p.Id).Distinct().ToList();
-                    var existsDocumentSets = Execute.SelectAll<DocEntityDocumentSet>().Where(e => e.Id.In(requestedDocumentSets)).Select( e => e.Id ).ToList();
-                    if (existsDocumentSets.Count != requestedDocumentSets.Count)
-                    {
-                        var nonExists = requestedDocumentSets.Where(id => existsDocumentSets.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection DocumentSets with objects that do not exist. No matching DocumentSets(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedDocumentSets.Where(id => entity.DocumentSets.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityDocumentSet.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(Document)}");
-                        entity.DocumentSets.Add(target);
-                    });
-                    var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDocumentSet.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Document)}");
-                        entity.DocumentSets.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.DocumentSets.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDocumentSet.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Document)}");
-                        entity.DocumentSets.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.Select.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.DocumentSets));
-                }
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.DOCUMENT);
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pLookupTables, permission, DocConstantModelName.DOCUMENT, nameof(request.LookupTables)))
-            {
-                if (true == pLookupTables?.Any() )
-                {
-                    var requestedLookupTables = pLookupTables.Select(p => p.Id).Distinct().ToList();
-                    var existsLookupTables = Execute.SelectAll<DocEntityLookupTable>().Where(e => e.Id.In(requestedLookupTables)).Select( e => e.Id ).ToList();
-                    if (existsLookupTables.Count != requestedLookupTables.Count)
-                    {
-                        var nonExists = requestedLookupTables.Where(id => existsLookupTables.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection LookupTables with objects that do not exist. No matching LookupTables(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedLookupTables.Where(id => entity.LookupTables.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityLookupTable.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.LookupTables)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.LookupTables)} to {nameof(Document)}");
-                        entity.LookupTables.Add(target);
-                    });
-                    var toRemove = entity.LookupTables.Where(e => requestedLookupTables.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityLookupTable.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.LookupTables)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.LookupTables)} from {nameof(Document)}");
-                        entity.LookupTables.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.LookupTables.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityLookupTable.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.LookupTables)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.LookupTables)} from {nameof(Document)}");
-                        entity.LookupTables.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pLookupTables, nameof(request.LookupTables)) && !request.Select.Matches(nameof(request.LookupTables), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.LookupTables));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pVariableData, permission, DocConstantModelName.DOCUMENT, nameof(request.VariableData)))
-            {
-                if (true == pVariableData?.Any() )
-                {
-                    var requestedVariableData = pVariableData.Select(p => p.Id).Distinct().ToList();
-                    var existsVariableData = Execute.SelectAll<DocEntityVariableInstance>().Where(e => e.Id.In(requestedVariableData)).Select( e => e.Id ).ToList();
-                    if (existsVariableData.Count != requestedVariableData.Count)
-                    {
-                        var nonExists = requestedVariableData.Where(id => existsVariableData.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection VariableData with objects that do not exist. No matching VariableData(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedVariableData.Where(id => entity.VariableData.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityVariableInstance.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.VariableData)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.VariableData)} to {nameof(Document)}");
-                        entity.VariableData.Add(target);
-                    });
-                    var toRemove = entity.VariableData.Where(e => requestedVariableData.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityVariableInstance.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.VariableData)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.VariableData)} from {nameof(Document)}");
-                        entity.VariableData.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.VariableData.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityVariableInstance.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.VariableData)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.VariableData)} from {nameof(Document)}");
-                        entity.VariableData.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pVariableData, nameof(request.VariableData)) && !request.Select.Matches(nameof(request.VariableData), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.VariableData));
-                }
-            }
+
             DocPermissionFactory.SetSelect<Document>(currentUser, nameof(Document), request.Select);
             ret = entity.ToDto();
 

@@ -257,50 +257,15 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pBindings, permission, DocConstantModelName.TERMSYNONYM, nameof(request.Bindings)))
+            var idsToInvalidate = new List<int>();
+            idsToInvalidate.AddRange(PatchCollection<TermSynonym, DocEntityTermSynonym, Reference, DocEntityLookupTableBinding>(request, entity, pBindings, permission, nameof(request.Bindings)));
+            if (idsToInvalidate.Any())
             {
-                if (true == pBindings?.Any() )
-                {
-                    var requestedBindings = pBindings.Select(p => p.Id).Distinct().ToList();
-                    var existsBindings = Execute.SelectAll<DocEntityLookupTableBinding>().Where(e => e.Id.In(requestedBindings)).Select( e => e.Id ).ToList();
-                    if (existsBindings.Count != requestedBindings.Count)
-                    {
-                        var nonExists = requestedBindings.Where(id => existsBindings.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Bindings with objects that do not exist. No matching Bindings(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedBindings.Where(id => entity.Bindings.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityLookupTableBinding.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(request.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Bindings)} to {nameof(TermSynonym)}");
-                        entity.Bindings.Add(target);
-                    });
-                    var toRemove = entity.Bindings.Where(e => requestedBindings.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityLookupTableBinding.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(request.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(TermSynonym)}");
-                        entity.Bindings.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Bindings.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityLookupTableBinding.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(request.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(TermSynonym)}");
-                        entity.Bindings.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pBindings, nameof(request.Bindings)) && !request.Select.Matches(nameof(request.Bindings), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Bindings));
-                }
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.TERMSYNONYM);
             }
+
             DocPermissionFactory.SetSelect<TermSynonym>(currentUser, nameof(TermSynonym), request.Select);
             ret = entity.ToDto();
 

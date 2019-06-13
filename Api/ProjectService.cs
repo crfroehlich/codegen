@@ -510,94 +510,16 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pChildren, permission, DocConstantModelName.PROJECT, nameof(request.Children)))
+            var idsToInvalidate = new List<int>();
+            idsToInvalidate.AddRange(PatchCollection<Project, DocEntityProject, Reference, DocEntityProject>(request, entity, pChildren, permission, nameof(request.Children)));
+            idsToInvalidate.AddRange(PatchCollection<Project, DocEntityProject, Reference, DocEntityTimeCard>(request, entity, pTimeCards, permission, nameof(request.TimeCards)));
+            if (idsToInvalidate.Any())
             {
-                if (true == pChildren?.Any() )
-                {
-                    var requestedChildren = pChildren.Select(p => p.Id).Distinct().ToList();
-                    var existsChildren = Execute.SelectAll<DocEntityProject>().Where(e => e.Id.In(requestedChildren)).Select( e => e.Id ).ToList();
-                    if (existsChildren.Count != requestedChildren.Count)
-                    {
-                        var nonExists = requestedChildren.Where(id => existsChildren.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Children with objects that do not exist. No matching Children(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedChildren.Where(id => entity.Children.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityProject.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Children)} to {nameof(Project)}");
-                        entity.Children.Add(target);
-                    });
-                    var toRemove = entity.Children.Where(e => requestedChildren.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityProject.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Project)}");
-                        entity.Children.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Children.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityProject.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Project)}");
-                        entity.Children.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pChildren, nameof(request.Children)) && !request.Select.Matches(nameof(request.Children), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Children));
-                }
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.PROJECT);
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pTimeCards, permission, DocConstantModelName.PROJECT, nameof(request.TimeCards)))
-            {
-                if (true == pTimeCards?.Any() )
-                {
-                    var requestedTimeCards = pTimeCards.Select(p => p.Id).Distinct().ToList();
-                    var existsTimeCards = Execute.SelectAll<DocEntityTimeCard>().Where(e => e.Id.In(requestedTimeCards)).Select( e => e.Id ).ToList();
-                    if (existsTimeCards.Count != requestedTimeCards.Count)
-                    {
-                        var nonExists = requestedTimeCards.Where(id => existsTimeCards.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection TimeCards with objects that do not exist. No matching TimeCards(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedTimeCards.Where(id => entity.TimeCards.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityTimeCard.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.TimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.TimeCards)} to {nameof(Project)}");
-                        entity.TimeCards.Add(target);
-                    });
-                    var toRemove = entity.TimeCards.Where(e => requestedTimeCards.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTimeCard.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.TimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TimeCards)} from {nameof(Project)}");
-                        entity.TimeCards.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.TimeCards.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTimeCard.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.TimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TimeCards)} from {nameof(Project)}");
-                        entity.TimeCards.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pTimeCards, nameof(request.TimeCards)) && !request.Select.Matches(nameof(request.TimeCards), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.TimeCards));
-                }
-            }
+
             DocPermissionFactory.SetSelect<Project>(currentUser, nameof(Project), request.Select);
             ret = entity.ToDto();
 
