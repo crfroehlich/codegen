@@ -376,6 +376,14 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
+            var idsToInvalidate = new List<int>();
+
+            if (idsToInvalidate.Any())
+            {
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.RATING);
+            }
 
             DocPermissionFactory.SetSelect<Rating>(currentUser, nameof(Rating), request.Select);
             ret = entity.ToDto();

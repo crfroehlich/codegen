@@ -355,50 +355,15 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pEvents, permission, DocConstantModelName.UPDATE, nameof(request.Events)))
+            var idsToInvalidate = new List<int>();
+            idsToInvalidate.AddRange(PatchCollection<Update, DocEntityUpdate, Reference, DocEntityEvent>(request, entity, pEvents, permission, nameof(request.Events)));
+            if (idsToInvalidate.Any())
             {
-                if (true == pEvents?.Any() )
-                {
-                    var requestedEvents = pEvents.Select(p => p.Id).Distinct().ToList();
-                    var existsEvents = Execute.SelectAll<DocEntityEvent>().Where(e => e.Id.In(requestedEvents)).Select( e => e.Id ).ToList();
-                    if (existsEvents.Count != requestedEvents.Count)
-                    {
-                        var nonExists = requestedEvents.Where(id => existsEvents.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Events with objects that do not exist. No matching Events(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedEvents.Where(id => entity.Events.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityEvent.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Update), columnName: nameof(request.Events)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Events)} to {nameof(Update)}");
-                        entity.Events.Add(target);
-                    });
-                    var toRemove = entity.Events.Where(e => requestedEvents.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityEvent.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Update), columnName: nameof(request.Events)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Events)} from {nameof(Update)}");
-                        entity.Events.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Events.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityEvent.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Update), columnName: nameof(request.Events)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Events)} from {nameof(Update)}");
-                        entity.Events.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pEvents, nameof(request.Events)) && !request.Select.Matches(nameof(request.Events), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Events));
-                }
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.UPDATE);
             }
+
             DocPermissionFactory.SetSelect<Update>(currentUser, nameof(Update), request.Select);
             ret = entity.ToDto();
 

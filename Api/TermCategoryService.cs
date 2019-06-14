@@ -235,50 +235,15 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pTerms, permission, DocConstantModelName.TERMCATEGORY, nameof(request.Terms)))
+            var idsToInvalidate = new List<int>();
+            idsToInvalidate.AddRange(PatchCollection<TermCategory, DocEntityTermCategory, Reference, DocEntityTermMaster>(request, entity, pTerms, permission, nameof(request.Terms)));
+            if (idsToInvalidate.Any())
             {
-                if (true == pTerms?.Any() )
-                {
-                    var requestedTerms = pTerms.Select(p => p.Id).Distinct().ToList();
-                    var existsTerms = Execute.SelectAll<DocEntityTermMaster>().Where(e => e.Id.In(requestedTerms)).Select( e => e.Id ).ToList();
-                    if (existsTerms.Count != requestedTerms.Count)
-                    {
-                        var nonExists = requestedTerms.Where(id => existsTerms.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Terms with objects that do not exist. No matching Terms(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedTerms.Where(id => entity.Terms.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityTermMaster.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(request.Terms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Terms)} to {nameof(TermCategory)}");
-                        entity.Terms.Add(target);
-                    });
-                    var toRemove = entity.Terms.Where(e => requestedTerms.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTermMaster.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(request.Terms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Terms)} from {nameof(TermCategory)}");
-                        entity.Terms.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Terms.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTermMaster.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(request.Terms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Terms)} from {nameof(TermCategory)}");
-                        entity.Terms.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pTerms, nameof(request.Terms)) && !request.Select.Matches(nameof(request.Terms), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Terms));
-                }
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.TERMCATEGORY);
             }
+
             DocPermissionFactory.SetSelect<TermCategory>(currentUser, nameof(TermCategory), request.Select);
             ret = entity.ToDto();
 

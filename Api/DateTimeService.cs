@@ -222,6 +222,14 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
+            var idsToInvalidate = new List<int>();
+
+            if (idsToInvalidate.Any())
+            {
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.DATETIME);
+            }
 
             DocPermissionFactory.SetSelect<DateTimeDto>(currentUser, nameof(DateTimeDto), request.Select);
             ret = entity.ToDto();

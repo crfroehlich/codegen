@@ -227,50 +227,15 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pLookups, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.Lookups)))
+            var idsToInvalidate = new List<int>();
+            idsToInvalidate.AddRange(PatchCollection<LookupCategory, DocEntityLookupCategory, Reference, DocEntityLookupTable>(request, entity, pLookups, permission, nameof(request.Lookups)));
+            if (idsToInvalidate.Any())
             {
-                if (true == pLookups?.Any() )
-                {
-                    var requestedLookups = pLookups.Select(p => p.Id).Distinct().ToList();
-                    var existsLookups = Execute.SelectAll<DocEntityLookupTable>().Where(e => e.Id.In(requestedLookups)).Select( e => e.Id ).ToList();
-                    if (existsLookups.Count != requestedLookups.Count)
-                    {
-                        var nonExists = requestedLookups.Where(id => existsLookups.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Lookups with objects that do not exist. No matching Lookups(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedLookups.Where(id => entity.Lookups.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityLookupTable.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupCategory), columnName: nameof(request.Lookups)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Lookups)} to {nameof(LookupCategory)}");
-                        entity.Lookups.Add(target);
-                    });
-                    var toRemove = entity.Lookups.Where(e => requestedLookups.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityLookupTable.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupCategory), columnName: nameof(request.Lookups)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Lookups)} from {nameof(LookupCategory)}");
-                        entity.Lookups.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Lookups.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityLookupTable.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupCategory), columnName: nameof(request.Lookups)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Lookups)} from {nameof(LookupCategory)}");
-                        entity.Lookups.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pLookups, nameof(request.Lookups)) && !request.Select.Matches(nameof(request.Lookups), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Lookups));
-                }
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.LOOKUPCATEGORY);
             }
+
             DocPermissionFactory.SetSelect<LookupCategory>(currentUser, nameof(LookupCategory), request.Select);
             ret = entity.ToDto();
 

@@ -307,50 +307,15 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pChildren, permission, DocConstantModelName.JUNCTION, nameof(request.Children)))
+            var idsToInvalidate = new List<int>();
+            idsToInvalidate.AddRange(PatchCollection<Junction, DocEntityJunction, Reference, DocEntityJunction>(request, entity, pChildren, permission, nameof(request.Children)));
+            if (idsToInvalidate.Any())
             {
-                if (true == pChildren?.Any() )
-                {
-                    var requestedChildren = pChildren.Select(p => p.Id).Distinct().ToList();
-                    var existsChildren = Execute.SelectAll<DocEntityJunction>().Where(e => e.Id.In(requestedChildren)).Select( e => e.Id ).ToList();
-                    if (existsChildren.Count != requestedChildren.Count)
-                    {
-                        var nonExists = requestedChildren.Where(id => existsChildren.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Children with objects that do not exist. No matching Children(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedChildren.Where(id => entity.Children.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityJunction.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Junction), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Children)} to {nameof(Junction)}");
-                        entity.Children.Add(target);
-                    });
-                    var toRemove = entity.Children.Where(e => requestedChildren.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityJunction.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Junction), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Junction)}");
-                        entity.Children.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Children.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityJunction.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Junction), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Junction)}");
-                        entity.Children.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pChildren, nameof(request.Children)) && !request.Select.Matches(nameof(request.Children), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Children));
-                }
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.JUNCTION);
             }
+
             DocPermissionFactory.SetSelect<Junction>(currentUser, nameof(Junction), request.Select);
             ret = entity.ToDto();
 

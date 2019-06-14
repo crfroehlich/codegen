@@ -251,50 +251,15 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pUsers, permission, DocConstantModelName.USERTYPE, nameof(request.Users)))
+            var idsToInvalidate = new List<int>();
+            idsToInvalidate.AddRange(PatchCollection<UserType, DocEntityUserType, Reference, DocEntityUser>(request, entity, pUsers, permission, nameof(request.Users)));
+            if (idsToInvalidate.Any())
             {
-                if (true == pUsers?.Any() )
-                {
-                    var requestedUsers = pUsers.Select(p => p.Id).Distinct().ToList();
-                    var existsUsers = Execute.SelectAll<DocEntityUser>().Where(e => e.Id.In(requestedUsers)).Select( e => e.Id ).ToList();
-                    if (existsUsers.Count != requestedUsers.Count)
-                    {
-                        var nonExists = requestedUsers.Where(id => existsUsers.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Users with objects that do not exist. No matching Users(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedUsers.Where(id => entity.Users.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityUser.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(UserType), columnName: nameof(request.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Users)} to {nameof(UserType)}");
-                        entity.Users.Add(target);
-                    });
-                    var toRemove = entity.Users.Where(e => requestedUsers.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityUser.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(UserType), columnName: nameof(request.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(UserType)}");
-                        entity.Users.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Users.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityUser.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(UserType), columnName: nameof(request.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(UserType)}");
-                        entity.Users.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pUsers, nameof(request.Users)) && !request.Select.Matches(nameof(request.Users), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Users));
-                }
+                idsToInvalidate.Add(entity.Id);
+                DocCacheClient.RemoveByEntityIds(idsToInvalidate);
+                DocCacheClient.RemoveSearch(DocConstantModelName.USERTYPE);
             }
+
             DocPermissionFactory.SetSelect<UserType>(currentUser, nameof(UserType), request.Select);
             ret = entity.ToDto();
 
