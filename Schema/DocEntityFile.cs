@@ -98,8 +98,8 @@ namespace Services.Schema
         public string OriginalFileName { get; set; }
 
 
-        [Field(DefaultValue = FileRightsEnm.RESTRICTED)]
-        public FileRightsEnm Rights { get; set; }
+        [Field]
+        public FileRightsEnm? Rights { get; set; }
 
 
         [Field]
@@ -113,8 +113,8 @@ namespace Services.Schema
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
-        [Field(DefaultValue = FileSourceEnm.PUBLISHER)]
-        public FileSourceEnm Source { get; set; }
+        [Field]
+        public FileSourceEnm? Source { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = FileTypeEnm.FULL_TEXT)]
