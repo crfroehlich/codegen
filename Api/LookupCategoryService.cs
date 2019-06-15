@@ -177,50 +177,21 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.Archived)))
+            if (PatchValue<LookupCategory, bool>(request, DocConstantModelName.LOOKUPCATEGORY, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pCategory, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.Category)))
+            if (PatchValue<LookupCategory, string>(request, DocConstantModelName.LOOKUPCATEGORY, pCategory, entity.Category, permission, nameof(request.Category), pCategory != entity.Category))
             {
-                if(DocPermissionFactory.IsRequested(request, pCategory, entity.Category, nameof(request.Category)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Category)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Category)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pCategory) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Category))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Category)} requires a value.");
-                    entity.Category = pCategory;
-                if(DocPermissionFactory.IsRequested<string>(request, pCategory, nameof(request.Category)) && !request.Select.Matches(nameof(request.Category), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Category));
-                }
+                entity.Category = pCategory;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, request, pEnum, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.Enum)))
+            if (PatchValue<LookupCategory, DocEntityLookupTableEnum>(request, DocConstantModelName.LOOKUPCATEGORY, pEnum, entity.Enum, permission, nameof(request.Enum), pEnum != entity.Enum))
             {
-                if(DocPermissionFactory.IsRequested(request, pEnum, entity.Enum, nameof(request.Enum)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Enum)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Enum)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pEnum) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Enum))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Enum)} requires a value.");
-                    entity.Enum = pEnum;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.Select.Matches(nameof(request.Enum), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Enum));
-                }
+                entity.Enum = pEnum;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupCategory>(currentUser, request, pParentCategory, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.ParentCategory)))
+            if (PatchValue<LookupCategory, DocEntityLookupCategory>(request, DocConstantModelName.LOOKUPCATEGORY, pParentCategory, entity.ParentCategory, permission, nameof(request.ParentCategory), pParentCategory != entity.ParentCategory))
             {
-                if(DocPermissionFactory.IsRequested(request, pParentCategory, entity.ParentCategory, nameof(request.ParentCategory)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.ParentCategory)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ParentCategory)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pParentCategory) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPCATEGORY, nameof(request.ParentCategory))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ParentCategory)} requires a value.");
-                    entity.ParentCategory = pParentCategory;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupCategory>(request, pParentCategory, nameof(request.ParentCategory)) && !request.Select.Matches(nameof(request.ParentCategory), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.ParentCategory));
-                }
+                entity.ParentCategory = pParentCategory;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

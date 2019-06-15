@@ -155,39 +155,17 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.FAVORITE, nameof(request.Archived)))
+            if (PatchValue<Favorite, bool>(request, DocConstantModelName.FAVORITE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FAVORITE, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.FAVORITE, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityScope>(currentUser, request, pScope, permission, DocConstantModelName.FAVORITE, nameof(request.Scope)))
+            if (PatchValue<Favorite, DocEntityScope>(request, DocConstantModelName.FAVORITE, pScope, entity.Scope, permission, nameof(request.Scope), pScope != entity.Scope))
             {
-                if(DocPermissionFactory.IsRequested(request, pScope, entity.Scope, nameof(request.Scope)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FAVORITE, nameof(request.Scope)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Scope)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pScope) && DocResources.Metadata.IsRequired(DocConstantModelName.FAVORITE, nameof(request.Scope))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Scope)} requires a value.");
-                    entity.Scope = pScope;
-                if(DocPermissionFactory.IsRequested<DocEntityScope>(request, pScope, nameof(request.Scope)) && !request.Select.Matches(nameof(request.Scope), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Scope));
-                }
+                entity.Scope = pScope;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityBase>(currentUser, request, pOwner, permission, DocConstantModelName.FAVORITE, nameof(request.Owner)))
+            if (PatchValue<Favorite, DocEntityBase>(request, DocConstantModelName.FAVORITE, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
-                if(DocPermissionFactory.IsRequested(request, pOwner, entity.Owner, nameof(request.Owner)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FAVORITE, nameof(request.Owner)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Owner)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pOwner) && DocResources.Metadata.IsRequired(DocConstantModelName.FAVORITE, nameof(request.Owner))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Owner)} requires a value.");
-                    entity.Owner = pOwner;
-                if(DocPermissionFactory.IsRequested<DocEntityBase>(request, pOwner, nameof(request.Owner)) && !request.Select.Matches(nameof(request.Owner), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Owner));
-                }
+                entity.Owner = pOwner;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

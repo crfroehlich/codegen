@@ -266,129 +266,49 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Archived)))
+            if (PatchValue<AdjudicatedRating, bool>(request, DocConstantModelName.ADJUDICATEDRATING, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pAssignee, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Assignee)))
+            if (PatchValue<AdjudicatedRating, DocEntityUser>(request, DocConstantModelName.ADJUDICATEDRATING, pAssignee, entity.Assignee, permission, nameof(request.Assignee), pAssignee != entity.Assignee))
             {
-                if(DocPermissionFactory.IsRequested(request, pAssignee, entity.Assignee, nameof(request.Assignee)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Assignee)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Assignee)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pAssignee) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Assignee))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Assignee)} requires a value.");
-                    entity.Assignee = pAssignee;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pAssignee, nameof(request.Assignee)) && !request.Select.Matches(nameof(request.Assignee), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Assignee));
-                }
+                entity.Assignee = pAssignee;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pData, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Data)))
+            if (PatchValue<AdjudicatedRating, string>(request, DocConstantModelName.ADJUDICATEDRATING, pData, entity.Data, permission, nameof(request.Data), pData != entity.Data))
             {
-                if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Data)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Data)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pData) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Data))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Data)} requires a value.");
-                    entity.Data = pData;
-                if(DocPermissionFactory.IsRequested<string>(request, pData, nameof(request.Data)) && !request.Select.Matches(nameof(request.Data), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Data));
-                }
+                entity.Data = pData;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Description)))
+            if (PatchValue<AdjudicatedRating, string>(request, DocConstantModelName.ADJUDICATEDRATING, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
             {
-                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Description)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Description)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDescription) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Description))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Description)} requires a value.");
-                    entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.Select.Matches(nameof(request.Description), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Description));
-                }
+                entity.Description = pDescription;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocument>(currentUser, request, pDocument, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Document)))
+            if (PatchValue<AdjudicatedRating, DocEntityDocument>(request, DocConstantModelName.ADJUDICATEDRATING, pDocument, entity.Document, permission, nameof(request.Document), pDocument != entity.Document))
             {
-                if(DocPermissionFactory.IsRequested(request, pDocument, entity.Document, nameof(request.Document)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Document)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Document)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDocument) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Document))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Document)} requires a value.");
-                    entity.Document = pDocument;
-                if(DocPermissionFactory.IsRequested<DocEntityDocument>(request, pDocument, nameof(request.Document)) && !request.Select.Matches(nameof(request.Document), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Document));
-                }
+                entity.Document = pDocument;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDueDate, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.DueDate)))
+            if (PatchValue<AdjudicatedRating, DateTime?>(request, DocConstantModelName.ADJUDICATEDRATING, pDueDate, entity.DueDate, permission, nameof(request.DueDate), pDueDate != entity.DueDate))
             {
-                if(DocPermissionFactory.IsRequested(request, pDueDate, entity.DueDate, nameof(request.DueDate)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.DueDate)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DueDate)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDueDate) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.DueDate))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DueDate)} requires a value.");
-                    entity.DueDate = pDueDate;
-                if(DocPermissionFactory.IsRequested<DateTime?>(request, pDueDate, nameof(request.DueDate)) && !request.Select.Matches(nameof(request.DueDate), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.DueDate));
-                }
+                entity.DueDate = pDueDate;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<RatingEnm?>(currentUser, request, pRating, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Rating)))
+            if (PatchValue<AdjudicatedRating, RatingEnm?>(request, DocConstantModelName.ADJUDICATEDRATING, pRating, entity.Rating, permission, nameof(request.Rating), pRating != entity.Rating))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pRating, (int) entity.Rating, nameof(request.Rating)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Rating)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Rating)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pRating) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Rating))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Rating)} requires a value.");
-                    if(null != pRating)
-                        entity.Rating = pRating.Value;
-                if(DocPermissionFactory.IsRequested<RatingEnm?>(request, pRating, nameof(request.Rating)) && !request.Select.Matches(nameof(request.Rating), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Rating));
-                }
+                if(null != pRating) entity.Rating = pRating.Value;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<ReasonRejectedEnm?>(currentUser, request, pReasonRejected, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.ReasonRejected)))
+            if (PatchValue<AdjudicatedRating, ReasonRejectedEnm?>(request, DocConstantModelName.ADJUDICATEDRATING, pReasonRejected, entity.ReasonRejected, permission, nameof(request.ReasonRejected), pReasonRejected != entity.ReasonRejected))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pReasonRejected, (int?) entity.ReasonRejected, nameof(request.ReasonRejected)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.ReasonRejected)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ReasonRejected)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pReasonRejected) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.ReasonRejected))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ReasonRejected)} requires a value.");
-                    entity.ReasonRejected = pReasonRejected;
-                if(DocPermissionFactory.IsRequested<ReasonRejectedEnm?>(request, pReasonRejected, nameof(request.ReasonRejected)) && !request.Select.Matches(nameof(request.ReasonRejected), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.ReasonRejected));
-                }
+                entity.ReasonRejected = pReasonRejected;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pReporter, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Reporter)))
+            if (PatchValue<AdjudicatedRating, DocEntityUser>(request, DocConstantModelName.ADJUDICATEDRATING, pReporter, entity.Reporter, permission, nameof(request.Reporter), pReporter != entity.Reporter))
             {
-                if(DocPermissionFactory.IsRequested(request, pReporter, entity.Reporter, nameof(request.Reporter)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Reporter)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Reporter)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pReporter) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Reporter))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Reporter)} requires a value.");
-                    entity.Reporter = pReporter;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pReporter, nameof(request.Reporter)) && !request.Select.Matches(nameof(request.Reporter), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Reporter));
-                }
+                entity.Reporter = pReporter;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<TaskTypeEnm?>(currentUser, request, pType, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Type)))
+            if (PatchValue<AdjudicatedRating, TaskTypeEnm?>(request, DocConstantModelName.ADJUDICATEDRATING, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pType, (int) entity.Type, nameof(request.Type)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
-                    if(null != pType)
-                        entity.Type = pType.Value;
-                if(DocPermissionFactory.IsRequested<TaskTypeEnm?>(request, pType, nameof(request.Type)) && !request.Select.Matches(nameof(request.Type), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Type));
-                }
+                if(null != pType) entity.Type = pType.Value;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityWorkflow>(currentUser, request, pWorkflow, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Workflow)))
+            if (PatchValue<AdjudicatedRating, DocEntityWorkflow>(request, DocConstantModelName.ADJUDICATEDRATING, pWorkflow, entity.Workflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
             {
-                if(DocPermissionFactory.IsRequested(request, pWorkflow, entity.Workflow, nameof(request.Workflow)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Workflow)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Workflow)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pWorkflow) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Workflow))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Workflow)} requires a value.");
-                    entity.Workflow = pWorkflow;
-                if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(request, pWorkflow, nameof(request.Workflow)) && !request.Select.Matches(nameof(request.Workflow), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Workflow));
-                }
+                entity.Workflow = pWorkflow;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

@@ -155,39 +155,17 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.AUDITDELTA, nameof(request.Archived)))
+            if (PatchValue<AuditDelta, bool>(request, DocConstantModelName.AUDITDELTA, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.AUDITDELTA, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityAuditRecord>(currentUser, request, pAudit, permission, DocConstantModelName.AUDITDELTA, nameof(request.Audit)))
+            if (PatchValue<AuditDelta, DocEntityAuditRecord>(request, DocConstantModelName.AUDITDELTA, pAudit, entity.Audit, permission, nameof(request.Audit), pAudit != entity.Audit))
             {
-                if(DocPermissionFactory.IsRequested(request, pAudit, entity.Audit, nameof(request.Audit)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Audit)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Audit)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pAudit) && DocResources.Metadata.IsRequired(DocConstantModelName.AUDITDELTA, nameof(request.Audit))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Audit)} requires a value.");
-                    entity.Audit = pAudit;
-                if(DocPermissionFactory.IsRequested<DocEntityAuditRecord>(request, pAudit, nameof(request.Audit)) && !request.Select.Matches(nameof(request.Audit), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Audit));
-                }
+                entity.Audit = pAudit;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDelta, permission, DocConstantModelName.AUDITDELTA, nameof(request.Delta)))
+            if (PatchValue<AuditDelta, string>(request, DocConstantModelName.AUDITDELTA, pDelta, entity.Delta, permission, nameof(request.Delta), pDelta != entity.Delta))
             {
-                if(DocPermissionFactory.IsRequested(request, pDelta, entity.Delta, nameof(request.Delta)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Delta)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Delta)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDelta) && DocResources.Metadata.IsRequired(DocConstantModelName.AUDITDELTA, nameof(request.Delta))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Delta)} requires a value.");
-                    entity.Delta = pDelta;
-                if(DocPermissionFactory.IsRequested<string>(request, pDelta, nameof(request.Delta)) && !request.Select.Matches(nameof(request.Delta), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Delta));
-                }
+                entity.Delta = pDelta;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

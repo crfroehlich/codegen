@@ -160,39 +160,17 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.TAG, nameof(request.Archived)))
+            if (PatchValue<Tag, bool>(request, DocConstantModelName.TAG, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TAG, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.TAG, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.TAG, nameof(request.Name)))
+            if (PatchValue<Tag, string>(request, DocConstantModelName.TAG, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
             {
-                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TAG, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.TAG, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
-                    entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.Select.Matches(nameof(request.Name), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Name));
-                }
+                entity.Name = pName;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.TAG, nameof(request.URI)))
+            if (PatchValue<Tag, string>(request, DocConstantModelName.TAG, pURI, entity.URI, permission, nameof(request.URI), pURI != entity.URI))
             {
-                if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TAG, nameof(request.URI)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.URI)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pURI) && DocResources.Metadata.IsRequired(DocConstantModelName.TAG, nameof(request.URI))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.URI)} requires a value.");
-                    entity.URI = pURI;
-                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.Select.Matches(nameof(request.URI), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.URI));
-                }
+                entity.URI = pURI;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

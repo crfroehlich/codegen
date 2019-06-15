@@ -161,61 +161,25 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.DATETIME, nameof(request.Archived)))
+            if (PatchValue<DateTimeDto, bool>(request, DocConstantModelName.DATETIME, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATETIME, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.DATETIME, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pDateDay, permission, DocConstantModelName.DATETIME, nameof(request.DateDay)))
+            if (PatchValue<DateTimeDto, int?>(request, DocConstantModelName.DATETIME, pDateDay, entity.DateDay, permission, nameof(request.DateDay), pDateDay != entity.DateDay))
             {
-                if(DocPermissionFactory.IsRequested(request, pDateDay, entity.DateDay, nameof(request.DateDay)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATETIME, nameof(request.DateDay)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DateDay)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDateDay) && DocResources.Metadata.IsRequired(DocConstantModelName.DATETIME, nameof(request.DateDay))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DateDay)} requires a value.");
-                    entity.DateDay = pDateDay;
-                if(DocPermissionFactory.IsRequested<int?>(request, pDateDay, nameof(request.DateDay)) && !request.Select.Matches(nameof(request.DateDay), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.DateDay));
-                }
+                entity.DateDay = pDateDay;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pDateMonth, permission, DocConstantModelName.DATETIME, nameof(request.DateMonth)))
+            if (PatchValue<DateTimeDto, int?>(request, DocConstantModelName.DATETIME, pDateMonth, entity.DateMonth, permission, nameof(request.DateMonth), pDateMonth != entity.DateMonth))
             {
-                if(DocPermissionFactory.IsRequested(request, pDateMonth, entity.DateMonth, nameof(request.DateMonth)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATETIME, nameof(request.DateMonth)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DateMonth)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDateMonth) && DocResources.Metadata.IsRequired(DocConstantModelName.DATETIME, nameof(request.DateMonth))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DateMonth)} requires a value.");
-                    entity.DateMonth = pDateMonth;
-                if(DocPermissionFactory.IsRequested<int?>(request, pDateMonth, nameof(request.DateMonth)) && !request.Select.Matches(nameof(request.DateMonth), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.DateMonth));
-                }
+                entity.DateMonth = pDateMonth;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDateTime, permission, DocConstantModelName.DATETIME, nameof(request.DateTime)))
+            if (PatchValue<DateTimeDto, DateTime?>(request, DocConstantModelName.DATETIME, pDateTime, entity.DateTime, permission, nameof(request.DateTime), pDateTime != entity.DateTime))
             {
-                if(DocPermissionFactory.IsRequested(request, pDateTime, entity.DateTime, nameof(request.DateTime)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATETIME, nameof(request.DateTime)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DateTime)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDateTime) && DocResources.Metadata.IsRequired(DocConstantModelName.DATETIME, nameof(request.DateTime))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DateTime)} requires a value.");
-                    entity.DateTime = pDateTime;
-                if(DocPermissionFactory.IsRequested<DateTime?>(request, pDateTime, nameof(request.DateTime)) && !request.Select.Matches(nameof(request.DateTime), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.DateTime));
-                }
+                entity.DateTime = pDateTime;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pDateYear, permission, DocConstantModelName.DATETIME, nameof(request.DateYear)))
+            if (PatchValue<DateTimeDto, int?>(request, DocConstantModelName.DATETIME, pDateYear, entity.DateYear, permission, nameof(request.DateYear), pDateYear != entity.DateYear))
             {
-                if(DocPermissionFactory.IsRequested(request, pDateYear, entity.DateYear, nameof(request.DateYear)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATETIME, nameof(request.DateYear)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DateYear)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDateYear) && DocResources.Metadata.IsRequired(DocConstantModelName.DATETIME, nameof(request.DateYear))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DateYear)} requires a value.");
-                    entity.DateYear = pDateYear;
-                if(DocPermissionFactory.IsRequested<int?>(request, pDateYear, nameof(request.DateYear)) && !request.Select.Matches(nameof(request.DateYear), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.DateYear));
-                }
+                entity.DateYear = pDateYear;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

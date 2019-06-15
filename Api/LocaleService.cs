@@ -160,50 +160,21 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.LOCALE, nameof(request.Archived)))
+            if (PatchValue<Locale, bool>(request, DocConstantModelName.LOCALE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pCountry, permission, DocConstantModelName.LOCALE, nameof(request.Country)))
+            if (PatchValue<Locale, string>(request, DocConstantModelName.LOCALE, pCountry, entity.Country, permission, nameof(request.Country), pCountry != entity.Country))
             {
-                if(DocPermissionFactory.IsRequested(request, pCountry, entity.Country, nameof(request.Country)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Country)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Country)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pCountry) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.Country))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Country)} requires a value.");
-                    entity.Country = pCountry;
-                if(DocPermissionFactory.IsRequested<string>(request, pCountry, nameof(request.Country)) && !request.Select.Matches(nameof(request.Country), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Country));
-                }
+                entity.Country = pCountry;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pLanguage, permission, DocConstantModelName.LOCALE, nameof(request.Language)))
+            if (PatchValue<Locale, string>(request, DocConstantModelName.LOCALE, pLanguage, entity.Language, permission, nameof(request.Language), pLanguage != entity.Language))
             {
-                if(DocPermissionFactory.IsRequested(request, pLanguage, entity.Language, nameof(request.Language)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Language)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Language)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pLanguage) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.Language))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Language)} requires a value.");
-                    entity.Language = pLanguage;
-                if(DocPermissionFactory.IsRequested<string>(request, pLanguage, nameof(request.Language)) && !request.Select.Matches(nameof(request.Language), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Language));
-                }
+                entity.Language = pLanguage;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pTimeZone, permission, DocConstantModelName.LOCALE, nameof(request.TimeZone)))
+            if (PatchValue<Locale, string>(request, DocConstantModelName.LOCALE, pTimeZone, entity.TimeZone, permission, nameof(request.TimeZone), pTimeZone != entity.TimeZone))
             {
-                if(DocPermissionFactory.IsRequested(request, pTimeZone, entity.TimeZone, nameof(request.TimeZone)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.TimeZone)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TimeZone)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pTimeZone) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.TimeZone))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.TimeZone)} requires a value.");
-                    entity.TimeZone = pTimeZone;
-                if(DocPermissionFactory.IsRequested<string>(request, pTimeZone, nameof(request.TimeZone)) && !request.Select.Matches(nameof(request.TimeZone), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.TimeZone));
-                }
+                entity.TimeZone = pTimeZone;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

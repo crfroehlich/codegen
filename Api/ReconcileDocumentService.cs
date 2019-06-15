@@ -260,163 +260,61 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Archived)))
+            if (PatchValue<ReconcileDocument, bool>(request, DocConstantModelName.RECONCILEDOCUMENT, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pArticleId, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.ArticleId)))
+            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pArticleId, entity.ArticleId, permission, nameof(request.ArticleId), pArticleId != entity.ArticleId))
             {
-                if(DocPermissionFactory.IsRequested(request, pArticleId, entity.ArticleId, nameof(request.ArticleId)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.ArticleId)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ArticleId)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArticleId) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.ArticleId))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ArticleId)} requires a value.");
-                    entity.ArticleId = pArticleId;
-                if(DocPermissionFactory.IsRequested<string>(request, pArticleId, nameof(request.ArticleId)) && !request.Select.Matches(nameof(request.ArticleId), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.ArticleId));
-                }
+                entity.ArticleId = pArticleId;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pArticleLink, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.ArticleLink)))
+            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pArticleLink, entity.ArticleLink, permission, nameof(request.ArticleLink), pArticleLink != entity.ArticleLink))
             {
-                if(DocPermissionFactory.IsRequested(request, pArticleLink, entity.ArticleLink, nameof(request.ArticleLink)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.ArticleLink)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ArticleLink)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArticleLink) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.ArticleLink))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ArticleLink)} requires a value.");
-                    entity.ArticleLink = pArticleLink;
-                if(DocPermissionFactory.IsRequested<string>(request, pArticleLink, nameof(request.ArticleLink)) && !request.Select.Matches(nameof(request.ArticleLink), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.ArticleLink));
-                }
+                entity.ArticleLink = pArticleLink;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pAssignee, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Assignee)))
+            if (PatchValue<ReconcileDocument, DocEntityUser>(request, DocConstantModelName.RECONCILEDOCUMENT, pAssignee, entity.Assignee, permission, nameof(request.Assignee), pAssignee != entity.Assignee))
             {
-                if(DocPermissionFactory.IsRequested(request, pAssignee, entity.Assignee, nameof(request.Assignee)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Assignee)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Assignee)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pAssignee) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Assignee))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Assignee)} requires a value.");
-                    entity.Assignee = pAssignee;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pAssignee, nameof(request.Assignee)) && !request.Select.Matches(nameof(request.Assignee), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Assignee));
-                }
+                entity.Assignee = pAssignee;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pData, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Data)))
+            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pData, entity.Data, permission, nameof(request.Data), pData != entity.Data))
             {
-                if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Data)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Data)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pData) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Data))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Data)} requires a value.");
-                    entity.Data = pData;
-                if(DocPermissionFactory.IsRequested<string>(request, pData, nameof(request.Data)) && !request.Select.Matches(nameof(request.Data), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Data));
-                }
+                entity.Data = pData;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Description)))
+            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
             {
-                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Description)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Description)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDescription) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Description))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Description)} requires a value.");
-                    entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.Select.Matches(nameof(request.Description), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Description));
-                }
+                entity.Description = pDescription;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocument>(currentUser, request, pDocument, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Document)))
+            if (PatchValue<ReconcileDocument, DocEntityDocument>(request, DocConstantModelName.RECONCILEDOCUMENT, pDocument, entity.Document, permission, nameof(request.Document), pDocument != entity.Document))
             {
-                if(DocPermissionFactory.IsRequested(request, pDocument, entity.Document, nameof(request.Document)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Document)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Document)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDocument) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Document))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Document)} requires a value.");
-                    entity.Document = pDocument;
-                if(DocPermissionFactory.IsRequested<DocEntityDocument>(request, pDocument, nameof(request.Document)) && !request.Select.Matches(nameof(request.Document), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Document));
-                }
+                entity.Document = pDocument;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDueDate, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.DueDate)))
+            if (PatchValue<ReconcileDocument, DateTime?>(request, DocConstantModelName.RECONCILEDOCUMENT, pDueDate, entity.DueDate, permission, nameof(request.DueDate), pDueDate != entity.DueDate))
             {
-                if(DocPermissionFactory.IsRequested(request, pDueDate, entity.DueDate, nameof(request.DueDate)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.DueDate)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DueDate)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDueDate) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.DueDate))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DueDate)} requires a value.");
-                    entity.DueDate = pDueDate;
-                if(DocPermissionFactory.IsRequested<DateTime?>(request, pDueDate, nameof(request.DueDate)) && !request.Select.Matches(nameof(request.DueDate), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.DueDate));
-                }
+                entity.DueDate = pDueDate;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pMatches, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Matches)))
+            if (PatchValue<ReconcileDocument, int?>(request, DocConstantModelName.RECONCILEDOCUMENT, pMatches, entity.Matches, permission, nameof(request.Matches), pMatches != entity.Matches))
             {
-                if(DocPermissionFactory.IsRequested(request, pMatches, entity.Matches, nameof(request.Matches)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Matches)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Matches)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pMatches) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Matches))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Matches)} requires a value.");
-                    if(null != pMatches)
-                        entity.Matches = (int) pMatches;
-                if(DocPermissionFactory.IsRequested<int?>(request, pMatches, nameof(request.Matches)) && !request.Select.Matches(nameof(request.Matches), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Matches));
-                }
+                if(null != pMatches) entity.Matches = (int) pMatches;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pReporter, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Reporter)))
+            if (PatchValue<ReconcileDocument, DocEntityUser>(request, DocConstantModelName.RECONCILEDOCUMENT, pReporter, entity.Reporter, permission, nameof(request.Reporter), pReporter != entity.Reporter))
             {
-                if(DocPermissionFactory.IsRequested(request, pReporter, entity.Reporter, nameof(request.Reporter)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Reporter)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Reporter)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pReporter) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Reporter))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Reporter)} requires a value.");
-                    entity.Reporter = pReporter;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pReporter, nameof(request.Reporter)) && !request.Select.Matches(nameof(request.Reporter), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Reporter));
-                }
+                entity.Reporter = pReporter;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSearchLink, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.SearchLink)))
+            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pSearchLink, entity.SearchLink, permission, nameof(request.SearchLink), pSearchLink != entity.SearchLink))
             {
-                if(DocPermissionFactory.IsRequested(request, pSearchLink, entity.SearchLink, nameof(request.SearchLink)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.SearchLink)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.SearchLink)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pSearchLink) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.SearchLink))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.SearchLink)} requires a value.");
-                    entity.SearchLink = pSearchLink;
-                if(DocPermissionFactory.IsRequested<string>(request, pSearchLink, nameof(request.SearchLink)) && !request.Select.Matches(nameof(request.SearchLink), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.SearchLink));
-                }
+                entity.SearchLink = pSearchLink;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<ReconciliationStatusEnm?>(currentUser, request, pStatus, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Status)))
+            if (PatchValue<ReconcileDocument, ReconciliationStatusEnm?>(request, DocConstantModelName.RECONCILEDOCUMENT, pStatus, entity.Status, permission, nameof(request.Status), pStatus != entity.Status))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pStatus, (int) entity.Status, nameof(request.Status)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Status))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Status)} requires a value.");
-                    if(null != pStatus)
-                        entity.Status = pStatus.Value;
-                if(DocPermissionFactory.IsRequested<ReconciliationStatusEnm?>(request, pStatus, nameof(request.Status)) && !request.Select.Matches(nameof(request.Status), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Status));
-                }
+                if(null != pStatus) entity.Status = pStatus.Value;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<TaskTypeEnm?>(currentUser, request, pType, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Type)))
+            if (PatchValue<ReconcileDocument, TaskTypeEnm?>(request, DocConstantModelName.RECONCILEDOCUMENT, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pType, (int) entity.Type, nameof(request.Type)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
-                    if(null != pType)
-                        entity.Type = pType.Value;
-                if(DocPermissionFactory.IsRequested<TaskTypeEnm?>(request, pType, nameof(request.Type)) && !request.Select.Matches(nameof(request.Type), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Type));
-                }
+                if(null != pType) entity.Type = pType.Value;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityWorkflow>(currentUser, request, pWorkflow, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Workflow)))
+            if (PatchValue<ReconcileDocument, DocEntityWorkflow>(request, DocConstantModelName.RECONCILEDOCUMENT, pWorkflow, entity.Workflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
             {
-                if(DocPermissionFactory.IsRequested(request, pWorkflow, entity.Workflow, nameof(request.Workflow)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Workflow)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Workflow)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pWorkflow) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Workflow))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Workflow)} requires a value.");
-                    entity.Workflow = pWorkflow;
-                if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(request, pWorkflow, nameof(request.Workflow)) && !request.Select.Matches(nameof(request.Workflow), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Workflow));
-                }
+                entity.Workflow = pWorkflow;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

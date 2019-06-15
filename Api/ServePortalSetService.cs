@@ -296,95 +296,37 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.Archived)))
+            if (PatchValue<ServePortalSet, bool>(request, DocConstantModelName.SERVEPORTALSET, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SERVEPORTALSET, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.SERVEPORTALSET, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pConfidential, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.Confidential)))
+            if (PatchValue<ServePortalSet, bool>(request, DocConstantModelName.SERVEPORTALSET, pConfidential, entity.Confidential, permission, nameof(request.Confidential), pConfidential != entity.Confidential))
             {
-                if(DocPermissionFactory.IsRequested(request, pConfidential, entity.Confidential, nameof(request.Confidential)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SERVEPORTALSET, nameof(request.Confidential)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Confidential)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pConfidential) && DocResources.Metadata.IsRequired(DocConstantModelName.SERVEPORTALSET, nameof(request.Confidential))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Confidential)} requires a value.");
-                    entity.Confidential = pConfidential;
-                if(DocPermissionFactory.IsRequested<bool>(request, pConfidential, nameof(request.Confidential)) && !request.Select.Matches(nameof(request.Confidential), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Confidential));
-                }
+                entity.Confidential = pConfidential;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pLegacyDocumentSetId, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.LegacyDocumentSetId)))
+            if (PatchValue<ServePortalSet, int?>(request, DocConstantModelName.SERVEPORTALSET, pLegacyDocumentSetId, entity.LegacyDocumentSetId, permission, nameof(request.LegacyDocumentSetId), pLegacyDocumentSetId != entity.LegacyDocumentSetId))
             {
-                if(DocPermissionFactory.IsRequested(request, pLegacyDocumentSetId, entity.LegacyDocumentSetId, nameof(request.LegacyDocumentSetId)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SERVEPORTALSET, nameof(request.LegacyDocumentSetId)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LegacyDocumentSetId)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pLegacyDocumentSetId) && DocResources.Metadata.IsRequired(DocConstantModelName.SERVEPORTALSET, nameof(request.LegacyDocumentSetId))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LegacyDocumentSetId)} requires a value.");
-                    entity.LegacyDocumentSetId = pLegacyDocumentSetId;
-                if(DocPermissionFactory.IsRequested<int?>(request, pLegacyDocumentSetId, nameof(request.LegacyDocumentSetId)) && !request.Select.Matches(nameof(request.LegacyDocumentSetId), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.LegacyDocumentSetId));
-                }
+                entity.LegacyDocumentSetId = pLegacyDocumentSetId;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.Name)))
+            if (PatchValue<ServePortalSet, string>(request, DocConstantModelName.SERVEPORTALSET, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
             {
-                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SERVEPORTALSET, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.SERVEPORTALSET, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
-                    entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.Select.Matches(nameof(request.Name), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Name));
-                }
+                entity.Name = pName;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, request, pOwner, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.Owner)))
+            if (PatchValue<ServePortalSet, DocEntityDocumentSet>(request, DocConstantModelName.SERVEPORTALSET, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
-                if(DocPermissionFactory.IsRequested(request, pOwner, entity.Owner, nameof(request.Owner)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SERVEPORTALSET, nameof(request.Owner)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Owner)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pOwner) && DocResources.Metadata.IsRequired(DocConstantModelName.SERVEPORTALSET, nameof(request.Owner))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Owner)} requires a value.");
-                    entity.Owner = pOwner;
-                if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(request, pOwner, nameof(request.Owner)) && !request.Select.Matches(nameof(request.Owner), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Owner));
-                }
+                entity.Owner = pOwner;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTeam>(currentUser, request, pProjectTeam, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.ProjectTeam)))
+            if (PatchValue<ServePortalSet, DocEntityTeam>(request, DocConstantModelName.SERVEPORTALSET, pProjectTeam, entity.ProjectTeam, permission, nameof(request.ProjectTeam), pProjectTeam != entity.ProjectTeam))
             {
-                if(DocPermissionFactory.IsRequested(request, pProjectTeam, entity.ProjectTeam, nameof(request.ProjectTeam)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SERVEPORTALSET, nameof(request.ProjectTeam)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ProjectTeam)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pProjectTeam) && DocResources.Metadata.IsRequired(DocConstantModelName.SERVEPORTALSET, nameof(request.ProjectTeam))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ProjectTeam)} requires a value.");
-                    entity.ProjectTeam = pProjectTeam;
-                if(DocPermissionFactory.IsRequested<DocEntityTeam>(request, pProjectTeam, nameof(request.ProjectTeam)) && !request.Select.Matches(nameof(request.ProjectTeam), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.ProjectTeam));
-                }
+                entity.ProjectTeam = pProjectTeam;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSettings, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.Settings)))
+            if (PatchValue<ServePortalSet, string>(request, DocConstantModelName.SERVEPORTALSET, pSettings, entity.Settings, permission, nameof(request.Settings), pSettings != entity.Settings))
             {
-                if(DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SERVEPORTALSET, nameof(request.Settings)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Settings)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pSettings) && DocResources.Metadata.IsRequired(DocConstantModelName.SERVEPORTALSET, nameof(request.Settings))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Settings)} requires a value.");
-                    entity.Settings = pSettings;
-                if(DocPermissionFactory.IsRequested<string>(request, pSettings, nameof(request.Settings)) && !request.Select.Matches(nameof(request.Settings), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Settings));
-                }
+                entity.Settings = pSettings;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocumentSetTypeEnm?>(currentUser, request, pType, permission, DocConstantModelName.SERVEPORTALSET, nameof(request.Type)))
+            if (PatchValue<ServePortalSet, DocumentSetTypeEnm?>(request, DocConstantModelName.SERVEPORTALSET, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pType, (int) entity.Type, nameof(request.Type)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SERVEPORTALSET, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.SERVEPORTALSET, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
-                    if(null != pType)
-                        entity.Type = pType.Value;
-                if(DocPermissionFactory.IsRequested<DocumentSetTypeEnm?>(request, pType, nameof(request.Type)) && !request.Select.Matches(nameof(request.Type), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Type));
-                }
+                if(null != pType) entity.Type = pType.Value;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

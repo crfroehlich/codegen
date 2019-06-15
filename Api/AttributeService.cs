@@ -222,105 +222,41 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.ATTRIBUTE, nameof(request.Archived)))
+            if (PatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ATTRIBUTE, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.ATTRIBUTE, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pAttributeName, permission, DocConstantModelName.ATTRIBUTE, nameof(request.AttributeName)))
+            if (PatchValue<Attribute, DocEntityLookupTable>(request, DocConstantModelName.ATTRIBUTE, pAttributeName, entity.AttributeName, permission, nameof(request.AttributeName), pAttributeName != entity.AttributeName))
             {
-                if(DocPermissionFactory.IsRequested(request, pAttributeName, entity.AttributeName, nameof(request.AttributeName)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ATTRIBUTE, nameof(request.AttributeName)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.AttributeName)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pAttributeName) && DocResources.Metadata.IsRequired(DocConstantModelName.ATTRIBUTE, nameof(request.AttributeName))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.AttributeName)} requires a value.");
-                    entity.AttributeName = pAttributeName;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pAttributeName, nameof(request.AttributeName)) && !request.Select.Matches(nameof(request.AttributeName), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.AttributeName));
-                }
+                entity.AttributeName = pAttributeName;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pAttributeType, permission, DocConstantModelName.ATTRIBUTE, nameof(request.AttributeType)))
+            if (PatchValue<Attribute, DocEntityLookupTable>(request, DocConstantModelName.ATTRIBUTE, pAttributeType, entity.AttributeType, permission, nameof(request.AttributeType), pAttributeType != entity.AttributeType))
             {
-                if(DocPermissionFactory.IsRequested(request, pAttributeType, entity.AttributeType, nameof(request.AttributeType)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ATTRIBUTE, nameof(request.AttributeType)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.AttributeType)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pAttributeType) && DocResources.Metadata.IsRequired(DocConstantModelName.ATTRIBUTE, nameof(request.AttributeType))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.AttributeType)} requires a value.");
-                    entity.AttributeType = pAttributeType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pAttributeType, nameof(request.AttributeType)) && !request.Select.Matches(nameof(request.AttributeType), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.AttributeType));
-                }
+                entity.AttributeType = pAttributeType;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityAttributeInterval>(currentUser, request, pInterval, permission, DocConstantModelName.ATTRIBUTE, nameof(request.Interval)))
+            if (PatchValue<Attribute, DocEntityAttributeInterval>(request, DocConstantModelName.ATTRIBUTE, pInterval, entity.Interval, permission, nameof(request.Interval), pInterval != entity.Interval))
             {
-                if(DocPermissionFactory.IsRequested(request, pInterval, entity.Interval, nameof(request.Interval)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ATTRIBUTE, nameof(request.Interval)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Interval)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pInterval) && DocResources.Metadata.IsRequired(DocConstantModelName.ATTRIBUTE, nameof(request.Interval))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Interval)} requires a value.");
-                    entity.Interval = pInterval;
-                if(DocPermissionFactory.IsRequested<DocEntityAttributeInterval>(request, pInterval, nameof(request.Interval)) && !request.Select.Matches(nameof(request.Interval), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Interval));
-                }
+                entity.Interval = pInterval;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsCharacteristic, permission, DocConstantModelName.ATTRIBUTE, nameof(request.IsCharacteristic)))
+            if (PatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pIsCharacteristic, entity.IsCharacteristic, permission, nameof(request.IsCharacteristic), pIsCharacteristic != entity.IsCharacteristic))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsCharacteristic, entity.IsCharacteristic, nameof(request.IsCharacteristic)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ATTRIBUTE, nameof(request.IsCharacteristic)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsCharacteristic)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pIsCharacteristic) && DocResources.Metadata.IsRequired(DocConstantModelName.ATTRIBUTE, nameof(request.IsCharacteristic))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsCharacteristic)} requires a value.");
-                    entity.IsCharacteristic = pIsCharacteristic;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsCharacteristic, nameof(request.IsCharacteristic)) && !request.Select.Matches(nameof(request.IsCharacteristic), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.IsCharacteristic));
-                }
+                entity.IsCharacteristic = pIsCharacteristic;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsOutcome, permission, DocConstantModelName.ATTRIBUTE, nameof(request.IsOutcome)))
+            if (PatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pIsOutcome, entity.IsOutcome, permission, nameof(request.IsOutcome), pIsOutcome != entity.IsOutcome))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsOutcome, entity.IsOutcome, nameof(request.IsOutcome)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ATTRIBUTE, nameof(request.IsOutcome)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsOutcome)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pIsOutcome) && DocResources.Metadata.IsRequired(DocConstantModelName.ATTRIBUTE, nameof(request.IsOutcome))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsOutcome)} requires a value.");
-                    entity.IsOutcome = pIsOutcome;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsOutcome, nameof(request.IsOutcome)) && !request.Select.Matches(nameof(request.IsOutcome), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.IsOutcome));
-                }
+                entity.IsOutcome = pIsOutcome;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pIsPositive, permission, DocConstantModelName.ATTRIBUTE, nameof(request.IsPositive)))
+            if (PatchValue<Attribute, bool?>(request, DocConstantModelName.ATTRIBUTE, pIsPositive, entity.IsPositive, permission, nameof(request.IsPositive), pIsPositive != entity.IsPositive))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsPositive, entity.IsPositive, nameof(request.IsPositive)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ATTRIBUTE, nameof(request.IsPositive)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsPositive)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pIsPositive) && DocResources.Metadata.IsRequired(DocConstantModelName.ATTRIBUTE, nameof(request.IsPositive))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsPositive)} requires a value.");
-                    entity.IsPositive = pIsPositive;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pIsPositive, nameof(request.IsPositive)) && !request.Select.Matches(nameof(request.IsPositive), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.IsPositive));
-                }
+                entity.IsPositive = pIsPositive;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pUniqueKey, permission, DocConstantModelName.ATTRIBUTE, nameof(request.UniqueKey)))
+            if (PatchValue<Attribute, string>(request, DocConstantModelName.ATTRIBUTE, pUniqueKey, entity.UniqueKey, permission, nameof(request.UniqueKey), pUniqueKey != entity.UniqueKey))
             {
-                if(DocPermissionFactory.IsRequested(request, pUniqueKey, entity.UniqueKey, nameof(request.UniqueKey)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ATTRIBUTE, nameof(request.UniqueKey)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.UniqueKey)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pUniqueKey) && DocResources.Metadata.IsRequired(DocConstantModelName.ATTRIBUTE, nameof(request.UniqueKey))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.UniqueKey)} requires a value.");
-                    entity.UniqueKey = pUniqueKey;
-                if(DocPermissionFactory.IsRequested<string>(request, pUniqueKey, nameof(request.UniqueKey)) && !request.Select.Matches(nameof(request.UniqueKey), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.UniqueKey));
-                }
+                entity.UniqueKey = pUniqueKey;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityValueType>(currentUser, request, pValueType, permission, DocConstantModelName.ATTRIBUTE, nameof(request.ValueType)))
+            if (PatchValue<Attribute, DocEntityValueType>(request, DocConstantModelName.ATTRIBUTE, pValueType, entity.ValueType, permission, nameof(request.ValueType), pValueType != entity.ValueType))
             {
-                if(DocPermissionFactory.IsRequested(request, pValueType, entity.ValueType, nameof(request.ValueType)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ATTRIBUTE, nameof(request.ValueType)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ValueType)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pValueType) && DocResources.Metadata.IsRequired(DocConstantModelName.ATTRIBUTE, nameof(request.ValueType))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ValueType)} requires a value.");
-                    entity.ValueType = pValueType;
-                if(DocPermissionFactory.IsRequested<DocEntityValueType>(request, pValueType, nameof(request.ValueType)) && !request.Select.Matches(nameof(request.ValueType), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.ValueType));
-                }
+                entity.ValueType = pValueType;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

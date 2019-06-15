@@ -183,95 +183,37 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.FILE, nameof(request.Archived)))
+            if (PatchValue<File, bool>(request, DocConstantModelName.FILE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<decimal?>(currentUser, request, pCost, permission, DocConstantModelName.FILE, nameof(request.Cost)))
+            if (PatchValue<File, decimal?>(request, DocConstantModelName.FILE, pCost, entity.Cost, permission, nameof(request.Cost), pCost != entity.Cost))
             {
-                if(DocPermissionFactory.IsRequested(request, pCost, entity.Cost, nameof(request.Cost)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Cost)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Cost)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pCost) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Cost))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Cost)} requires a value.");
-                    entity.Cost = pCost;
-                if(DocPermissionFactory.IsRequested<decimal?>(request, pCost, nameof(request.Cost)) && !request.Select.Matches(nameof(request.Cost), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Cost));
-                }
+                entity.Cost = pCost;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pFileLabel, permission, DocConstantModelName.FILE, nameof(request.FileLabel)))
+            if (PatchValue<File, string>(request, DocConstantModelName.FILE, pFileLabel, entity.FileLabel, permission, nameof(request.FileLabel), pFileLabel != entity.FileLabel))
             {
-                if(DocPermissionFactory.IsRequested(request, pFileLabel, entity.FileLabel, nameof(request.FileLabel)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.FileLabel)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FileLabel)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pFileLabel) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.FileLabel))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.FileLabel)} requires a value.");
-                    entity.FileLabel = pFileLabel;
-                if(DocPermissionFactory.IsRequested<string>(request, pFileLabel, nameof(request.FileLabel)) && !request.Select.Matches(nameof(request.FileLabel), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.FileLabel));
-                }
+                entity.FileLabel = pFileLabel;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pFileName, permission, DocConstantModelName.FILE, nameof(request.FileName)))
+            if (PatchValue<File, string>(request, DocConstantModelName.FILE, pFileName, entity.FileName, permission, nameof(request.FileName), pFileName != entity.FileName))
             {
-                if(DocPermissionFactory.IsRequested(request, pFileName, entity.FileName, nameof(request.FileName)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.FileName)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FileName)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pFileName) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.FileName))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.FileName)} requires a value.");
-                    entity.FileName = pFileName;
-                if(DocPermissionFactory.IsRequested<string>(request, pFileName, nameof(request.FileName)) && !request.Select.Matches(nameof(request.FileName), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.FileName));
-                }
+                entity.FileName = pFileName;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pOriginalFileName, permission, DocConstantModelName.FILE, nameof(request.OriginalFileName)))
+            if (PatchValue<File, string>(request, DocConstantModelName.FILE, pOriginalFileName, entity.OriginalFileName, permission, nameof(request.OriginalFileName), pOriginalFileName != entity.OriginalFileName))
             {
-                if(DocPermissionFactory.IsRequested(request, pOriginalFileName, entity.OriginalFileName, nameof(request.OriginalFileName)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.OriginalFileName)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.OriginalFileName)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pOriginalFileName) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.OriginalFileName))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.OriginalFileName)} requires a value.");
-                    entity.OriginalFileName = pOriginalFileName;
-                if(DocPermissionFactory.IsRequested<string>(request, pOriginalFileName, nameof(request.OriginalFileName)) && !request.Select.Matches(nameof(request.OriginalFileName), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.OriginalFileName));
-                }
+                entity.OriginalFileName = pOriginalFileName;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<FileRightsEnm?>(currentUser, request, pRights, permission, DocConstantModelName.FILE, nameof(request.Rights)))
+            if (PatchValue<File, FileRightsEnm?>(request, DocConstantModelName.FILE, pRights, entity.Rights, permission, nameof(request.Rights), pRights != entity.Rights))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pRights, (int?) entity.Rights, nameof(request.Rights)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Rights)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Rights)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pRights) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Rights))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Rights)} requires a value.");
-                    entity.Rights = pRights;
-                if(DocPermissionFactory.IsRequested<FileRightsEnm?>(request, pRights, nameof(request.Rights)) && !request.Select.Matches(nameof(request.Rights), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Rights));
-                }
+                entity.Rights = pRights;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<FileSourceEnm?>(currentUser, request, pSource, permission, DocConstantModelName.FILE, nameof(request.Source)))
+            if (PatchValue<File, FileSourceEnm?>(request, DocConstantModelName.FILE, pSource, entity.Source, permission, nameof(request.Source), pSource != entity.Source))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pSource, (int?) entity.Source, nameof(request.Source)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Source)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Source)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pSource) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Source))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Source)} requires a value.");
-                    entity.Source = pSource;
-                if(DocPermissionFactory.IsRequested<FileSourceEnm?>(request, pSource, nameof(request.Source)) && !request.Select.Matches(nameof(request.Source), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Source));
-                }
+                entity.Source = pSource;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<FileTypeEnm?>(currentUser, request, pType, permission, DocConstantModelName.FILE, nameof(request.Type)))
+            if (PatchValue<File, FileTypeEnm?>(request, DocConstantModelName.FILE, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pType, (int) entity.Type, nameof(request.Type)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.FILE, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.FILE, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
-                    if(null != pType)
-                        entity.Type = pType.Value;
-                if(DocPermissionFactory.IsRequested<FileTypeEnm?>(request, pType, nameof(request.Type)) && !request.Select.Matches(nameof(request.Type), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Type));
-                }
+                if(null != pType) entity.Type = pType.Value;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

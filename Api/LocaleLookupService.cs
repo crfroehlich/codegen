@@ -137,7 +137,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<LocaleLookup>(DocConstantModelName.LOCALELOOKUP, nameof(LocaleLookup), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pData = request.Data;
+            var pData = (DocTools.IsNullOrEmpty(request.Data)) ? null : DocSerialize<IpData>.ToString(request.Data);
             var pIpAddress = request.IpAddress;
             var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.Get(request.Locale.Id) : null;
 
@@ -160,50 +160,21 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.Archived)))
+            if (PatchValue<LocaleLookup, bool>(request, DocConstantModelName.LOCALELOOKUP, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALELOOKUP, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<IpData>(currentUser, request, pData, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.Data)))
+            if (PatchValue<LocaleLookup, string>(request, DocConstantModelName.LOCALELOOKUP, pData, entity.Data, permission, nameof(request.Data), pData != entity.Data))
             {
-                if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.Data)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Data)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pData) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALELOOKUP, nameof(request.Data))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Data)} requires a value.");
-                    entity.Data = DocSerialize<IpData>.ToString(pData);
-                if(DocPermissionFactory.IsRequested<IpData>(request, pData, nameof(request.Data)) && !request.Select.Matches(nameof(request.Data), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Data));
-                }
+                entity.Data = pData;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pIpAddress, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.IpAddress)))
+            if (PatchValue<LocaleLookup, string>(request, DocConstantModelName.LOCALELOOKUP, pIpAddress, entity.IpAddress, permission, nameof(request.IpAddress), pIpAddress != entity.IpAddress))
             {
-                if(DocPermissionFactory.IsRequested(request, pIpAddress, entity.IpAddress, nameof(request.IpAddress)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.IpAddress)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IpAddress)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pIpAddress) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALELOOKUP, nameof(request.IpAddress))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IpAddress)} requires a value.");
-                    entity.IpAddress = pIpAddress;
-                if(DocPermissionFactory.IsRequested<string>(request, pIpAddress, nameof(request.IpAddress)) && !request.Select.Matches(nameof(request.IpAddress), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.IpAddress));
-                }
+                entity.IpAddress = pIpAddress;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLocale>(currentUser, request, pLocale, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.Locale)))
+            if (PatchValue<LocaleLookup, DocEntityLocale>(request, DocConstantModelName.LOCALELOOKUP, pLocale, entity.Locale, permission, nameof(request.Locale), pLocale != entity.Locale))
             {
-                if(DocPermissionFactory.IsRequested(request, pLocale, entity.Locale, nameof(request.Locale)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.Locale)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Locale)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pLocale) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALELOOKUP, nameof(request.Locale))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Locale)} requires a value.");
-                    entity.Locale = pLocale;
-                if(DocPermissionFactory.IsRequested<DocEntityLocale>(request, pLocale, nameof(request.Locale)) && !request.Select.Matches(nameof(request.Locale), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Locale));
-                }
+                entity.Locale = pLocale;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

@@ -213,105 +213,41 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Archived)))
+            if (PatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUnitOfMeasure>(currentUser, request, pDestinationUnit, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.DestinationUnit)))
+            if (PatchValue<UnitConversionRules, DocEntityUnitOfMeasure>(request, DocConstantModelName.UNITCONVERSIONRULES, pDestinationUnit, entity.DestinationUnit, permission, nameof(request.DestinationUnit), pDestinationUnit != entity.DestinationUnit))
             {
-                if(DocPermissionFactory.IsRequested(request, pDestinationUnit, entity.DestinationUnit, nameof(request.DestinationUnit)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.DestinationUnit)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DestinationUnit)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDestinationUnit) && DocResources.Metadata.IsRequired(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.DestinationUnit))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DestinationUnit)} requires a value.");
-                    entity.DestinationUnit = pDestinationUnit;
-                if(DocPermissionFactory.IsRequested<DocEntityUnitOfMeasure>(request, pDestinationUnit, nameof(request.DestinationUnit)) && !request.Select.Matches(nameof(request.DestinationUnit), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.DestinationUnit));
-                }
+                entity.DestinationUnit = pDestinationUnit;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsDefault, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.IsDefault)))
+            if (PatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pIsDefault, entity.IsDefault, permission, nameof(request.IsDefault), pIsDefault != entity.IsDefault))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsDefault, entity.IsDefault, nameof(request.IsDefault)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.IsDefault)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsDefault)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pIsDefault) && DocResources.Metadata.IsRequired(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.IsDefault))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsDefault)} requires a value.");
-                    entity.IsDefault = pIsDefault;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsDefault, nameof(request.IsDefault)) && !request.Select.Matches(nameof(request.IsDefault), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.IsDefault));
-                }
+                entity.IsDefault = pIsDefault;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsDestinationSi, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.IsDestinationSi)))
+            if (PatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pIsDestinationSi, entity.IsDestinationSi, permission, nameof(request.IsDestinationSi), pIsDestinationSi != entity.IsDestinationSi))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsDestinationSi, entity.IsDestinationSi, nameof(request.IsDestinationSi)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.IsDestinationSi)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsDestinationSi)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pIsDestinationSi) && DocResources.Metadata.IsRequired(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.IsDestinationSi))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsDestinationSi)} requires a value.");
-                    entity.IsDestinationSi = pIsDestinationSi;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsDestinationSi, nameof(request.IsDestinationSi)) && !request.Select.Matches(nameof(request.IsDestinationSi), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.IsDestinationSi));
-                }
+                entity.IsDestinationSi = pIsDestinationSi;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, request, pModifierTerm, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.ModifierTerm)))
+            if (PatchValue<UnitConversionRules, DocEntityTermMaster>(request, DocConstantModelName.UNITCONVERSIONRULES, pModifierTerm, entity.ModifierTerm, permission, nameof(request.ModifierTerm), pModifierTerm != entity.ModifierTerm))
             {
-                if(DocPermissionFactory.IsRequested(request, pModifierTerm, entity.ModifierTerm, nameof(request.ModifierTerm)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.ModifierTerm)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ModifierTerm)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pModifierTerm) && DocResources.Metadata.IsRequired(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.ModifierTerm))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ModifierTerm)} requires a value.");
-                    entity.ModifierTerm = pModifierTerm;
-                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(request, pModifierTerm, nameof(request.ModifierTerm)) && !request.Select.Matches(nameof(request.ModifierTerm), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.ModifierTerm));
-                }
+                entity.ModifierTerm = pModifierTerm;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<decimal>(currentUser, request, pMultiplier, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Multiplier)))
+            if (PatchValue<UnitConversionRules, decimal>(request, DocConstantModelName.UNITCONVERSIONRULES, pMultiplier, entity.Multiplier, permission, nameof(request.Multiplier), pMultiplier != entity.Multiplier))
             {
-                if(DocPermissionFactory.IsRequested(request, pMultiplier, entity.Multiplier, nameof(request.Multiplier)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Multiplier)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Multiplier)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pMultiplier) && DocResources.Metadata.IsRequired(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Multiplier))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Multiplier)} requires a value.");
-                    entity.Multiplier = pMultiplier;
-                if(DocPermissionFactory.IsRequested<decimal>(request, pMultiplier, nameof(request.Multiplier)) && !request.Select.Matches(nameof(request.Multiplier), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Multiplier));
-                }
+                entity.Multiplier = pMultiplier;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pParent, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Parent)))
+            if (PatchValue<UnitConversionRules, DocEntityLookupTable>(request, DocConstantModelName.UNITCONVERSIONRULES, pParent, entity.Parent, permission, nameof(request.Parent), pParent != entity.Parent))
             {
-                if(DocPermissionFactory.IsRequested(request, pParent, entity.Parent, nameof(request.Parent)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Parent)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Parent)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pParent) && DocResources.Metadata.IsRequired(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Parent))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Parent)} requires a value.");
-                    entity.Parent = pParent;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pParent, nameof(request.Parent)) && !request.Select.Matches(nameof(request.Parent), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Parent));
-                }
+                entity.Parent = pParent;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, request, pRootTerm, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.RootTerm)))
+            if (PatchValue<UnitConversionRules, DocEntityTermMaster>(request, DocConstantModelName.UNITCONVERSIONRULES, pRootTerm, entity.RootTerm, permission, nameof(request.RootTerm), pRootTerm != entity.RootTerm))
             {
-                if(DocPermissionFactory.IsRequested(request, pRootTerm, entity.RootTerm, nameof(request.RootTerm)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.RootTerm)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.RootTerm)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pRootTerm) && DocResources.Metadata.IsRequired(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.RootTerm))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.RootTerm)} requires a value.");
-                    entity.RootTerm = pRootTerm;
-                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(request, pRootTerm, nameof(request.RootTerm)) && !request.Select.Matches(nameof(request.RootTerm), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.RootTerm));
-                }
+                entity.RootTerm = pRootTerm;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUnitOfMeasure>(currentUser, request, pSourceUnit, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.SourceUnit)))
+            if (PatchValue<UnitConversionRules, DocEntityUnitOfMeasure>(request, DocConstantModelName.UNITCONVERSIONRULES, pSourceUnit, entity.SourceUnit, permission, nameof(request.SourceUnit), pSourceUnit != entity.SourceUnit))
             {
-                if(DocPermissionFactory.IsRequested(request, pSourceUnit, entity.SourceUnit, nameof(request.SourceUnit)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.SourceUnit)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.SourceUnit)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pSourceUnit) && DocResources.Metadata.IsRequired(DocConstantModelName.UNITCONVERSIONRULES, nameof(request.SourceUnit))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.SourceUnit)} requires a value.");
-                    entity.SourceUnit = pSourceUnit;
-                if(DocPermissionFactory.IsRequested<DocEntityUnitOfMeasure>(request, pSourceUnit, nameof(request.SourceUnit)) && !request.Select.Matches(nameof(request.SourceUnit), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.SourceUnit));
-                }
+                entity.SourceUnit = pSourceUnit;
             }
 
             if (request.Locked) entity.Locked = request.Locked;

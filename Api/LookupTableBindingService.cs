@@ -161,7 +161,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<LookupTableBinding>(DocConstantModelName.LOOKUPTABLEBINDING, nameof(LookupTableBinding), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pBinding = request.Binding;
+            var pBinding = (DocTools.IsNullOrEmpty(request.Binding)) ? null : DocSerialize<Bindings>.ToString(request.Binding);
             var pBoundName = request.BoundName;
             DocEntityLookupTable pLookupTable = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.LookupTable?.Name, request.LookupTable?.Id);
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
@@ -187,61 +187,25 @@ namespace Services.API
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Archived)))
+            if (PatchValue<LookupTableBinding, bool>(request, DocConstantModelName.LOOKUPTABLEBINDING, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Archived));
-                }
+                entity.Archived = pArchived;
             }
-
-            if (DocPermissionFactory.IsRequestedHasPermission<Bindings>(currentUser, request, pBinding, permission, DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Binding)))
+            if (PatchValue<LookupTableBinding, string>(request, DocConstantModelName.LOOKUPTABLEBINDING, pBinding, entity.Binding, permission, nameof(request.Binding), pBinding != entity.Binding))
             {
-                if(DocPermissionFactory.IsRequested(request, pBinding, entity.Binding, nameof(request.Binding)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Binding)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Binding)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pBinding) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Binding))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Binding)} requires a value.");
-                    entity.Binding = DocSerialize<Bindings>.ToString(pBinding);
-                if(DocPermissionFactory.IsRequested<Bindings>(request, pBinding, nameof(request.Binding)) && !request.Select.Matches(nameof(request.Binding), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Binding));
-                }
+                entity.Binding = pBinding;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pBoundName, permission, DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.BoundName)))
+            if (PatchValue<LookupTableBinding, string>(request, DocConstantModelName.LOOKUPTABLEBINDING, pBoundName, entity.BoundName, permission, nameof(request.BoundName), pBoundName != entity.BoundName))
             {
-                if(DocPermissionFactory.IsRequested(request, pBoundName, entity.BoundName, nameof(request.BoundName)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.BoundName)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.BoundName)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pBoundName) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.BoundName))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.BoundName)} requires a value.");
-                    entity.BoundName = pBoundName;
-                if(DocPermissionFactory.IsRequested<string>(request, pBoundName, nameof(request.BoundName)) && !request.Select.Matches(nameof(request.BoundName), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.BoundName));
-                }
+                entity.BoundName = pBoundName;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pLookupTable, permission, DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.LookupTable)))
+            if (PatchValue<LookupTableBinding, DocEntityLookupTable>(request, DocConstantModelName.LOOKUPTABLEBINDING, pLookupTable, entity.LookupTable, permission, nameof(request.LookupTable), pLookupTable != entity.LookupTable))
             {
-                if(DocPermissionFactory.IsRequested(request, pLookupTable, entity.LookupTable, nameof(request.LookupTable)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.LookupTable)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LookupTable)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pLookupTable) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.LookupTable))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LookupTable)} requires a value.");
-                    entity.LookupTable = pLookupTable;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pLookupTable, nameof(request.LookupTable)) && !request.Select.Matches(nameof(request.LookupTable), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.LookupTable));
-                }
+                entity.LookupTable = pLookupTable;
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityScope>(currentUser, request, pScope, permission, DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Scope)))
+            if (PatchValue<LookupTableBinding, DocEntityScope>(request, DocConstantModelName.LOOKUPTABLEBINDING, pScope, entity.Scope, permission, nameof(request.Scope), pScope != entity.Scope))
             {
-                if(DocPermissionFactory.IsRequested(request, pScope, entity.Scope, nameof(request.Scope)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Scope)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Scope)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pScope) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Scope))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Scope)} requires a value.");
-                    entity.Scope = pScope;
-                if(DocPermissionFactory.IsRequested<DocEntityScope>(request, pScope, nameof(request.Scope)) && !request.Select.Matches(nameof(request.Scope), ignoreSpaces: true))
-                {
-                    request.Select.Add(nameof(request.Scope));
-                }
+                entity.Scope = pScope;
             }
 
             if (request.Locked) entity.Locked = request.Locked;
