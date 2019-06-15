@@ -147,49 +147,35 @@ namespace Services.API
             var pDescription = request.Description;
             var pName = request.Name;
             var pOrder = request.Order;
-
-            DocEntityDataTab entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityDataTab(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityDataTab.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<DataTab, bool>(request, DocConstantModelName.DATATAB, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityDataTab,DataTab>(request, permission, session);
+
+            if (AllowPatchValue<DataTab, bool>(request, DocConstantModelName.DATATAB, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<DataTab, DocEntityDataClass>(request, DocConstantModelName.DATATAB, pClass, entity.Class, permission, nameof(request.Class), pClass != entity.Class))
+            if (AllowPatchValue<DataTab, DocEntityDataClass>(request, DocConstantModelName.DATATAB, pClass, permission, nameof(request.Class), pClass != entity.Class))
             {
                 entity.Class = pClass;
             }
-            if (PatchValue<DataTab, string>(request, DocConstantModelName.DATATAB, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<DataTab, string>(request, DocConstantModelName.DATATAB, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<DataTab, string>(request, DocConstantModelName.DATATAB, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<DataTab, string>(request, DocConstantModelName.DATATAB, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<DataTab, int?>(request, DocConstantModelName.DATATAB, pOrder, entity.Order, permission, nameof(request.Order), pOrder != entity.Order))
+            if (AllowPatchValue<DataTab, int?>(request, DocConstantModelName.DATATAB, pOrder, permission, nameof(request.Order), pOrder != entity.Order))
             {
                 if(null != pOrder) entity.Order = (int) pOrder;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<DataTab, bool>(request, DocConstantModelName.DATATAB, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

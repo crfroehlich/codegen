@@ -155,41 +155,27 @@ namespace Services.API
             var pHelp = GetVariable<Reference>(request, nameof(request.Help), request.Help?.ToList(), request.HelpIds?.ToList());
             var pName = request.Name;
             var pRoles = GetVariable<Reference>(request, nameof(request.Roles), request.Roles?.ToList(), request.RolesIds?.ToList());
-
-            DocEntityPage entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityPage(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityPage.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Page, bool>(request, DocConstantModelName.PAGE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityPage,Page>(request, permission, session);
+
+            if (AllowPatchValue<Page, bool>(request, DocConstantModelName.PAGE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Page, string>(request, DocConstantModelName.PAGE, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<Page, string>(request, DocConstantModelName.PAGE, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<Page, string>(request, DocConstantModelName.PAGE, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<Page, string>(request, DocConstantModelName.PAGE, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Page, bool>(request, DocConstantModelName.PAGE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

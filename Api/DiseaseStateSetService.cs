@@ -266,61 +266,47 @@ namespace Services.API
             var pStats = GetVariable<Reference>(request, nameof(request.Stats), request.Stats?.ToList(), request.StatsIds?.ToList());
             var pType = request.Type;
             var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
-
-            DocEntityDiseaseStateSet entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityDiseaseStateSet(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityDiseaseStateSet.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<DiseaseStateSet, bool>(request, DocConstantModelName.DISEASESTATESET, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityDiseaseStateSet,DiseaseStateSet>(request, permission, session);
+
+            if (AllowPatchValue<DiseaseStateSet, bool>(request, DocConstantModelName.DISEASESTATESET, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<DiseaseStateSet, bool>(request, DocConstantModelName.DISEASESTATESET, pConfidential, entity.Confidential, permission, nameof(request.Confidential), pConfidential != entity.Confidential))
+            if (AllowPatchValue<DiseaseStateSet, bool>(request, DocConstantModelName.DISEASESTATESET, pConfidential, permission, nameof(request.Confidential), pConfidential != entity.Confidential))
             {
                 entity.Confidential = pConfidential;
             }
-            if (PatchValue<DiseaseStateSet, int?>(request, DocConstantModelName.DISEASESTATESET, pLegacyDocumentSetId, entity.LegacyDocumentSetId, permission, nameof(request.LegacyDocumentSetId), pLegacyDocumentSetId != entity.LegacyDocumentSetId))
+            if (AllowPatchValue<DiseaseStateSet, int?>(request, DocConstantModelName.DISEASESTATESET, pLegacyDocumentSetId, permission, nameof(request.LegacyDocumentSetId), pLegacyDocumentSetId != entity.LegacyDocumentSetId))
             {
                 entity.LegacyDocumentSetId = pLegacyDocumentSetId;
             }
-            if (PatchValue<DiseaseStateSet, string>(request, DocConstantModelName.DISEASESTATESET, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<DiseaseStateSet, string>(request, DocConstantModelName.DISEASESTATESET, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<DiseaseStateSet, DocEntityDocumentSet>(request, DocConstantModelName.DISEASESTATESET, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
+            if (AllowPatchValue<DiseaseStateSet, DocEntityDocumentSet>(request, DocConstantModelName.DISEASESTATESET, pOwner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
                 entity.Owner = pOwner;
             }
-            if (PatchValue<DiseaseStateSet, DocEntityTeam>(request, DocConstantModelName.DISEASESTATESET, pProjectTeam, entity.ProjectTeam, permission, nameof(request.ProjectTeam), pProjectTeam != entity.ProjectTeam))
+            if (AllowPatchValue<DiseaseStateSet, DocEntityTeam>(request, DocConstantModelName.DISEASESTATESET, pProjectTeam, permission, nameof(request.ProjectTeam), pProjectTeam != entity.ProjectTeam))
             {
                 entity.ProjectTeam = pProjectTeam;
             }
-            if (PatchValue<DiseaseStateSet, string>(request, DocConstantModelName.DISEASESTATESET, pSettings, entity.Settings, permission, nameof(request.Settings), pSettings != entity.Settings))
+            if (AllowPatchValue<DiseaseStateSet, string>(request, DocConstantModelName.DISEASESTATESET, pSettings, permission, nameof(request.Settings), pSettings != entity.Settings))
             {
                 entity.Settings = pSettings;
             }
-            if (PatchValue<DiseaseStateSet, DocumentSetTypeEnm?>(request, DocConstantModelName.DISEASESTATESET, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<DiseaseStateSet, DocumentSetTypeEnm?>(request, DocConstantModelName.DISEASESTATESET, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<DiseaseStateSet, bool>(request, DocConstantModelName.DISEASESTATESET, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

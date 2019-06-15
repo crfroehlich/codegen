@@ -126,34 +126,20 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pInterval = request.Interval;
-
-            DocEntityAttributeInterval entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityAttributeInterval(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityAttributeInterval.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<AttributeInterval, bool>(request, DocConstantModelName.ATTRIBUTEINTERVAL, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityAttributeInterval,AttributeInterval>(request, permission, session);
+
+            if (AllowPatchValue<AttributeInterval, bool>(request, DocConstantModelName.ATTRIBUTEINTERVAL, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
 
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<AttributeInterval, bool>(request, DocConstantModelName.ATTRIBUTEINTERVAL, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

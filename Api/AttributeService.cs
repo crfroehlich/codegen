@@ -202,65 +202,51 @@ namespace Services.API
             var pIsPositive = request.IsPositive;
             var pUniqueKey = request.UniqueKey;
             var pValueType = DocEntityValueType.Get(request.ValueType);
-
-            DocEntityAttribute entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityAttribute(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityAttribute.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityAttribute,Attribute>(request, permission, session);
+
+            if (AllowPatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Attribute, DocEntityLookupTable>(request, DocConstantModelName.ATTRIBUTE, pAttributeName, entity.AttributeName, permission, nameof(request.AttributeName), pAttributeName != entity.AttributeName))
+            if (AllowPatchValue<Attribute, DocEntityLookupTable>(request, DocConstantModelName.ATTRIBUTE, pAttributeName, permission, nameof(request.AttributeName), pAttributeName != entity.AttributeName))
             {
                 entity.AttributeName = pAttributeName;
             }
-            if (PatchValue<Attribute, DocEntityLookupTable>(request, DocConstantModelName.ATTRIBUTE, pAttributeType, entity.AttributeType, permission, nameof(request.AttributeType), pAttributeType != entity.AttributeType))
+            if (AllowPatchValue<Attribute, DocEntityLookupTable>(request, DocConstantModelName.ATTRIBUTE, pAttributeType, permission, nameof(request.AttributeType), pAttributeType != entity.AttributeType))
             {
                 entity.AttributeType = pAttributeType;
             }
-            if (PatchValue<Attribute, DocEntityAttributeInterval>(request, DocConstantModelName.ATTRIBUTE, pInterval, entity.Interval, permission, nameof(request.Interval), pInterval != entity.Interval))
+            if (AllowPatchValue<Attribute, DocEntityAttributeInterval>(request, DocConstantModelName.ATTRIBUTE, pInterval, permission, nameof(request.Interval), pInterval != entity.Interval))
             {
                 entity.Interval = pInterval;
             }
-            if (PatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pIsCharacteristic, entity.IsCharacteristic, permission, nameof(request.IsCharacteristic), pIsCharacteristic != entity.IsCharacteristic))
+            if (AllowPatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pIsCharacteristic, permission, nameof(request.IsCharacteristic), pIsCharacteristic != entity.IsCharacteristic))
             {
                 entity.IsCharacteristic = pIsCharacteristic;
             }
-            if (PatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pIsOutcome, entity.IsOutcome, permission, nameof(request.IsOutcome), pIsOutcome != entity.IsOutcome))
+            if (AllowPatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pIsOutcome, permission, nameof(request.IsOutcome), pIsOutcome != entity.IsOutcome))
             {
                 entity.IsOutcome = pIsOutcome;
             }
-            if (PatchValue<Attribute, bool?>(request, DocConstantModelName.ATTRIBUTE, pIsPositive, entity.IsPositive, permission, nameof(request.IsPositive), pIsPositive != entity.IsPositive))
+            if (AllowPatchValue<Attribute, bool?>(request, DocConstantModelName.ATTRIBUTE, pIsPositive, permission, nameof(request.IsPositive), pIsPositive != entity.IsPositive))
             {
                 entity.IsPositive = pIsPositive;
             }
-            if (PatchValue<Attribute, string>(request, DocConstantModelName.ATTRIBUTE, pUniqueKey, entity.UniqueKey, permission, nameof(request.UniqueKey), pUniqueKey != entity.UniqueKey))
+            if (AllowPatchValue<Attribute, string>(request, DocConstantModelName.ATTRIBUTE, pUniqueKey, permission, nameof(request.UniqueKey), pUniqueKey != entity.UniqueKey))
             {
                 entity.UniqueKey = pUniqueKey;
             }
-            if (PatchValue<Attribute, DocEntityValueType>(request, DocConstantModelName.ATTRIBUTE, pValueType, entity.ValueType, permission, nameof(request.ValueType), pValueType != entity.ValueType))
+            if (AllowPatchValue<Attribute, DocEntityValueType>(request, DocConstantModelName.ATTRIBUTE, pValueType, permission, nameof(request.ValueType), pValueType != entity.ValueType))
             {
                 entity.ValueType = pValueType;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Attribute, bool>(request, DocConstantModelName.ATTRIBUTE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

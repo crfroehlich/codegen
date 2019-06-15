@@ -141,49 +141,35 @@ namespace Services.API
             var pDateMonth = request.DateMonth;
             var pDateTime = request.DateTime;
             var pDateYear = request.DateYear;
-
-            DocEntityDateTime entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityDateTime(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityDateTime.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<DateTimeDto, bool>(request, DocConstantModelName.DATETIME, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityDateTime,DateTimeDto>(request, permission, session);
+
+            if (AllowPatchValue<DateTimeDto, bool>(request, DocConstantModelName.DATETIME, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<DateTimeDto, int?>(request, DocConstantModelName.DATETIME, pDateDay, entity.DateDay, permission, nameof(request.DateDay), pDateDay != entity.DateDay))
+            if (AllowPatchValue<DateTimeDto, int?>(request, DocConstantModelName.DATETIME, pDateDay, permission, nameof(request.DateDay), pDateDay != entity.DateDay))
             {
                 entity.DateDay = pDateDay;
             }
-            if (PatchValue<DateTimeDto, int?>(request, DocConstantModelName.DATETIME, pDateMonth, entity.DateMonth, permission, nameof(request.DateMonth), pDateMonth != entity.DateMonth))
+            if (AllowPatchValue<DateTimeDto, int?>(request, DocConstantModelName.DATETIME, pDateMonth, permission, nameof(request.DateMonth), pDateMonth != entity.DateMonth))
             {
                 entity.DateMonth = pDateMonth;
             }
-            if (PatchValue<DateTimeDto, DateTime?>(request, DocConstantModelName.DATETIME, pDateTime, entity.DateTime, permission, nameof(request.DateTime), pDateTime != entity.DateTime))
+            if (AllowPatchValue<DateTimeDto, DateTime?>(request, DocConstantModelName.DATETIME, pDateTime, permission, nameof(request.DateTime), pDateTime != entity.DateTime))
             {
                 entity.DateTime = pDateTime;
             }
-            if (PatchValue<DateTimeDto, int?>(request, DocConstantModelName.DATETIME, pDateYear, entity.DateYear, permission, nameof(request.DateYear), pDateYear != entity.DateYear))
+            if (AllowPatchValue<DateTimeDto, int?>(request, DocConstantModelName.DATETIME, pDateYear, permission, nameof(request.DateYear), pDateYear != entity.DateYear))
             {
                 entity.DateYear = pDateYear;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<DateTimeDto, bool>(request, DocConstantModelName.DATETIME, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

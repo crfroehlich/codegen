@@ -203,61 +203,47 @@ namespace Services.API
             var pStats = GetVariable<Reference>(request, nameof(request.Stats), request.Stats?.ToList(), request.StatsIds?.ToList());
             var pType = request.Type;
             var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
-
-            DocEntityDocumentSet entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityDocumentSet(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityDocumentSet.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<DocumentSet, bool>(request, DocConstantModelName.DOCUMENTSET, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityDocumentSet,DocumentSet>(request, permission, session);
+
+            if (AllowPatchValue<DocumentSet, bool>(request, DocConstantModelName.DOCUMENTSET, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<DocumentSet, bool>(request, DocConstantModelName.DOCUMENTSET, pConfidential, entity.Confidential, permission, nameof(request.Confidential), pConfidential != entity.Confidential))
+            if (AllowPatchValue<DocumentSet, bool>(request, DocConstantModelName.DOCUMENTSET, pConfidential, permission, nameof(request.Confidential), pConfidential != entity.Confidential))
             {
                 entity.Confidential = pConfidential;
             }
-            if (PatchValue<DocumentSet, int?>(request, DocConstantModelName.DOCUMENTSET, pLegacyDocumentSetId, entity.LegacyDocumentSetId, permission, nameof(request.LegacyDocumentSetId), pLegacyDocumentSetId != entity.LegacyDocumentSetId))
+            if (AllowPatchValue<DocumentSet, int?>(request, DocConstantModelName.DOCUMENTSET, pLegacyDocumentSetId, permission, nameof(request.LegacyDocumentSetId), pLegacyDocumentSetId != entity.LegacyDocumentSetId))
             {
                 entity.LegacyDocumentSetId = pLegacyDocumentSetId;
             }
-            if (PatchValue<DocumentSet, string>(request, DocConstantModelName.DOCUMENTSET, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<DocumentSet, string>(request, DocConstantModelName.DOCUMENTSET, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<DocumentSet, DocEntityDocumentSet>(request, DocConstantModelName.DOCUMENTSET, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
+            if (AllowPatchValue<DocumentSet, DocEntityDocumentSet>(request, DocConstantModelName.DOCUMENTSET, pOwner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
                 entity.Owner = pOwner;
             }
-            if (PatchValue<DocumentSet, DocEntityTeam>(request, DocConstantModelName.DOCUMENTSET, pProjectTeam, entity.ProjectTeam, permission, nameof(request.ProjectTeam), pProjectTeam != entity.ProjectTeam))
+            if (AllowPatchValue<DocumentSet, DocEntityTeam>(request, DocConstantModelName.DOCUMENTSET, pProjectTeam, permission, nameof(request.ProjectTeam), pProjectTeam != entity.ProjectTeam))
             {
                 entity.ProjectTeam = pProjectTeam;
             }
-            if (PatchValue<DocumentSet, string>(request, DocConstantModelName.DOCUMENTSET, pSettings, entity.Settings, permission, nameof(request.Settings), pSettings != entity.Settings))
+            if (AllowPatchValue<DocumentSet, string>(request, DocConstantModelName.DOCUMENTSET, pSettings, permission, nameof(request.Settings), pSettings != entity.Settings))
             {
                 entity.Settings = pSettings;
             }
-            if (PatchValue<DocumentSet, DocumentSetTypeEnm?>(request, DocConstantModelName.DOCUMENTSET, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<DocumentSet, DocumentSetTypeEnm?>(request, DocConstantModelName.DOCUMENTSET, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<DocumentSet, bool>(request, DocConstantModelName.DOCUMENTSET, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

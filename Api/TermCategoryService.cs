@@ -165,45 +165,31 @@ namespace Services.API
             var pParentCategory = (request.ParentCategory?.Id > 0) ? DocEntityTermCategory.Get(request.ParentCategory.Id) : null;
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
             var pTerms = GetVariable<Reference>(request, nameof(request.Terms), request.Terms?.ToList(), request.TermsIds?.ToList());
-
-            DocEntityTermCategory entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityTermCategory(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityTermCategory.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<TermCategory, bool>(request, DocConstantModelName.TERMCATEGORY, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityTermCategory,TermCategory>(request, permission, session);
+
+            if (AllowPatchValue<TermCategory, bool>(request, DocConstantModelName.TERMCATEGORY, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<TermCategory, DocEntityLookupTable>(request, DocConstantModelName.TERMCATEGORY, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<TermCategory, DocEntityLookupTable>(request, DocConstantModelName.TERMCATEGORY, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<TermCategory, DocEntityTermCategory>(request, DocConstantModelName.TERMCATEGORY, pParentCategory, entity.ParentCategory, permission, nameof(request.ParentCategory), pParentCategory != entity.ParentCategory))
+            if (AllowPatchValue<TermCategory, DocEntityTermCategory>(request, DocConstantModelName.TERMCATEGORY, pParentCategory, permission, nameof(request.ParentCategory), pParentCategory != entity.ParentCategory))
             {
                 entity.ParentCategory = pParentCategory;
             }
-            if (PatchValue<TermCategory, DocEntityScope>(request, DocConstantModelName.TERMCATEGORY, pScope, entity.Scope, permission, nameof(request.Scope), pScope != entity.Scope))
+            if (AllowPatchValue<TermCategory, DocEntityScope>(request, DocConstantModelName.TERMCATEGORY, pScope, permission, nameof(request.Scope), pScope != entity.Scope))
             {
                 entity.Scope = pScope;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<TermCategory, bool>(request, DocConstantModelName.TERMCATEGORY, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

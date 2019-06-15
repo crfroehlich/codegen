@@ -166,53 +166,39 @@ namespace Services.API
             var pIcon = request.Icon;
             var pPage = (request.Page?.Id > 0) ? DocEntityPage.Get(request.Page.Id) : null;
             var pTerm = (request.Term?.Id > 0) ? DocEntityTermMaster.Get(request.Term.Id) : null;
-
-            DocEntityGlossary entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityGlossary(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityGlossary.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Glossary, bool>(request, DocConstantModelName.GLOSSARY, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityGlossary,Glossary>(request, permission, session);
+
+            if (AllowPatchValue<Glossary, bool>(request, DocConstantModelName.GLOSSARY, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Glossary, string>(request, DocConstantModelName.GLOSSARY, pDefinition, entity.Definition, permission, nameof(request.Definition), pDefinition != entity.Definition))
+            if (AllowPatchValue<Glossary, string>(request, DocConstantModelName.GLOSSARY, pDefinition, permission, nameof(request.Definition), pDefinition != entity.Definition))
             {
                 entity.Definition = pDefinition;
             }
-            if (PatchValue<Glossary, DocEntityLookupTableEnum>(request, DocConstantModelName.GLOSSARY, pEnum, entity.Enum, permission, nameof(request.Enum), pEnum != entity.Enum))
+            if (AllowPatchValue<Glossary, DocEntityLookupTableEnum>(request, DocConstantModelName.GLOSSARY, pEnum, permission, nameof(request.Enum), pEnum != entity.Enum))
             {
                 entity.Enum = pEnum;
             }
-            if (PatchValue<Glossary, string>(request, DocConstantModelName.GLOSSARY, pIcon, entity.Icon, permission, nameof(request.Icon), pIcon != entity.Icon))
+            if (AllowPatchValue<Glossary, string>(request, DocConstantModelName.GLOSSARY, pIcon, permission, nameof(request.Icon), pIcon != entity.Icon))
             {
                 entity.Icon = pIcon;
             }
-            if (PatchValue<Glossary, DocEntityPage>(request, DocConstantModelName.GLOSSARY, pPage, entity.Page, permission, nameof(request.Page), pPage != entity.Page))
+            if (AllowPatchValue<Glossary, DocEntityPage>(request, DocConstantModelName.GLOSSARY, pPage, permission, nameof(request.Page), pPage != entity.Page))
             {
                 entity.Page = pPage;
             }
-            if (PatchValue<Glossary, DocEntityTermMaster>(request, DocConstantModelName.GLOSSARY, pTerm, entity.Term, permission, nameof(request.Term), pTerm != entity.Term))
+            if (AllowPatchValue<Glossary, DocEntityTermMaster>(request, DocConstantModelName.GLOSSARY, pTerm, permission, nameof(request.Term), pTerm != entity.Term))
             {
                 entity.Term = pTerm;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Glossary, bool>(request, DocConstantModelName.GLOSSARY, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

@@ -167,49 +167,35 @@ namespace Services.API
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
             var pSynonyms = GetVariable<Reference>(request, nameof(request.Synonyms), request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
             var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
-
-            DocEntityLookupTableBinding entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityLookupTableBinding(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityLookupTableBinding.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<LookupTableBinding, bool>(request, DocConstantModelName.LOOKUPTABLEBINDING, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityLookupTableBinding,LookupTableBinding>(request, permission, session);
+
+            if (AllowPatchValue<LookupTableBinding, bool>(request, DocConstantModelName.LOOKUPTABLEBINDING, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<LookupTableBinding, string>(request, DocConstantModelName.LOOKUPTABLEBINDING, pBinding, entity.Binding, permission, nameof(request.Binding), pBinding != entity.Binding))
+            if (AllowPatchValue<LookupTableBinding, string>(request, DocConstantModelName.LOOKUPTABLEBINDING, pBinding, permission, nameof(request.Binding), pBinding != entity.Binding))
             {
                 entity.Binding = pBinding;
             }
-            if (PatchValue<LookupTableBinding, string>(request, DocConstantModelName.LOOKUPTABLEBINDING, pBoundName, entity.BoundName, permission, nameof(request.BoundName), pBoundName != entity.BoundName))
+            if (AllowPatchValue<LookupTableBinding, string>(request, DocConstantModelName.LOOKUPTABLEBINDING, pBoundName, permission, nameof(request.BoundName), pBoundName != entity.BoundName))
             {
                 entity.BoundName = pBoundName;
             }
-            if (PatchValue<LookupTableBinding, DocEntityLookupTable>(request, DocConstantModelName.LOOKUPTABLEBINDING, pLookupTable, entity.LookupTable, permission, nameof(request.LookupTable), pLookupTable != entity.LookupTable))
+            if (AllowPatchValue<LookupTableBinding, DocEntityLookupTable>(request, DocConstantModelName.LOOKUPTABLEBINDING, pLookupTable, permission, nameof(request.LookupTable), pLookupTable != entity.LookupTable))
             {
                 entity.LookupTable = pLookupTable;
             }
-            if (PatchValue<LookupTableBinding, DocEntityScope>(request, DocConstantModelName.LOOKUPTABLEBINDING, pScope, entity.Scope, permission, nameof(request.Scope), pScope != entity.Scope))
+            if (AllowPatchValue<LookupTableBinding, DocEntityScope>(request, DocConstantModelName.LOOKUPTABLEBINDING, pScope, permission, nameof(request.Scope), pScope != entity.Scope))
             {
                 entity.Scope = pScope;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<LookupTableBinding, bool>(request, DocConstantModelName.LOOKUPTABLEBINDING, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

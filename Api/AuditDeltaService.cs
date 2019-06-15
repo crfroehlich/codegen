@@ -135,41 +135,27 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pAudit = (request.Audit?.Id > 0) ? DocEntityAuditRecord.Get(request.Audit.Id) : null;
             var pDelta = request.Delta;
-
-            DocEntityAuditDelta entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityAuditDelta(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityAuditDelta.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<AuditDelta, bool>(request, DocConstantModelName.AUDITDELTA, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityAuditDelta,AuditDelta>(request, permission, session);
+
+            if (AllowPatchValue<AuditDelta, bool>(request, DocConstantModelName.AUDITDELTA, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<AuditDelta, DocEntityAuditRecord>(request, DocConstantModelName.AUDITDELTA, pAudit, entity.Audit, permission, nameof(request.Audit), pAudit != entity.Audit))
+            if (AllowPatchValue<AuditDelta, DocEntityAuditRecord>(request, DocConstantModelName.AUDITDELTA, pAudit, permission, nameof(request.Audit), pAudit != entity.Audit))
             {
                 entity.Audit = pAudit;
             }
-            if (PatchValue<AuditDelta, string>(request, DocConstantModelName.AUDITDELTA, pDelta, entity.Delta, permission, nameof(request.Delta), pDelta != entity.Delta))
+            if (AllowPatchValue<AuditDelta, string>(request, DocConstantModelName.AUDITDELTA, pDelta, permission, nameof(request.Delta), pDelta != entity.Delta))
             {
                 entity.Delta = pDelta;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<AuditDelta, bool>(request, DocConstantModelName.AUDITDELTA, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

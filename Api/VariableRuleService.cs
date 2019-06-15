@@ -189,53 +189,39 @@ namespace Services.API
             DocEntityLookupTable pRule = GetLookup(DocConstantLookupTable.VARIABLERULE, request.Rule?.Name, request.Rule?.Id);
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.VARIABLETYPE, request.Type?.Name, request.Type?.Id);
-
-            DocEntityVariableRule entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityVariableRule(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityVariableRule.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<VariableRule, bool>(request, DocConstantModelName.VARIABLERULE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityVariableRule,VariableRule>(request, permission, session);
+
+            if (AllowPatchValue<VariableRule, bool>(request, DocConstantModelName.VARIABLERULE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<VariableRule, string>(request, DocConstantModelName.VARIABLERULE, pDefinition, entity.Definition, permission, nameof(request.Definition), pDefinition != entity.Definition))
+            if (AllowPatchValue<VariableRule, string>(request, DocConstantModelName.VARIABLERULE, pDefinition, permission, nameof(request.Definition), pDefinition != entity.Definition))
             {
                 entity.Definition = pDefinition;
             }
-            if (PatchValue<VariableRule, string>(request, DocConstantModelName.VARIABLERULE, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<VariableRule, string>(request, DocConstantModelName.VARIABLERULE, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<VariableRule, DocEntityVariableRule>(request, DocConstantModelName.VARIABLERULE, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
+            if (AllowPatchValue<VariableRule, DocEntityVariableRule>(request, DocConstantModelName.VARIABLERULE, pOwner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
                 entity.Owner = pOwner;
             }
-            if (PatchValue<VariableRule, DocEntityLookupTable>(request, DocConstantModelName.VARIABLERULE, pRule, entity.Rule, permission, nameof(request.Rule), pRule != entity.Rule))
+            if (AllowPatchValue<VariableRule, DocEntityLookupTable>(request, DocConstantModelName.VARIABLERULE, pRule, permission, nameof(request.Rule), pRule != entity.Rule))
             {
                 entity.Rule = pRule;
             }
-            if (PatchValue<VariableRule, DocEntityLookupTable>(request, DocConstantModelName.VARIABLERULE, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<VariableRule, DocEntityLookupTable>(request, DocConstantModelName.VARIABLERULE, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 entity.Type = pType;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<VariableRule, bool>(request, DocConstantModelName.VARIABLERULE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

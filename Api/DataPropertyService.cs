@@ -367,189 +367,175 @@ namespace Services.API
             var pTargetAlias = request.TargetAlias;
             var pType = request.Type;
             var pUIType = request.UIType;
-
-            DocEntityDataProperty entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityDataProperty(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityDataProperty.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityDataProperty,DataProperty>(request, permission, session);
+
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pAutoCreateMissing, entity.AutoCreateMissing, permission, nameof(request.AutoCreateMissing), pAutoCreateMissing != entity.AutoCreateMissing))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pAutoCreateMissing, permission, nameof(request.AutoCreateMissing), pAutoCreateMissing != entity.AutoCreateMissing))
             {
                 entity.AutoCreateMissing = pAutoCreateMissing;
             }
-            if (PatchValue<DataProperty, DocEntityDataClass>(request, DocConstantModelName.DATAPROPERTY, pClass, entity.Class, permission, nameof(request.Class), pClass != entity.Class))
+            if (AllowPatchValue<DataProperty, DocEntityDataClass>(request, DocConstantModelName.DATAPROPERTY, pClass, permission, nameof(request.Class), pClass != entity.Class))
             {
                 entity.Class = pClass;
             }
-            if (PatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pDisplayName, entity.DisplayName, permission, nameof(request.DisplayName), pDisplayName != entity.DisplayName))
+            if (AllowPatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pDisplayName, permission, nameof(request.DisplayName), pDisplayName != entity.DisplayName))
             {
                 entity.DisplayName = pDisplayName;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowAddInForm, entity.IsAllowAddInForm, permission, nameof(request.IsAllowAddInForm), pIsAllowAddInForm != entity.IsAllowAddInForm))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowAddInForm, permission, nameof(request.IsAllowAddInForm), pIsAllowAddInForm != entity.IsAllowAddInForm))
             {
                 entity.IsAllowAddInForm = pIsAllowAddInForm;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowCreateInForm, entity.IsAllowCreateInForm, permission, nameof(request.IsAllowCreateInForm), pIsAllowCreateInForm != entity.IsAllowCreateInForm))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowCreateInForm, permission, nameof(request.IsAllowCreateInForm), pIsAllowCreateInForm != entity.IsAllowCreateInForm))
             {
                 entity.IsAllowCreateInForm = pIsAllowCreateInForm;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowEditInForm, entity.IsAllowEditInForm, permission, nameof(request.IsAllowEditInForm), pIsAllowEditInForm != entity.IsAllowEditInForm))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowEditInForm, permission, nameof(request.IsAllowEditInForm), pIsAllowEditInForm != entity.IsAllowEditInForm))
             {
                 entity.IsAllowEditInForm = pIsAllowEditInForm;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowFreeText, entity.IsAllowFreeText, permission, nameof(request.IsAllowFreeText), pIsAllowFreeText != entity.IsAllowFreeText))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowFreeText, permission, nameof(request.IsAllowFreeText), pIsAllowFreeText != entity.IsAllowFreeText))
             {
                 entity.IsAllowFreeText = pIsAllowFreeText;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowRemoveInForm, entity.IsAllowRemoveInForm, permission, nameof(request.IsAllowRemoveInForm), pIsAllowRemoveInForm != entity.IsAllowRemoveInForm))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAllowRemoveInForm, permission, nameof(request.IsAllowRemoveInForm), pIsAllowRemoveInForm != entity.IsAllowRemoveInForm))
             {
                 entity.IsAllowRemoveInForm = pIsAllowRemoveInForm;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAudited, entity.IsAudited, permission, nameof(request.IsAudited), pIsAudited != entity.IsAudited))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsAudited, permission, nameof(request.IsAudited), pIsAudited != entity.IsAudited))
             {
                 entity.IsAudited = pIsAudited;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsCompressed, entity.IsCompressed, permission, nameof(request.IsCompressed), pIsCompressed != entity.IsCompressed))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsCompressed, permission, nameof(request.IsCompressed), pIsCompressed != entity.IsCompressed))
             {
                 entity.IsCompressed = pIsCompressed;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsDisplayInForm, entity.IsDisplayInForm, permission, nameof(request.IsDisplayInForm), pIsDisplayInForm != entity.IsDisplayInForm))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsDisplayInForm, permission, nameof(request.IsDisplayInForm), pIsDisplayInForm != entity.IsDisplayInForm))
             {
                 entity.IsDisplayInForm = pIsDisplayInForm;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsDisplayInGrid, entity.IsDisplayInGrid, permission, nameof(request.IsDisplayInGrid), pIsDisplayInGrid != entity.IsDisplayInGrid))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsDisplayInGrid, permission, nameof(request.IsDisplayInGrid), pIsDisplayInGrid != entity.IsDisplayInGrid))
             {
                 entity.IsDisplayInGrid = pIsDisplayInGrid;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsEditColumn, entity.IsEditColumn, permission, nameof(request.IsEditColumn), pIsEditColumn != entity.IsEditColumn))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsEditColumn, permission, nameof(request.IsEditColumn), pIsEditColumn != entity.IsEditColumn))
             {
                 entity.IsEditColumn = pIsEditColumn;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsInsertOnly, entity.IsInsertOnly, permission, nameof(request.IsInsertOnly), pIsInsertOnly != entity.IsInsertOnly))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsInsertOnly, permission, nameof(request.IsInsertOnly), pIsInsertOnly != entity.IsInsertOnly))
             {
                 entity.IsInsertOnly = pIsInsertOnly;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsJSON, entity.IsJSON, permission, nameof(request.IsJSON), pIsJSON != entity.IsJSON))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsJSON, permission, nameof(request.IsJSON), pIsJSON != entity.IsJSON))
             {
                 entity.IsJSON = pIsJSON;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsLazy, entity.IsLazy, permission, nameof(request.IsLazy), pIsLazy != entity.IsLazy))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsLazy, permission, nameof(request.IsLazy), pIsLazy != entity.IsLazy))
             {
                 entity.IsLazy = pIsLazy;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsNullOnUpgrade, entity.IsNullOnUpgrade, permission, nameof(request.IsNullOnUpgrade), pIsNullOnUpgrade != entity.IsNullOnUpgrade))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsNullOnUpgrade, permission, nameof(request.IsNullOnUpgrade), pIsNullOnUpgrade != entity.IsNullOnUpgrade))
             {
                 entity.IsNullOnUpgrade = pIsNullOnUpgrade;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsReadOnly, entity.IsReadOnly, permission, nameof(request.IsReadOnly), pIsReadOnly != entity.IsReadOnly))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsReadOnly, permission, nameof(request.IsReadOnly), pIsReadOnly != entity.IsReadOnly))
             {
                 entity.IsReadOnly = pIsReadOnly;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsRelationship, entity.IsRelationship, permission, nameof(request.IsRelationship), pIsRelationship != entity.IsRelationship))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsRelationship, permission, nameof(request.IsRelationship), pIsRelationship != entity.IsRelationship))
             {
                 entity.IsRelationship = pIsRelationship;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsRequired, entity.IsRequired, permission, nameof(request.IsRequired), pIsRequired != entity.IsRequired))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsRequired, permission, nameof(request.IsRequired), pIsRequired != entity.IsRequired))
             {
                 entity.IsRequired = pIsRequired;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsRequiredInForm, entity.IsRequiredInForm, permission, nameof(request.IsRequiredInForm), pIsRequiredInForm != entity.IsRequiredInForm))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsRequiredInForm, permission, nameof(request.IsRequiredInForm), pIsRequiredInForm != entity.IsRequiredInForm))
             {
                 entity.IsRequiredInForm = pIsRequiredInForm;
             }
-            if (PatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsVirtual, entity.IsVirtual, permission, nameof(request.IsVirtual), pIsVirtual != entity.IsVirtual))
+            if (AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pIsVirtual, permission, nameof(request.IsVirtual), pIsVirtual != entity.IsVirtual))
             {
                 entity.IsVirtual = pIsVirtual;
             }
-            if (PatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pJsonType, entity.JsonType, permission, nameof(request.JsonType), pJsonType != entity.JsonType))
+            if (AllowPatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pJsonType, permission, nameof(request.JsonType), pJsonType != entity.JsonType))
             {
                 entity.JsonType = pJsonType;
             }
-            if (PatchValue<DataProperty, DocEntityLookupTableEnum>(request, DocConstantModelName.DATAPROPERTY, pLookupTableEnum, entity.LookupTableEnum, permission, nameof(request.LookupTableEnum), pLookupTableEnum != entity.LookupTableEnum))
+            if (AllowPatchValue<DataProperty, DocEntityLookupTableEnum>(request, DocConstantModelName.DATAPROPERTY, pLookupTableEnum, permission, nameof(request.LookupTableEnum), pLookupTableEnum != entity.LookupTableEnum))
             {
                 entity.LookupTableEnum = pLookupTableEnum;
             }
-            if (PatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<DataProperty, int?>(request, DocConstantModelName.DATAPROPERTY, pOrder, entity.Order, permission, nameof(request.Order), pOrder != entity.Order))
+            if (AllowPatchValue<DataProperty, int?>(request, DocConstantModelName.DATAPROPERTY, pOrder, permission, nameof(request.Order), pOrder != entity.Order))
             {
                 if(null != pOrder) entity.Order = (int) pOrder;
             }
-            if (PatchValue<DataProperty, DocEntityDataProperty>(request, DocConstantModelName.DATAPROPERTY, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
+            if (AllowPatchValue<DataProperty, DocEntityDataProperty>(request, DocConstantModelName.DATAPROPERTY, pOwner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
                 entity.Owner = pOwner;
             }
-            if (PatchValue<DataProperty, int?>(request, DocConstantModelName.DATAPROPERTY, pPrecision, entity.Precision, permission, nameof(request.Precision), pPrecision != entity.Precision))
+            if (AllowPatchValue<DataProperty, int?>(request, DocConstantModelName.DATAPROPERTY, pPrecision, permission, nameof(request.Precision), pPrecision != entity.Precision))
             {
                 entity.Precision = pPrecision;
             }
-            if (PatchValue<DataProperty, OnRemoveAction?>(request, DocConstantModelName.DATAPROPERTY, pRelationshipOnOwnerRemove, entity.RelationshipOnOwnerRemove, permission, nameof(request.RelationshipOnOwnerRemove), pRelationshipOnOwnerRemove != entity.RelationshipOnOwnerRemove))
+            if (AllowPatchValue<DataProperty, OnRemoveAction?>(request, DocConstantModelName.DATAPROPERTY, pRelationshipOnOwnerRemove, permission, nameof(request.RelationshipOnOwnerRemove), pRelationshipOnOwnerRemove != entity.RelationshipOnOwnerRemove))
             {
                 entity.RelationshipOnOwnerRemove = pRelationshipOnOwnerRemove;
             }
-            if (PatchValue<DataProperty, OnRemoveAction?>(request, DocConstantModelName.DATAPROPERTY, pRelationshipOnTargetRemove, entity.RelationshipOnTargetRemove, permission, nameof(request.RelationshipOnTargetRemove), pRelationshipOnTargetRemove != entity.RelationshipOnTargetRemove))
+            if (AllowPatchValue<DataProperty, OnRemoveAction?>(request, DocConstantModelName.DATAPROPERTY, pRelationshipOnTargetRemove, permission, nameof(request.RelationshipOnTargetRemove), pRelationshipOnTargetRemove != entity.RelationshipOnTargetRemove))
             {
                 entity.RelationshipOnTargetRemove = pRelationshipOnTargetRemove;
             }
-            if (PatchValue<DataProperty, DocEntityDataProperty>(request, DocConstantModelName.DATAPROPERTY, pRelationshipPairTo, entity.RelationshipPairTo, permission, nameof(request.RelationshipPairTo), pRelationshipPairTo != entity.RelationshipPairTo))
+            if (AllowPatchValue<DataProperty, DocEntityDataProperty>(request, DocConstantModelName.DATAPROPERTY, pRelationshipPairTo, permission, nameof(request.RelationshipPairTo), pRelationshipPairTo != entity.RelationshipPairTo))
             {
                 entity.RelationshipPairTo = pRelationshipPairTo;
             }
-            if (PatchValue<DataProperty, int?>(request, DocConstantModelName.DATAPROPERTY, pScale, entity.Scale, permission, nameof(request.Scale), pScale != entity.Scale))
+            if (AllowPatchValue<DataProperty, int?>(request, DocConstantModelName.DATAPROPERTY, pScale, permission, nameof(request.Scale), pScale != entity.Scale))
             {
                 entity.Scale = pScale;
             }
-            if (PatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pSetDefaultValue, entity.SetDefaultValue, permission, nameof(request.SetDefaultValue), pSetDefaultValue != entity.SetDefaultValue))
+            if (AllowPatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pSetDefaultValue, permission, nameof(request.SetDefaultValue), pSetDefaultValue != entity.SetDefaultValue))
             {
                 entity.SetDefaultValue = pSetDefaultValue;
             }
-            if (PatchValue<DataProperty, DocEntityDataTab>(request, DocConstantModelName.DATAPROPERTY, pTab, entity.Tab, permission, nameof(request.Tab), pTab != entity.Tab))
+            if (AllowPatchValue<DataProperty, DocEntityDataTab>(request, DocConstantModelName.DATAPROPERTY, pTab, permission, nameof(request.Tab), pTab != entity.Tab))
             {
                 entity.Tab = pTab;
             }
-            if (PatchValue<DataProperty, DocEntityDataClass>(request, DocConstantModelName.DATAPROPERTY, pTarget, entity.Target, permission, nameof(request.Target), pTarget != entity.Target))
+            if (AllowPatchValue<DataProperty, DocEntityDataClass>(request, DocConstantModelName.DATAPROPERTY, pTarget, permission, nameof(request.Target), pTarget != entity.Target))
             {
                 entity.Target = pTarget;
             }
-            if (PatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pTargetAlias, entity.TargetAlias, permission, nameof(request.TargetAlias), pTargetAlias != entity.TargetAlias))
+            if (AllowPatchValue<DataProperty, string>(request, DocConstantModelName.DATAPROPERTY, pTargetAlias, permission, nameof(request.TargetAlias), pTargetAlias != entity.TargetAlias))
             {
                 entity.TargetAlias = pTargetAlias;
             }
-            if (PatchValue<DataProperty, DataType?>(request, DocConstantModelName.DATAPROPERTY, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<DataProperty, DataType?>(request, DocConstantModelName.DATAPROPERTY, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-            if (PatchValue<DataProperty, UiType?>(request, DocConstantModelName.DATAPROPERTY, pUIType, entity.UIType, permission, nameof(request.UIType), pUIType != entity.UIType))
+            if (AllowPatchValue<DataProperty, UiType?>(request, DocConstantModelName.DATAPROPERTY, pUIType, permission, nameof(request.UIType), pUIType != entity.UIType))
             {
                 entity.UIType = pUIType;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<DataProperty, bool>(request, DocConstantModelName.DATAPROPERTY, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

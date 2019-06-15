@@ -168,53 +168,39 @@ namespace Services.API
             var pRole = (request.Role?.Id > 0) ? DocEntityRole.Get(request.Role.Id) : null;
             var pSettings = (DocTools.IsNullOrEmpty(request.Settings)) ? null : DocSerialize<DivisionSettings>.ToString(request.Settings);
             var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
-
-            DocEntityDivision entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityDivision(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityDivision.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Division, bool>(request, DocConstantModelName.DIVISION, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityDivision,Division>(request, permission, session);
+
+            if (AllowPatchValue<Division, bool>(request, DocConstantModelName.DIVISION, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Division, DocEntityClient>(request, DocConstantModelName.DIVISION, pClient, entity.Client, permission, nameof(request.Client), pClient != entity.Client))
+            if (AllowPatchValue<Division, DocEntityClient>(request, DocConstantModelName.DIVISION, pClient, permission, nameof(request.Client), pClient != entity.Client))
             {
                 entity.Client = pClient;
             }
-            if (PatchValue<Division, DocEntityLocale>(request, DocConstantModelName.DIVISION, pDefaultLocale, entity.DefaultLocale, permission, nameof(request.DefaultLocale), pDefaultLocale != entity.DefaultLocale))
+            if (AllowPatchValue<Division, DocEntityLocale>(request, DocConstantModelName.DIVISION, pDefaultLocale, permission, nameof(request.DefaultLocale), pDefaultLocale != entity.DefaultLocale))
             {
                 entity.DefaultLocale = pDefaultLocale;
             }
-            if (PatchValue<Division, string>(request, DocConstantModelName.DIVISION, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<Division, string>(request, DocConstantModelName.DIVISION, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<Division, DocEntityRole>(request, DocConstantModelName.DIVISION, pRole, entity.Role, permission, nameof(request.Role), pRole != entity.Role))
+            if (AllowPatchValue<Division, DocEntityRole>(request, DocConstantModelName.DIVISION, pRole, permission, nameof(request.Role), pRole != entity.Role))
             {
                 entity.Role = pRole;
             }
-            if (PatchValue<Division, string>(request, DocConstantModelName.DIVISION, pSettings, entity.Settings, permission, nameof(request.Settings), pSettings != entity.Settings))
+            if (AllowPatchValue<Division, string>(request, DocConstantModelName.DIVISION, pSettings, permission, nameof(request.Settings), pSettings != entity.Settings))
             {
                 entity.Settings = pSettings;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Division, bool>(request, DocConstantModelName.DIVISION, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

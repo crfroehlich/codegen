@@ -276,61 +276,47 @@ namespace Services.API
             var pStats = GetVariable<Reference>(request, nameof(request.Stats), request.Stats?.ToList(), request.StatsIds?.ToList());
             var pType = request.Type;
             var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
-
-            DocEntityServePortalSet entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityServePortalSet(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityServePortalSet.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<ServePortalSet, bool>(request, DocConstantModelName.SERVEPORTALSET, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityServePortalSet,ServePortalSet>(request, permission, session);
+
+            if (AllowPatchValue<ServePortalSet, bool>(request, DocConstantModelName.SERVEPORTALSET, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<ServePortalSet, bool>(request, DocConstantModelName.SERVEPORTALSET, pConfidential, entity.Confidential, permission, nameof(request.Confidential), pConfidential != entity.Confidential))
+            if (AllowPatchValue<ServePortalSet, bool>(request, DocConstantModelName.SERVEPORTALSET, pConfidential, permission, nameof(request.Confidential), pConfidential != entity.Confidential))
             {
                 entity.Confidential = pConfidential;
             }
-            if (PatchValue<ServePortalSet, int?>(request, DocConstantModelName.SERVEPORTALSET, pLegacyDocumentSetId, entity.LegacyDocumentSetId, permission, nameof(request.LegacyDocumentSetId), pLegacyDocumentSetId != entity.LegacyDocumentSetId))
+            if (AllowPatchValue<ServePortalSet, int?>(request, DocConstantModelName.SERVEPORTALSET, pLegacyDocumentSetId, permission, nameof(request.LegacyDocumentSetId), pLegacyDocumentSetId != entity.LegacyDocumentSetId))
             {
                 entity.LegacyDocumentSetId = pLegacyDocumentSetId;
             }
-            if (PatchValue<ServePortalSet, string>(request, DocConstantModelName.SERVEPORTALSET, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<ServePortalSet, string>(request, DocConstantModelName.SERVEPORTALSET, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<ServePortalSet, DocEntityDocumentSet>(request, DocConstantModelName.SERVEPORTALSET, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
+            if (AllowPatchValue<ServePortalSet, DocEntityDocumentSet>(request, DocConstantModelName.SERVEPORTALSET, pOwner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
                 entity.Owner = pOwner;
             }
-            if (PatchValue<ServePortalSet, DocEntityTeam>(request, DocConstantModelName.SERVEPORTALSET, pProjectTeam, entity.ProjectTeam, permission, nameof(request.ProjectTeam), pProjectTeam != entity.ProjectTeam))
+            if (AllowPatchValue<ServePortalSet, DocEntityTeam>(request, DocConstantModelName.SERVEPORTALSET, pProjectTeam, permission, nameof(request.ProjectTeam), pProjectTeam != entity.ProjectTeam))
             {
                 entity.ProjectTeam = pProjectTeam;
             }
-            if (PatchValue<ServePortalSet, string>(request, DocConstantModelName.SERVEPORTALSET, pSettings, entity.Settings, permission, nameof(request.Settings), pSettings != entity.Settings))
+            if (AllowPatchValue<ServePortalSet, string>(request, DocConstantModelName.SERVEPORTALSET, pSettings, permission, nameof(request.Settings), pSettings != entity.Settings))
             {
                 entity.Settings = pSettings;
             }
-            if (PatchValue<ServePortalSet, DocumentSetTypeEnm?>(request, DocConstantModelName.SERVEPORTALSET, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<ServePortalSet, DocumentSetTypeEnm?>(request, DocConstantModelName.SERVEPORTALSET, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<ServePortalSet, bool>(request, DocConstantModelName.SERVEPORTALSET, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

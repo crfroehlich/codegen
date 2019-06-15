@@ -163,61 +163,47 @@ namespace Services.API
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSource = request.Source;
             var pType = request.Type;
-
-            DocEntityFile entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityFile(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityFile.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<File, bool>(request, DocConstantModelName.FILE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityFile,File>(request, permission, session);
+
+            if (AllowPatchValue<File, bool>(request, DocConstantModelName.FILE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<File, decimal?>(request, DocConstantModelName.FILE, pCost, entity.Cost, permission, nameof(request.Cost), pCost != entity.Cost))
+            if (AllowPatchValue<File, decimal?>(request, DocConstantModelName.FILE, pCost, permission, nameof(request.Cost), pCost != entity.Cost))
             {
                 entity.Cost = pCost;
             }
-            if (PatchValue<File, string>(request, DocConstantModelName.FILE, pFileLabel, entity.FileLabel, permission, nameof(request.FileLabel), pFileLabel != entity.FileLabel))
+            if (AllowPatchValue<File, string>(request, DocConstantModelName.FILE, pFileLabel, permission, nameof(request.FileLabel), pFileLabel != entity.FileLabel))
             {
                 entity.FileLabel = pFileLabel;
             }
-            if (PatchValue<File, string>(request, DocConstantModelName.FILE, pFileName, entity.FileName, permission, nameof(request.FileName), pFileName != entity.FileName))
+            if (AllowPatchValue<File, string>(request, DocConstantModelName.FILE, pFileName, permission, nameof(request.FileName), pFileName != entity.FileName))
             {
                 entity.FileName = pFileName;
             }
-            if (PatchValue<File, string>(request, DocConstantModelName.FILE, pOriginalFileName, entity.OriginalFileName, permission, nameof(request.OriginalFileName), pOriginalFileName != entity.OriginalFileName))
+            if (AllowPatchValue<File, string>(request, DocConstantModelName.FILE, pOriginalFileName, permission, nameof(request.OriginalFileName), pOriginalFileName != entity.OriginalFileName))
             {
                 entity.OriginalFileName = pOriginalFileName;
             }
-            if (PatchValue<File, FileRightsEnm?>(request, DocConstantModelName.FILE, pRights, entity.Rights, permission, nameof(request.Rights), pRights != entity.Rights))
+            if (AllowPatchValue<File, FileRightsEnm?>(request, DocConstantModelName.FILE, pRights, permission, nameof(request.Rights), pRights != entity.Rights))
             {
                 entity.Rights = pRights;
             }
-            if (PatchValue<File, FileSourceEnm?>(request, DocConstantModelName.FILE, pSource, entity.Source, permission, nameof(request.Source), pSource != entity.Source))
+            if (AllowPatchValue<File, FileSourceEnm?>(request, DocConstantModelName.FILE, pSource, permission, nameof(request.Source), pSource != entity.Source))
             {
                 entity.Source = pSource;
             }
-            if (PatchValue<File, FileTypeEnm?>(request, DocConstantModelName.FILE, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<File, FileTypeEnm?>(request, DocConstantModelName.FILE, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<File, bool>(request, DocConstantModelName.FILE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

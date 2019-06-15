@@ -142,34 +142,20 @@ namespace Services.API
             var pIsBindable = request.IsBindable;
             var pIsGlobal = request.IsGlobal;
             var pName = request.Name;
-
-            DocEntityLookupTableEnum entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityLookupTableEnum(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityLookupTableEnum.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<LookupTableEnum, bool>(request, DocConstantModelName.LOOKUPTABLEENUM, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityLookupTableEnum,LookupTableEnum>(request, permission, session);
+
+            if (AllowPatchValue<LookupTableEnum, bool>(request, DocConstantModelName.LOOKUPTABLEENUM, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
 
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<LookupTableEnum, bool>(request, DocConstantModelName.LOOKUPTABLEENUM, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

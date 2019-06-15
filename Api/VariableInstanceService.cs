@@ -149,45 +149,31 @@ namespace Services.API
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
             var pRule = (request.Rule?.Id > 0) ? DocEntityVariableRule.Get(request.Rule.Id) : null;
             var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
-
-            DocEntityVariableInstance entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityVariableInstance(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityVariableInstance.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<VariableInstance, bool>(request, DocConstantModelName.VARIABLEINSTANCE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityVariableInstance,VariableInstance>(request, permission, session);
+
+            if (AllowPatchValue<VariableInstance, bool>(request, DocConstantModelName.VARIABLEINSTANCE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<VariableInstance, string>(request, DocConstantModelName.VARIABLEINSTANCE, pData, entity.Data, permission, nameof(request.Data), pData != entity.Data))
+            if (AllowPatchValue<VariableInstance, string>(request, DocConstantModelName.VARIABLEINSTANCE, pData, permission, nameof(request.Data), pData != entity.Data))
             {
                 entity.Data = pData;
             }
-            if (PatchValue<VariableInstance, DocEntityDocument>(request, DocConstantModelName.VARIABLEINSTANCE, pDocument, entity.Document, permission, nameof(request.Document), pDocument != entity.Document))
+            if (AllowPatchValue<VariableInstance, DocEntityDocument>(request, DocConstantModelName.VARIABLEINSTANCE, pDocument, permission, nameof(request.Document), pDocument != entity.Document))
             {
                 entity.Document = pDocument;
             }
-            if (PatchValue<VariableInstance, DocEntityVariableRule>(request, DocConstantModelName.VARIABLEINSTANCE, pRule, entity.Rule, permission, nameof(request.Rule), pRule != entity.Rule))
+            if (AllowPatchValue<VariableInstance, DocEntityVariableRule>(request, DocConstantModelName.VARIABLEINSTANCE, pRule, permission, nameof(request.Rule), pRule != entity.Rule))
             {
                 entity.Rule = pRule;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<VariableInstance, bool>(request, DocConstantModelName.VARIABLEINSTANCE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

@@ -140,45 +140,31 @@ namespace Services.API
             var pData = (DocTools.IsNullOrEmpty(request.Data)) ? null : DocSerialize<IpData>.ToString(request.Data);
             var pIpAddress = request.IpAddress;
             var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.Get(request.Locale.Id) : null;
-
-            DocEntityLocaleLookup entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityLocaleLookup(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityLocaleLookup.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<LocaleLookup, bool>(request, DocConstantModelName.LOCALELOOKUP, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityLocaleLookup,LocaleLookup>(request, permission, session);
+
+            if (AllowPatchValue<LocaleLookup, bool>(request, DocConstantModelName.LOCALELOOKUP, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<LocaleLookup, string>(request, DocConstantModelName.LOCALELOOKUP, pData, entity.Data, permission, nameof(request.Data), pData != entity.Data))
+            if (AllowPatchValue<LocaleLookup, string>(request, DocConstantModelName.LOCALELOOKUP, pData, permission, nameof(request.Data), pData != entity.Data))
             {
                 entity.Data = pData;
             }
-            if (PatchValue<LocaleLookup, string>(request, DocConstantModelName.LOCALELOOKUP, pIpAddress, entity.IpAddress, permission, nameof(request.IpAddress), pIpAddress != entity.IpAddress))
+            if (AllowPatchValue<LocaleLookup, string>(request, DocConstantModelName.LOCALELOOKUP, pIpAddress, permission, nameof(request.IpAddress), pIpAddress != entity.IpAddress))
             {
                 entity.IpAddress = pIpAddress;
             }
-            if (PatchValue<LocaleLookup, DocEntityLocale>(request, DocConstantModelName.LOCALELOOKUP, pLocale, entity.Locale, permission, nameof(request.Locale), pLocale != entity.Locale))
+            if (AllowPatchValue<LocaleLookup, DocEntityLocale>(request, DocConstantModelName.LOCALELOOKUP, pLocale, permission, nameof(request.Locale), pLocale != entity.Locale))
             {
                 entity.Locale = pLocale;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<LocaleLookup, bool>(request, DocConstantModelName.LOCALELOOKUP, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

@@ -178,57 +178,43 @@ namespace Services.API
             var pPages = GetVariable<Reference>(request, nameof(request.Pages), request.Pages?.ToList(), request.PagesIds?.ToList());
             var pPermissions = request.Permissions;
             var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
-
-            DocEntityRole entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityRole(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityRole.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Role, bool>(request, DocConstantModelName.ROLE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityRole,Role>(request, permission, session);
+
+            if (AllowPatchValue<Role, bool>(request, DocConstantModelName.ROLE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Role, DocEntityTeam>(request, DocConstantModelName.ROLE, pAdminTeam, entity.AdminTeam, permission, nameof(request.AdminTeam), pAdminTeam != entity.AdminTeam))
+            if (AllowPatchValue<Role, DocEntityTeam>(request, DocConstantModelName.ROLE, pAdminTeam, permission, nameof(request.AdminTeam), pAdminTeam != entity.AdminTeam))
             {
                 entity.AdminTeam = pAdminTeam;
             }
-            if (PatchValue<Role, string>(request, DocConstantModelName.ROLE, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<Role, string>(request, DocConstantModelName.ROLE, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<Role, string>(request, DocConstantModelName.ROLE, pFeatures, entity.Features, permission, nameof(request.Features), pFeatures != entity.Features))
+            if (AllowPatchValue<Role, string>(request, DocConstantModelName.ROLE, pFeatures, permission, nameof(request.Features), pFeatures != entity.Features))
             {
                 entity.Features = pFeatures;
             }
-            if (PatchValue<Role, bool>(request, DocConstantModelName.ROLE, pIsInternal, entity.IsInternal, permission, nameof(request.IsInternal), pIsInternal != entity.IsInternal))
+            if (AllowPatchValue<Role, bool>(request, DocConstantModelName.ROLE, pIsInternal, permission, nameof(request.IsInternal), pIsInternal != entity.IsInternal))
             {
                 entity.IsInternal = pIsInternal;
             }
-            if (PatchValue<Role, string>(request, DocConstantModelName.ROLE, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<Role, string>(request, DocConstantModelName.ROLE, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<Role, string>(request, DocConstantModelName.ROLE, pPermissions, entity.Permissions, permission, nameof(request.Permissions), pPermissions != entity.Permissions))
+            if (AllowPatchValue<Role, string>(request, DocConstantModelName.ROLE, pPermissions, permission, nameof(request.Permissions), pPermissions != entity.Permissions))
             {
                 entity.Permissions = pPermissions;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Role, bool>(request, DocConstantModelName.ROLE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

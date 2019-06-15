@@ -140,41 +140,27 @@ namespace Services.API
             var pName = request.Name;
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pURI = request.URI;
-
-            DocEntityTag entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityTag(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityTag.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Tag, bool>(request, DocConstantModelName.TAG, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityTag,Tag>(request, permission, session);
+
+            if (AllowPatchValue<Tag, bool>(request, DocConstantModelName.TAG, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Tag, string>(request, DocConstantModelName.TAG, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<Tag, string>(request, DocConstantModelName.TAG, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<Tag, string>(request, DocConstantModelName.TAG, pURI, entity.URI, permission, nameof(request.URI), pURI != entity.URI))
+            if (AllowPatchValue<Tag, string>(request, DocConstantModelName.TAG, pURI, permission, nameof(request.URI), pURI != entity.URI))
             {
                 entity.URI = pURI;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Tag, bool>(request, DocConstantModelName.TAG, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

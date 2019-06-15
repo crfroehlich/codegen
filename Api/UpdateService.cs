@@ -195,77 +195,63 @@ namespace Services.API
             var pSubject = request.Subject;
             var pTeam = (request.Team?.Id > 0) ? DocEntityTeam.Get(request.Team.Id) : null;
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
-
-            DocEntityUpdate entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityUpdate(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityUpdate.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Update, bool>(request, DocConstantModelName.UPDATE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityUpdate,Update>(request, permission, session);
+
+            if (AllowPatchValue<Update, bool>(request, DocConstantModelName.UPDATE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Update, string>(request, DocConstantModelName.UPDATE, pBody, entity.Body, permission, nameof(request.Body), pBody != entity.Body))
+            if (AllowPatchValue<Update, string>(request, DocConstantModelName.UPDATE, pBody, permission, nameof(request.Body), pBody != entity.Body))
             {
                 entity.Body = pBody;
             }
-            if (PatchValue<Update, string>(request, DocConstantModelName.UPDATE, pDeliveryStatus, entity.DeliveryStatus, permission, nameof(request.DeliveryStatus), pDeliveryStatus != entity.DeliveryStatus))
+            if (AllowPatchValue<Update, string>(request, DocConstantModelName.UPDATE, pDeliveryStatus, permission, nameof(request.DeliveryStatus), pDeliveryStatus != entity.DeliveryStatus))
             {
                 entity.DeliveryStatus = pDeliveryStatus;
             }
-            if (PatchValue<Update, int?>(request, DocConstantModelName.UPDATE, pEmailAttempts, entity.EmailAttempts, permission, nameof(request.EmailAttempts), pEmailAttempts != entity.EmailAttempts))
+            if (AllowPatchValue<Update, int?>(request, DocConstantModelName.UPDATE, pEmailAttempts, permission, nameof(request.EmailAttempts), pEmailAttempts != entity.EmailAttempts))
             {
                 if(null != pEmailAttempts) entity.EmailAttempts = (int) pEmailAttempts;
             }
-            if (PatchValue<Update, DateTime?>(request, DocConstantModelName.UPDATE, pEmailSent, entity.EmailSent, permission, nameof(request.EmailSent), pEmailSent != entity.EmailSent))
+            if (AllowPatchValue<Update, DateTime?>(request, DocConstantModelName.UPDATE, pEmailSent, permission, nameof(request.EmailSent), pEmailSent != entity.EmailSent))
             {
                 entity.EmailSent = pEmailSent;
             }
-            if (PatchValue<Update, string>(request, DocConstantModelName.UPDATE, pLink, entity.Link, permission, nameof(request.Link), pLink != entity.Link))
+            if (AllowPatchValue<Update, string>(request, DocConstantModelName.UPDATE, pLink, permission, nameof(request.Link), pLink != entity.Link))
             {
                 entity.Link = pLink;
             }
-            if (PatchValue<Update, int?>(request, DocConstantModelName.UPDATE, pPriority, entity.Priority, permission, nameof(request.Priority), pPriority != entity.Priority))
+            if (AllowPatchValue<Update, int?>(request, DocConstantModelName.UPDATE, pPriority, permission, nameof(request.Priority), pPriority != entity.Priority))
             {
                 if(null != pPriority) entity.Priority = (int) pPriority;
             }
-            if (PatchValue<Update, DateTime?>(request, DocConstantModelName.UPDATE, pRead, entity.Read, permission, nameof(request.Read), pRead != entity.Read))
+            if (AllowPatchValue<Update, DateTime?>(request, DocConstantModelName.UPDATE, pRead, permission, nameof(request.Read), pRead != entity.Read))
             {
                 entity.Read = pRead;
             }
-            if (PatchValue<Update, DateTime?>(request, DocConstantModelName.UPDATE, pSlackSent, entity.SlackSent, permission, nameof(request.SlackSent), pSlackSent != entity.SlackSent))
+            if (AllowPatchValue<Update, DateTime?>(request, DocConstantModelName.UPDATE, pSlackSent, permission, nameof(request.SlackSent), pSlackSent != entity.SlackSent))
             {
                 entity.SlackSent = pSlackSent;
             }
-            if (PatchValue<Update, string>(request, DocConstantModelName.UPDATE, pSubject, entity.Subject, permission, nameof(request.Subject), pSubject != entity.Subject))
+            if (AllowPatchValue<Update, string>(request, DocConstantModelName.UPDATE, pSubject, permission, nameof(request.Subject), pSubject != entity.Subject))
             {
                 entity.Subject = pSubject;
             }
-            if (PatchValue<Update, DocEntityTeam>(request, DocConstantModelName.UPDATE, pTeam, entity.Team, permission, nameof(request.Team), pTeam != entity.Team))
+            if (AllowPatchValue<Update, DocEntityTeam>(request, DocConstantModelName.UPDATE, pTeam, permission, nameof(request.Team), pTeam != entity.Team))
             {
                 entity.Team = pTeam;
             }
-            if (PatchValue<Update, DocEntityUser>(request, DocConstantModelName.UPDATE, pUser, entity.User, permission, nameof(request.User), pUser != entity.User))
+            if (AllowPatchValue<Update, DocEntityUser>(request, DocConstantModelName.UPDATE, pUser, permission, nameof(request.User), pUser != entity.User))
             {
                 entity.User = pUser;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Update, bool>(request, DocConstantModelName.UPDATE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

@@ -193,65 +193,51 @@ namespace Services.API
             DocEntityLookupTable pParent = GetLookup(DocConstantLookupTable.UNITCONVERSIONRULEPARENT, request.Parent?.Name, request.Parent?.Id);
             var pRootTerm = (request.RootTerm?.Id > 0) ? DocEntityTermMaster.Get(request.RootTerm.Id) : null;
             var pSourceUnit = (request.SourceUnit?.Id > 0) ? DocEntityUnitOfMeasure.Get(request.SourceUnit.Id) : null;
-
-            DocEntityUnitConversionRules entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityUnitConversionRules(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityUnitConversionRules.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityUnitConversionRules,UnitConversionRules>(request, permission, session);
+
+            if (AllowPatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<UnitConversionRules, DocEntityUnitOfMeasure>(request, DocConstantModelName.UNITCONVERSIONRULES, pDestinationUnit, entity.DestinationUnit, permission, nameof(request.DestinationUnit), pDestinationUnit != entity.DestinationUnit))
+            if (AllowPatchValue<UnitConversionRules, DocEntityUnitOfMeasure>(request, DocConstantModelName.UNITCONVERSIONRULES, pDestinationUnit, permission, nameof(request.DestinationUnit), pDestinationUnit != entity.DestinationUnit))
             {
                 entity.DestinationUnit = pDestinationUnit;
             }
-            if (PatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pIsDefault, entity.IsDefault, permission, nameof(request.IsDefault), pIsDefault != entity.IsDefault))
+            if (AllowPatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pIsDefault, permission, nameof(request.IsDefault), pIsDefault != entity.IsDefault))
             {
                 entity.IsDefault = pIsDefault;
             }
-            if (PatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pIsDestinationSi, entity.IsDestinationSi, permission, nameof(request.IsDestinationSi), pIsDestinationSi != entity.IsDestinationSi))
+            if (AllowPatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pIsDestinationSi, permission, nameof(request.IsDestinationSi), pIsDestinationSi != entity.IsDestinationSi))
             {
                 entity.IsDestinationSi = pIsDestinationSi;
             }
-            if (PatchValue<UnitConversionRules, DocEntityTermMaster>(request, DocConstantModelName.UNITCONVERSIONRULES, pModifierTerm, entity.ModifierTerm, permission, nameof(request.ModifierTerm), pModifierTerm != entity.ModifierTerm))
+            if (AllowPatchValue<UnitConversionRules, DocEntityTermMaster>(request, DocConstantModelName.UNITCONVERSIONRULES, pModifierTerm, permission, nameof(request.ModifierTerm), pModifierTerm != entity.ModifierTerm))
             {
                 entity.ModifierTerm = pModifierTerm;
             }
-            if (PatchValue<UnitConversionRules, decimal>(request, DocConstantModelName.UNITCONVERSIONRULES, pMultiplier, entity.Multiplier, permission, nameof(request.Multiplier), pMultiplier != entity.Multiplier))
+            if (AllowPatchValue<UnitConversionRules, decimal>(request, DocConstantModelName.UNITCONVERSIONRULES, pMultiplier, permission, nameof(request.Multiplier), pMultiplier != entity.Multiplier))
             {
                 entity.Multiplier = pMultiplier;
             }
-            if (PatchValue<UnitConversionRules, DocEntityLookupTable>(request, DocConstantModelName.UNITCONVERSIONRULES, pParent, entity.Parent, permission, nameof(request.Parent), pParent != entity.Parent))
+            if (AllowPatchValue<UnitConversionRules, DocEntityLookupTable>(request, DocConstantModelName.UNITCONVERSIONRULES, pParent, permission, nameof(request.Parent), pParent != entity.Parent))
             {
                 entity.Parent = pParent;
             }
-            if (PatchValue<UnitConversionRules, DocEntityTermMaster>(request, DocConstantModelName.UNITCONVERSIONRULES, pRootTerm, entity.RootTerm, permission, nameof(request.RootTerm), pRootTerm != entity.RootTerm))
+            if (AllowPatchValue<UnitConversionRules, DocEntityTermMaster>(request, DocConstantModelName.UNITCONVERSIONRULES, pRootTerm, permission, nameof(request.RootTerm), pRootTerm != entity.RootTerm))
             {
                 entity.RootTerm = pRootTerm;
             }
-            if (PatchValue<UnitConversionRules, DocEntityUnitOfMeasure>(request, DocConstantModelName.UNITCONVERSIONRULES, pSourceUnit, entity.SourceUnit, permission, nameof(request.SourceUnit), pSourceUnit != entity.SourceUnit))
+            if (AllowPatchValue<UnitConversionRules, DocEntityUnitOfMeasure>(request, DocConstantModelName.UNITCONVERSIONRULES, pSourceUnit, permission, nameof(request.SourceUnit), pSourceUnit != entity.SourceUnit))
             {
                 entity.SourceUnit = pSourceUnit;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<UnitConversionRules, bool>(request, DocConstantModelName.UNITCONVERSIONRULES, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

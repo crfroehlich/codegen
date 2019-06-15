@@ -145,45 +145,31 @@ namespace Services.API
             var pText = request.Text;
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityBase.Get(request.Owner.Id) : null;
-
-            DocEntityComment entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityComment(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityComment.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Comment, bool>(request, DocConstantModelName.COMMENT, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityComment,Comment>(request, permission, session);
+
+            if (AllowPatchValue<Comment, bool>(request, DocConstantModelName.COMMENT, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Comment, string>(request, DocConstantModelName.COMMENT, pText, entity.Text, permission, nameof(request.Text), pText != entity.Text))
+            if (AllowPatchValue<Comment, string>(request, DocConstantModelName.COMMENT, pText, permission, nameof(request.Text), pText != entity.Text))
             {
                 entity.Text = pText;
             }
-            if (PatchValue<Comment, DocEntityUser>(request, DocConstantModelName.COMMENT, pUser, entity.User, permission, nameof(request.User), pUser != entity.User))
+            if (AllowPatchValue<Comment, DocEntityUser>(request, DocConstantModelName.COMMENT, pUser, permission, nameof(request.User), pUser != entity.User))
             {
                 entity.User = pUser;
             }
-            if (PatchValue<Comment, DocEntityBase>(request, DocConstantModelName.COMMENT, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
+            if (AllowPatchValue<Comment, DocEntityBase>(request, DocConstantModelName.COMMENT, pOwner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
                 entity.Owner = pOwner;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Comment, bool>(request, DocConstantModelName.COMMENT, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

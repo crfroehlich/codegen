@@ -182,49 +182,35 @@ namespace Services.API
             DocEntityLookupTable pName = GetLookup(DocConstantLookupTable.UOMNAME, request.Name?.Name, request.Name?.Id);
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.UNITTYPE, request.Type?.Name, request.Type?.Id);
             DocEntityLookupTable pUnit = GetLookup(DocConstantLookupTable.UOMUNIT, request.Unit?.Name, request.Unit?.Id);
-
-            DocEntityUnitOfMeasure entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityUnitOfMeasure(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityUnitOfMeasure.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<UnitOfMeasure, bool>(request, DocConstantModelName.UNITOFMEASURE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityUnitOfMeasure,UnitOfMeasure>(request, permission, session);
+
+            if (AllowPatchValue<UnitOfMeasure, bool>(request, DocConstantModelName.UNITOFMEASURE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<UnitOfMeasure, bool>(request, DocConstantModelName.UNITOFMEASURE, pIsSI, entity.IsSI, permission, nameof(request.IsSI), pIsSI != entity.IsSI))
+            if (AllowPatchValue<UnitOfMeasure, bool>(request, DocConstantModelName.UNITOFMEASURE, pIsSI, permission, nameof(request.IsSI), pIsSI != entity.IsSI))
             {
                 entity.IsSI = pIsSI;
             }
-            if (PatchValue<UnitOfMeasure, DocEntityLookupTable>(request, DocConstantModelName.UNITOFMEASURE, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<UnitOfMeasure, DocEntityLookupTable>(request, DocConstantModelName.UNITOFMEASURE, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<UnitOfMeasure, DocEntityLookupTable>(request, DocConstantModelName.UNITOFMEASURE, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<UnitOfMeasure, DocEntityLookupTable>(request, DocConstantModelName.UNITOFMEASURE, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 entity.Type = pType;
             }
-            if (PatchValue<UnitOfMeasure, DocEntityLookupTable>(request, DocConstantModelName.UNITOFMEASURE, pUnit, entity.Unit, permission, nameof(request.Unit), pUnit != entity.Unit))
+            if (AllowPatchValue<UnitOfMeasure, DocEntityLookupTable>(request, DocConstantModelName.UNITOFMEASURE, pUnit, permission, nameof(request.Unit), pUnit != entity.Unit))
             {
                 entity.Unit = pUnit;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<UnitOfMeasure, bool>(request, DocConstantModelName.UNITOFMEASURE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

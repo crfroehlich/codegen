@@ -208,69 +208,55 @@ namespace Services.API
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.TIMECARDSTATUS, request.Status?.Name, request.Status?.Id);
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
             DocEntityLookupTable pWorkType = GetLookup(DocConstantLookupTable.WORKTYPE, request.WorkType?.Name, request.WorkType?.Id);
-
-            DocEntityTimeCard entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityTimeCard(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityTimeCard.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<TimeCard, bool>(request, DocConstantModelName.TIMECARD, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityTimeCard,TimeCard>(request, permission, session);
+
+            if (AllowPatchValue<TimeCard, bool>(request, DocConstantModelName.TIMECARD, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<TimeCard, string>(request, DocConstantModelName.TIMECARD, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<TimeCard, string>(request, DocConstantModelName.TIMECARD, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<TimeCard, DocEntityDocument>(request, DocConstantModelName.TIMECARD, pDocument, entity.Document, permission, nameof(request.Document), pDocument != entity.Document))
+            if (AllowPatchValue<TimeCard, DocEntityDocument>(request, DocConstantModelName.TIMECARD, pDocument, permission, nameof(request.Document), pDocument != entity.Document))
             {
                 entity.Document = pDocument;
             }
-            if (PatchValue<TimeCard, DateTime?>(request, DocConstantModelName.TIMECARD, pEnd, entity.End, permission, nameof(request.End), pEnd != entity.End))
+            if (AllowPatchValue<TimeCard, DateTime?>(request, DocConstantModelName.TIMECARD, pEnd, permission, nameof(request.End), pEnd != entity.End))
             {
                 if(null != pEnd) entity.End = (DateTime) pEnd;
             }
-            if (PatchValue<TimeCard, DocEntityProject>(request, DocConstantModelName.TIMECARD, pProject, entity.Project, permission, nameof(request.Project), pProject != entity.Project))
+            if (AllowPatchValue<TimeCard, DocEntityProject>(request, DocConstantModelName.TIMECARD, pProject, permission, nameof(request.Project), pProject != entity.Project))
             {
                 entity.Project = pProject;
             }
-            if (PatchValue<TimeCard, int?>(request, DocConstantModelName.TIMECARD, pReferenceId, entity.ReferenceId, permission, nameof(request.ReferenceId), pReferenceId != entity.ReferenceId))
+            if (AllowPatchValue<TimeCard, int?>(request, DocConstantModelName.TIMECARD, pReferenceId, permission, nameof(request.ReferenceId), pReferenceId != entity.ReferenceId))
             {
                 entity.ReferenceId = pReferenceId;
             }
-            if (PatchValue<TimeCard, DateTime?>(request, DocConstantModelName.TIMECARD, pStart, entity.Start, permission, nameof(request.Start), pStart != entity.Start))
+            if (AllowPatchValue<TimeCard, DateTime?>(request, DocConstantModelName.TIMECARD, pStart, permission, nameof(request.Start), pStart != entity.Start))
             {
                 if(null != pStart) entity.Start = (DateTime) pStart;
             }
-            if (PatchValue<TimeCard, DocEntityLookupTable>(request, DocConstantModelName.TIMECARD, pStatus, entity.Status, permission, nameof(request.Status), pStatus != entity.Status))
+            if (AllowPatchValue<TimeCard, DocEntityLookupTable>(request, DocConstantModelName.TIMECARD, pStatus, permission, nameof(request.Status), pStatus != entity.Status))
             {
                 entity.Status = pStatus;
             }
-            if (PatchValue<TimeCard, DocEntityUser>(request, DocConstantModelName.TIMECARD, pUser, entity.User, permission, nameof(request.User), pUser != entity.User))
+            if (AllowPatchValue<TimeCard, DocEntityUser>(request, DocConstantModelName.TIMECARD, pUser, permission, nameof(request.User), pUser != entity.User))
             {
                 entity.User = pUser;
             }
-            if (PatchValue<TimeCard, DocEntityLookupTable>(request, DocConstantModelName.TIMECARD, pWorkType, entity.WorkType, permission, nameof(request.WorkType), pWorkType != entity.WorkType))
+            if (AllowPatchValue<TimeCard, DocEntityLookupTable>(request, DocConstantModelName.TIMECARD, pWorkType, permission, nameof(request.WorkType), pWorkType != entity.WorkType))
             {
                 entity.WorkType = pWorkType;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<TimeCard, bool>(request, DocConstantModelName.TIMECARD, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

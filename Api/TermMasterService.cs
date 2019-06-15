@@ -188,69 +188,55 @@ namespace Services.API
             var pSynonyms = GetVariable<Reference>(request, nameof(request.Synonyms), request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
             var pTUI = request.TUI;
             var pURI = request.URI;
-
-            DocEntityTermMaster entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityTermMaster(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityTermMaster.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<TermMaster, bool>(request, DocConstantModelName.TERMMASTER, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityTermMaster,TermMaster>(request, permission, session);
+
+            if (AllowPatchValue<TermMaster, bool>(request, DocConstantModelName.TERMMASTER, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pBioPortal, entity.BioPortal, permission, nameof(request.BioPortal), pBioPortal != entity.BioPortal))
+            if (AllowPatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pBioPortal, permission, nameof(request.BioPortal), pBioPortal != entity.BioPortal))
             {
                 entity.BioPortal = pBioPortal;
             }
-            if (PatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pCUI, entity.CUI, permission, nameof(request.CUI), pCUI != entity.CUI))
+            if (AllowPatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pCUI, permission, nameof(request.CUI), pCUI != entity.CUI))
             {
                 entity.CUI = pCUI;
             }
-            if (PatchValue<TermMaster, DocEntityLookupTableEnum>(request, DocConstantModelName.TERMMASTER, pEnum, entity.Enum, permission, nameof(request.Enum), pEnum != entity.Enum))
+            if (AllowPatchValue<TermMaster, DocEntityLookupTableEnum>(request, DocConstantModelName.TERMMASTER, pEnum, permission, nameof(request.Enum), pEnum != entity.Enum))
             {
                 entity.Enum = pEnum;
             }
-            if (PatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pMedDRA, entity.MedDRA, permission, nameof(request.MedDRA), pMedDRA != entity.MedDRA))
+            if (AllowPatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pMedDRA, permission, nameof(request.MedDRA), pMedDRA != entity.MedDRA))
             {
                 entity.MedDRA = pMedDRA;
             }
-            if (PatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pRxNorm, entity.RxNorm, permission, nameof(request.RxNorm), pRxNorm != entity.RxNorm))
+            if (AllowPatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pRxNorm, permission, nameof(request.RxNorm), pRxNorm != entity.RxNorm))
             {
                 entity.RxNorm = pRxNorm;
             }
-            if (PatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pSNOWMED, entity.SNOWMED, permission, nameof(request.SNOWMED), pSNOWMED != entity.SNOWMED))
+            if (AllowPatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pSNOWMED, permission, nameof(request.SNOWMED), pSNOWMED != entity.SNOWMED))
             {
                 entity.SNOWMED = pSNOWMED;
             }
-            if (PatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pTUI, entity.TUI, permission, nameof(request.TUI), pTUI != entity.TUI))
+            if (AllowPatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pTUI, permission, nameof(request.TUI), pTUI != entity.TUI))
             {
                 entity.TUI = pTUI;
             }
-            if (PatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pURI, entity.URI, permission, nameof(request.URI), pURI != entity.URI))
+            if (AllowPatchValue<TermMaster, string>(request, DocConstantModelName.TERMMASTER, pURI, permission, nameof(request.URI), pURI != entity.URI))
             {
                 entity.URI = pURI;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<TermMaster, bool>(request, DocConstantModelName.TERMMASTER, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

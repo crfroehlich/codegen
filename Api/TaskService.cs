@@ -170,61 +170,47 @@ namespace Services.API
             var pReporter = (request.Reporter?.Id > 0) ? DocEntityUser.Get(request.Reporter.Id) : null;
             var pType = request.Type;
             var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
-
-            DocEntityTask entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityTask(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityTask.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Task, bool>(request, DocConstantModelName.TASK, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityTask,Task>(request, permission, session);
+
+            if (AllowPatchValue<Task, bool>(request, DocConstantModelName.TASK, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Task, DocEntityUser>(request, DocConstantModelName.TASK, pAssignee, entity.Assignee, permission, nameof(request.Assignee), pAssignee != entity.Assignee))
+            if (AllowPatchValue<Task, DocEntityUser>(request, DocConstantModelName.TASK, pAssignee, permission, nameof(request.Assignee), pAssignee != entity.Assignee))
             {
                 entity.Assignee = pAssignee;
             }
-            if (PatchValue<Task, string>(request, DocConstantModelName.TASK, pData, entity.Data, permission, nameof(request.Data), pData != entity.Data))
+            if (AllowPatchValue<Task, string>(request, DocConstantModelName.TASK, pData, permission, nameof(request.Data), pData != entity.Data))
             {
                 entity.Data = pData;
             }
-            if (PatchValue<Task, string>(request, DocConstantModelName.TASK, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<Task, string>(request, DocConstantModelName.TASK, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<Task, DateTime?>(request, DocConstantModelName.TASK, pDueDate, entity.DueDate, permission, nameof(request.DueDate), pDueDate != entity.DueDate))
+            if (AllowPatchValue<Task, DateTime?>(request, DocConstantModelName.TASK, pDueDate, permission, nameof(request.DueDate), pDueDate != entity.DueDate))
             {
                 entity.DueDate = pDueDate;
             }
-            if (PatchValue<Task, DocEntityUser>(request, DocConstantModelName.TASK, pReporter, entity.Reporter, permission, nameof(request.Reporter), pReporter != entity.Reporter))
+            if (AllowPatchValue<Task, DocEntityUser>(request, DocConstantModelName.TASK, pReporter, permission, nameof(request.Reporter), pReporter != entity.Reporter))
             {
                 entity.Reporter = pReporter;
             }
-            if (PatchValue<Task, TaskTypeEnm?>(request, DocConstantModelName.TASK, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<Task, TaskTypeEnm?>(request, DocConstantModelName.TASK, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-            if (PatchValue<Task, DocEntityWorkflow>(request, DocConstantModelName.TASK, pWorkflow, entity.Workflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
+            if (AllowPatchValue<Task, DocEntityWorkflow>(request, DocConstantModelName.TASK, pWorkflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
             {
                 entity.Workflow = pWorkflow;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Task, bool>(request, DocConstantModelName.TASK, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

@@ -158,41 +158,27 @@ namespace Services.API
             var pDocuments = GetVariable<Reference>(request, nameof(request.Documents), request.Documents?.ToList(), request.DocumentsIds?.ToList());
             var pEnum = DocEntityLookupTableEnum.Get(request.Enum);
             var pName = request.Name;
-
-            DocEntityLookupTable entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityLookupTable(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityLookupTable.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<LookupTable, bool>(request, DocConstantModelName.LOOKUPTABLE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityLookupTable,LookupTable>(request, permission, session);
+
+            if (AllowPatchValue<LookupTable, bool>(request, DocConstantModelName.LOOKUPTABLE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<LookupTable, DocEntityLookupTableEnum>(request, DocConstantModelName.LOOKUPTABLE, pEnum, entity.Enum, permission, nameof(request.Enum), pEnum != entity.Enum))
+            if (AllowPatchValue<LookupTable, DocEntityLookupTableEnum>(request, DocConstantModelName.LOOKUPTABLE, pEnum, permission, nameof(request.Enum), pEnum != entity.Enum))
             {
                 entity.Enum = pEnum;
             }
-            if (PatchValue<LookupTable, string>(request, DocConstantModelName.LOOKUPTABLE, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<LookupTable, string>(request, DocConstantModelName.LOOKUPTABLE, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<LookupTable, bool>(request, DocConstantModelName.LOOKUPTABLE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

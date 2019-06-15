@@ -272,105 +272,91 @@ namespace Services.API
             var pRequestedOn = request.RequestedOn;
             var pStartedOn = request.StartedOn;
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.IMPORTSTATUS, request.Status?.Name, request.Status?.Id);
-
-            DocEntityImportData entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityImportData(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityImportData.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityImportData,ImportData>(request, permission, session);
+
+            if (AllowPatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<ImportData, DateTime?>(request, DocConstantModelName.IMPORTDATA, pCompletedOn, entity.CompletedOn, permission, nameof(request.CompletedOn), pCompletedOn != entity.CompletedOn))
+            if (AllowPatchValue<ImportData, DateTime?>(request, DocConstantModelName.IMPORTDATA, pCompletedOn, permission, nameof(request.CompletedOn), pCompletedOn != entity.CompletedOn))
             {
                 entity.CompletedOn = pCompletedOn;
             }
-            if (PatchValue<ImportData, DocEntityDocument>(request, DocConstantModelName.IMPORTDATA, pDocument, entity.Document, permission, nameof(request.Document), pDocument != entity.Document))
+            if (AllowPatchValue<ImportData, DocEntityDocument>(request, DocConstantModelName.IMPORTDATA, pDocument, permission, nameof(request.Document), pDocument != entity.Document))
             {
                 entity.Document = pDocument;
             }
-            if (PatchValue<ImportData, string>(request, DocConstantModelName.IMPORTDATA, pErrorData, entity.ErrorData, permission, nameof(request.ErrorData), pErrorData != entity.ErrorData))
+            if (AllowPatchValue<ImportData, string>(request, DocConstantModelName.IMPORTDATA, pErrorData, permission, nameof(request.ErrorData), pErrorData != entity.ErrorData))
             {
                 entity.ErrorData = pErrorData;
             }
-            if (PatchValue<ImportData, string>(request, DocConstantModelName.IMPORTDATA, pExtractUrl, entity.ExtractUrl, permission, nameof(request.ExtractUrl), pExtractUrl != entity.ExtractUrl))
+            if (AllowPatchValue<ImportData, string>(request, DocConstantModelName.IMPORTDATA, pExtractUrl, permission, nameof(request.ExtractUrl), pExtractUrl != entity.ExtractUrl))
             {
                 entity.ExtractUrl = pExtractUrl;
             }
-            if (PatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pHighPriority, entity.HighPriority, permission, nameof(request.HighPriority), pHighPriority != entity.HighPriority))
+            if (AllowPatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pHighPriority, permission, nameof(request.HighPriority), pHighPriority != entity.HighPriority))
             {
                 entity.HighPriority = pHighPriority;
             }
-            if (PatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pImportFr, entity.ImportFr, permission, nameof(request.ImportFr), pImportFr != entity.ImportFr))
+            if (AllowPatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pImportFr, permission, nameof(request.ImportFr), pImportFr != entity.ImportFr))
             {
                 entity.ImportFr = pImportFr;
             }
-            if (PatchValue<ImportData, DocEntityLookupTable>(request, DocConstantModelName.IMPORTDATA, pImportLocation, entity.ImportLocation, permission, nameof(request.ImportLocation), pImportLocation != entity.ImportLocation))
+            if (AllowPatchValue<ImportData, DocEntityLookupTable>(request, DocConstantModelName.IMPORTDATA, pImportLocation, permission, nameof(request.ImportLocation), pImportLocation != entity.ImportLocation))
             {
                 entity.ImportLocation = pImportLocation;
             }
-            if (PatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pImportNewName, entity.ImportNewName, permission, nameof(request.ImportNewName), pImportNewName != entity.ImportNewName))
+            if (AllowPatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pImportNewName, permission, nameof(request.ImportNewName), pImportNewName != entity.ImportNewName))
             {
                 entity.ImportNewName = pImportNewName;
             }
-            if (PatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pImportTable, entity.ImportTable, permission, nameof(request.ImportTable), pImportTable != entity.ImportTable))
+            if (AllowPatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pImportTable, permission, nameof(request.ImportTable), pImportTable != entity.ImportTable))
             {
                 entity.ImportTable = pImportTable;
             }
-            if (PatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pImportText, entity.ImportText, permission, nameof(request.ImportText), pImportText != entity.ImportText))
+            if (AllowPatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pImportText, permission, nameof(request.ImportText), pImportText != entity.ImportText))
             {
                 entity.ImportText = pImportText;
             }
-            if (PatchValue<ImportData, DocEntityLookupTable>(request, DocConstantModelName.IMPORTDATA, pImportType, entity.ImportType, permission, nameof(request.ImportType), pImportType != entity.ImportType))
+            if (AllowPatchValue<ImportData, DocEntityLookupTable>(request, DocConstantModelName.IMPORTDATA, pImportType, permission, nameof(request.ImportType), pImportType != entity.ImportType))
             {
                 entity.ImportType = pImportType;
             }
-            if (PatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pIsLegacy, entity.IsLegacy, permission, nameof(request.IsLegacy), pIsLegacy != entity.IsLegacy))
+            if (AllowPatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pIsLegacy, permission, nameof(request.IsLegacy), pIsLegacy != entity.IsLegacy))
             {
                 entity.IsLegacy = pIsLegacy;
             }
-            if (PatchValue<ImportData, int?>(request, DocConstantModelName.IMPORTDATA, pOrder, entity.Order, permission, nameof(request.Order), pOrder != entity.Order))
+            if (AllowPatchValue<ImportData, int?>(request, DocConstantModelName.IMPORTDATA, pOrder, permission, nameof(request.Order), pOrder != entity.Order))
             {
                 entity.Order = pOrder;
             }
-            if (PatchValue<ImportData, int?>(request, DocConstantModelName.IMPORTDATA, pReferenceId, entity.ReferenceId, permission, nameof(request.ReferenceId), pReferenceId != entity.ReferenceId))
+            if (AllowPatchValue<ImportData, int?>(request, DocConstantModelName.IMPORTDATA, pReferenceId, permission, nameof(request.ReferenceId), pReferenceId != entity.ReferenceId))
             {
                 if(null != pReferenceId) entity.ReferenceId = (int) pReferenceId;
             }
-            if (PatchValue<ImportData, DocEntityUser>(request, DocConstantModelName.IMPORTDATA, pRequestedBy, entity.RequestedBy, permission, nameof(request.RequestedBy), pRequestedBy != entity.RequestedBy))
+            if (AllowPatchValue<ImportData, DocEntityUser>(request, DocConstantModelName.IMPORTDATA, pRequestedBy, permission, nameof(request.RequestedBy), pRequestedBy != entity.RequestedBy))
             {
                 entity.RequestedBy = pRequestedBy;
             }
-            if (PatchValue<ImportData, DateTime?>(request, DocConstantModelName.IMPORTDATA, pRequestedOn, entity.RequestedOn, permission, nameof(request.RequestedOn), pRequestedOn != entity.RequestedOn))
+            if (AllowPatchValue<ImportData, DateTime?>(request, DocConstantModelName.IMPORTDATA, pRequestedOn, permission, nameof(request.RequestedOn), pRequestedOn != entity.RequestedOn))
             {
                 entity.RequestedOn = pRequestedOn;
             }
-            if (PatchValue<ImportData, DateTime?>(request, DocConstantModelName.IMPORTDATA, pStartedOn, entity.StartedOn, permission, nameof(request.StartedOn), pStartedOn != entity.StartedOn))
+            if (AllowPatchValue<ImportData, DateTime?>(request, DocConstantModelName.IMPORTDATA, pStartedOn, permission, nameof(request.StartedOn), pStartedOn != entity.StartedOn))
             {
                 entity.StartedOn = pStartedOn;
             }
-            if (PatchValue<ImportData, DocEntityLookupTable>(request, DocConstantModelName.IMPORTDATA, pStatus, entity.Status, permission, nameof(request.Status), pStatus != entity.Status))
+            if (AllowPatchValue<ImportData, DocEntityLookupTable>(request, DocConstantModelName.IMPORTDATA, pStatus, permission, nameof(request.Status), pStatus != entity.Status))
             {
                 entity.Status = pStatus;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<ImportData, bool>(request, DocConstantModelName.IMPORTDATA, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

@@ -175,57 +175,43 @@ namespace Services.API
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pTitle = request.Title;
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.HELP, request.Type?.Name, request.Type?.Id);
-
-            DocEntityHelp entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityHelp(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityHelp.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Help, bool>(request, DocConstantModelName.HELP, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityHelp,Help>(request, permission, session);
+
+            if (AllowPatchValue<Help, bool>(request, DocConstantModelName.HELP, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Help, string>(request, DocConstantModelName.HELP, pConfluenceId, entity.ConfluenceId, permission, nameof(request.ConfluenceId), pConfluenceId != entity.ConfluenceId))
+            if (AllowPatchValue<Help, string>(request, DocConstantModelName.HELP, pConfluenceId, permission, nameof(request.ConfluenceId), pConfluenceId != entity.ConfluenceId))
             {
                 entity.ConfluenceId = pConfluenceId;
             }
-            if (PatchValue<Help, string>(request, DocConstantModelName.HELP, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<Help, string>(request, DocConstantModelName.HELP, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<Help, string>(request, DocConstantModelName.HELP, pIcon, entity.Icon, permission, nameof(request.Icon), pIcon != entity.Icon))
+            if (AllowPatchValue<Help, string>(request, DocConstantModelName.HELP, pIcon, permission, nameof(request.Icon), pIcon != entity.Icon))
             {
                 entity.Icon = pIcon;
             }
-            if (PatchValue<Help, int?>(request, DocConstantModelName.HELP, pOrder, entity.Order, permission, nameof(request.Order), pOrder != entity.Order))
+            if (AllowPatchValue<Help, int?>(request, DocConstantModelName.HELP, pOrder, permission, nameof(request.Order), pOrder != entity.Order))
             {
                 entity.Order = pOrder;
             }
-            if (PatchValue<Help, string>(request, DocConstantModelName.HELP, pTitle, entity.Title, permission, nameof(request.Title), pTitle != entity.Title))
+            if (AllowPatchValue<Help, string>(request, DocConstantModelName.HELP, pTitle, permission, nameof(request.Title), pTitle != entity.Title))
             {
                 entity.Title = pTitle;
             }
-            if (PatchValue<Help, DocEntityLookupTable>(request, DocConstantModelName.HELP, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<Help, DocEntityLookupTable>(request, DocConstantModelName.HELP, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 entity.Type = pType;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Help, bool>(request, DocConstantModelName.HELP, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

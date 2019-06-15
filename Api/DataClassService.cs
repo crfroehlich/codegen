@@ -236,97 +236,83 @@ namespace Services.API
             var pProperties = GetVariable<DataProperty>(request, nameof(request.Properties), request.Properties?.ToList(), request.PropertiesIds?.ToList());
             var pPUT = request.PUT;
             var pTabs = GetVariable<DataTab>(request, nameof(request.Tabs), request.Tabs?.ToList(), request.TabsIds?.ToList());
-
-            DocEntityDataClass entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityDataClass(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityDataClass.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityDataClass,DataClass>(request, permission, session);
+
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pAllowDelete, entity.AllowDelete, permission, nameof(request.AllowDelete), pAllowDelete != entity.AllowDelete))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pAllowDelete, permission, nameof(request.AllowDelete), pAllowDelete != entity.AllowDelete))
             {
                 entity.AllowDelete = pAllowDelete;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pAllSelectByDefault, entity.AllSelectByDefault, permission, nameof(request.AllSelectByDefault), pAllSelectByDefault != entity.AllSelectByDefault))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pAllSelectByDefault, permission, nameof(request.AllSelectByDefault), pAllSelectByDefault != entity.AllSelectByDefault))
             {
                 entity.AllSelectByDefault = pAllSelectByDefault;
             }
-            if (PatchValue<DataClass, ModelNameEnm?>(request, DocConstantModelName.DATACLASS, pBase, entity.Base, permission, nameof(request.Base), pBase != entity.Base))
+            if (AllowPatchValue<DataClass, ModelNameEnm?>(request, DocConstantModelName.DATACLASS, pBase, permission, nameof(request.Base), pBase != entity.Base))
             {
                 entity.Base = pBase;
             }
-            if (PatchValue<DataClass, int?>(request, DocConstantModelName.DATACLASS, pCacheDuration, entity.CacheDuration, permission, nameof(request.CacheDuration), pCacheDuration != entity.CacheDuration))
+            if (AllowPatchValue<DataClass, int?>(request, DocConstantModelName.DATACLASS, pCacheDuration, permission, nameof(request.CacheDuration), pCacheDuration != entity.CacheDuration))
             {
                 if(null != pCacheDuration) entity.CacheDuration = (int) pCacheDuration;
             }
-            if (PatchValue<DataClass, int?>(request, DocConstantModelName.DATACLASS, pClassId, entity.ClassId, permission, nameof(request.ClassId), pClassId != entity.ClassId))
+            if (AllowPatchValue<DataClass, int?>(request, DocConstantModelName.DATACLASS, pClassId, permission, nameof(request.ClassId), pClassId != entity.ClassId))
             {
                 if(null != pClassId) entity.ClassId = (int) pClassId;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pDELETE, entity.DELETE, permission, nameof(request.DELETE), pDELETE != entity.DELETE))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pDELETE, permission, nameof(request.DELETE), pDELETE != entity.DELETE))
             {
                 entity.DELETE = pDELETE;
             }
-            if (PatchValue<DataClass, string>(request, DocConstantModelName.DATACLASS, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<DataClass, string>(request, DocConstantModelName.DATACLASS, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<DataClass, string>(request, DocConstantModelName.DATACLASS, pDtoSuffix, entity.DtoSuffix, permission, nameof(request.DtoSuffix), pDtoSuffix != entity.DtoSuffix))
+            if (AllowPatchValue<DataClass, string>(request, DocConstantModelName.DATACLASS, pDtoSuffix, permission, nameof(request.DtoSuffix), pDtoSuffix != entity.DtoSuffix))
             {
                 entity.DtoSuffix = pDtoSuffix;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pFlattenReferences, entity.FlattenReferences, permission, nameof(request.FlattenReferences), pFlattenReferences != entity.FlattenReferences))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pFlattenReferences, permission, nameof(request.FlattenReferences), pFlattenReferences != entity.FlattenReferences))
             {
                 entity.FlattenReferences = pFlattenReferences;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pGET, entity.GET, permission, nameof(request.GET), pGET != entity.GET))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pGET, permission, nameof(request.GET), pGET != entity.GET))
             {
                 entity.GET = pGET;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pIsInsertOnly, entity.IsInsertOnly, permission, nameof(request.IsInsertOnly), pIsInsertOnly != entity.IsInsertOnly))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pIsInsertOnly, permission, nameof(request.IsInsertOnly), pIsInsertOnly != entity.IsInsertOnly))
             {
                 entity.IsInsertOnly = pIsInsertOnly;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pIsReadOnly, entity.IsReadOnly, permission, nameof(request.IsReadOnly), pIsReadOnly != entity.IsReadOnly))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pIsReadOnly, permission, nameof(request.IsReadOnly), pIsReadOnly != entity.IsReadOnly))
             {
                 entity.IsReadOnly = pIsReadOnly;
             }
-            if (PatchValue<DataClass, string>(request, DocConstantModelName.DATACLASS, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<DataClass, string>(request, DocConstantModelName.DATACLASS, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pPATCH, entity.PATCH, permission, nameof(request.PATCH), pPATCH != entity.PATCH))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pPATCH, permission, nameof(request.PATCH), pPATCH != entity.PATCH))
             {
                 entity.PATCH = pPATCH;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pPOST, entity.POST, permission, nameof(request.POST), pPOST != entity.POST))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pPOST, permission, nameof(request.POST), pPOST != entity.POST))
             {
                 entity.POST = pPOST;
             }
-            if (PatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pPUT, entity.PUT, permission, nameof(request.PUT), pPUT != entity.PUT))
+            if (AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pPUT, permission, nameof(request.PUT), pPUT != entity.PUT))
             {
                 entity.PUT = pPUT;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<DataClass, bool>(request, DocConstantModelName.DATACLASS, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

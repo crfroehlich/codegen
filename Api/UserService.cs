@@ -291,109 +291,95 @@ namespace Services.API
             var pUpdates = GetVariable<Reference>(request, nameof(request.Updates), request.Updates?.ToList(), request.UpdatesIds?.ToList());
             var pUserType = (request.UserType?.Id > 0) ? DocEntityUserType.Get(request.UserType.Id) : null;
             var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
-
-            DocEntityUser entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityUser(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityUser.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<User, bool>(request, DocConstantModelName.USER, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityUser,User>(request, permission, session);
+
+            if (AllowPatchValue<User, bool>(request, DocConstantModelName.USER, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pClientDepartment, entity.ClientDepartment, permission, nameof(request.ClientDepartment), pClientDepartment != entity.ClientDepartment))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pClientDepartment, permission, nameof(request.ClientDepartment), pClientDepartment != entity.ClientDepartment))
             {
                 entity.ClientDepartment = pClientDepartment;
             }
-            if (PatchValue<User, DocEntityDivision>(request, DocConstantModelName.USER, pDivision, entity.Division, permission, nameof(request.Division), pDivision != entity.Division))
+            if (AllowPatchValue<User, DocEntityDivision>(request, DocConstantModelName.USER, pDivision, permission, nameof(request.Division), pDivision != entity.Division))
             {
                 entity.Division = pDivision;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pEmail, entity.Email, permission, nameof(request.Email), pEmail != entity.Email))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pEmail, permission, nameof(request.Email), pEmail != entity.Email))
             {
                 entity.Email = pEmail;
             }
-            if (PatchValue<User, DateTime?>(request, DocConstantModelName.USER, pExpireDate, entity.ExpireDate, permission, nameof(request.ExpireDate), pExpireDate != entity.ExpireDate))
+            if (AllowPatchValue<User, DateTime?>(request, DocConstantModelName.USER, pExpireDate, permission, nameof(request.ExpireDate), pExpireDate != entity.ExpireDate))
             {
                 entity.ExpireDate = pExpireDate;
             }
-            if (PatchValue<User, int?>(request, DocConstantModelName.USER, pFailedLoginCount, entity.FailedLoginCount, permission, nameof(request.FailedLoginCount), pFailedLoginCount != entity.FailedLoginCount))
+            if (AllowPatchValue<User, int?>(request, DocConstantModelName.USER, pFailedLoginCount, permission, nameof(request.FailedLoginCount), pFailedLoginCount != entity.FailedLoginCount))
             {
                 if(null != pFailedLoginCount) entity.FailedLoginCount = (int) pFailedLoginCount;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pFirstName, entity.FirstName, permission, nameof(request.FirstName), pFirstName != entity.FirstName))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pFirstName, permission, nameof(request.FirstName), pFirstName != entity.FirstName))
             {
                 entity.FirstName = pFirstName;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pGravatar, entity.Gravatar, permission, nameof(request.Gravatar), pGravatar != entity.Gravatar))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pGravatar, permission, nameof(request.Gravatar), pGravatar != entity.Gravatar))
             {
                 entity.Gravatar = pGravatar;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pJobTitle, entity.JobTitle, permission, nameof(request.JobTitle), pJobTitle != entity.JobTitle))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pJobTitle, permission, nameof(request.JobTitle), pJobTitle != entity.JobTitle))
             {
                 entity.JobTitle = pJobTitle;
             }
-            if (PatchValue<User, DateTime?>(request, DocConstantModelName.USER, pLastLogin, entity.LastLogin, permission, nameof(request.LastLogin), pLastLogin != entity.LastLogin))
+            if (AllowPatchValue<User, DateTime?>(request, DocConstantModelName.USER, pLastLogin, permission, nameof(request.LastLogin), pLastLogin != entity.LastLogin))
             {
                 entity.LastLogin = pLastLogin;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pLastName, entity.LastName, permission, nameof(request.LastName), pLastName != entity.LastName))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pLastName, permission, nameof(request.LastName), pLastName != entity.LastName))
             {
                 entity.LastName = pLastName;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pLegacyUsername, entity.LegacyUsername, permission, nameof(request.LegacyUsername), pLegacyUsername != entity.LegacyUsername))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pLegacyUsername, permission, nameof(request.LegacyUsername), pLegacyUsername != entity.LegacyUsername))
             {
                 entity.LegacyUsername = pLegacyUsername;
             }
-            if (PatchValue<User, DocEntityLocale>(request, DocConstantModelName.USER, pLocale, entity.Locale, permission, nameof(request.Locale), pLocale != entity.Locale))
+            if (AllowPatchValue<User, DocEntityLocale>(request, DocConstantModelName.USER, pLocale, permission, nameof(request.Locale), pLocale != entity.Locale))
             {
                 entity.Locale = pLocale;
             }
-            if (PatchValue<User, int?>(request, DocConstantModelName.USER, pLoginCount, entity.LoginCount, permission, nameof(request.LoginCount), pLoginCount != entity.LoginCount))
+            if (AllowPatchValue<User, int?>(request, DocConstantModelName.USER, pLoginCount, permission, nameof(request.LoginCount), pLoginCount != entity.LoginCount))
             {
                 if(null != pLoginCount) entity.LoginCount = (int) pLoginCount;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pSettings, entity.Settings, permission, nameof(request.Settings), pSettings != entity.Settings))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pSettings, permission, nameof(request.Settings), pSettings != entity.Settings))
             {
                 entity.Settings = pSettings;
             }
-            if (PatchValue<User, string>(request, DocConstantModelName.USER, pSlack, entity.Slack, permission, nameof(request.Slack), pSlack != entity.Slack))
+            if (AllowPatchValue<User, string>(request, DocConstantModelName.USER, pSlack, permission, nameof(request.Slack), pSlack != entity.Slack))
             {
                 entity.Slack = pSlack;
             }
-            if (PatchValue<User, DateTime?>(request, DocConstantModelName.USER, pStartDate, entity.StartDate, permission, nameof(request.StartDate), pStartDate != entity.StartDate))
+            if (AllowPatchValue<User, DateTime?>(request, DocConstantModelName.USER, pStartDate, permission, nameof(request.StartDate), pStartDate != entity.StartDate))
             {
                 entity.StartDate = pStartDate;
             }
-            if (PatchValue<User, StatusEnm?>(request, DocConstantModelName.USER, pStatus, entity.Status, permission, nameof(request.Status), pStatus != entity.Status))
+            if (AllowPatchValue<User, StatusEnm?>(request, DocConstantModelName.USER, pStatus, permission, nameof(request.Status), pStatus != entity.Status))
             {
                 if(null != pStatus) entity.Status = pStatus.Value;
             }
-            if (PatchValue<User, DocEntityUserType>(request, DocConstantModelName.USER, pUserType, entity.UserType, permission, nameof(request.UserType), pUserType != entity.UserType))
+            if (AllowPatchValue<User, DocEntityUserType>(request, DocConstantModelName.USER, pUserType, permission, nameof(request.UserType), pUserType != entity.UserType))
             {
                 entity.UserType = pUserType;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<User, bool>(request, DocConstantModelName.USER, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

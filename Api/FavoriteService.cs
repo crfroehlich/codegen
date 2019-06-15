@@ -135,41 +135,27 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityBase.Get(request.Owner.Id) : null;
-
-            DocEntityFavorite entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityFavorite(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityFavorite.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Favorite, bool>(request, DocConstantModelName.FAVORITE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityFavorite,Favorite>(request, permission, session);
+
+            if (AllowPatchValue<Favorite, bool>(request, DocConstantModelName.FAVORITE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Favorite, DocEntityScope>(request, DocConstantModelName.FAVORITE, pScope, entity.Scope, permission, nameof(request.Scope), pScope != entity.Scope))
+            if (AllowPatchValue<Favorite, DocEntityScope>(request, DocConstantModelName.FAVORITE, pScope, permission, nameof(request.Scope), pScope != entity.Scope))
             {
                 entity.Scope = pScope;
             }
-            if (PatchValue<Favorite, DocEntityBase>(request, DocConstantModelName.FAVORITE, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
+            if (AllowPatchValue<Favorite, DocEntityBase>(request, DocConstantModelName.FAVORITE, pOwner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
                 entity.Owner = pOwner;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Favorite, bool>(request, DocConstantModelName.FAVORITE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

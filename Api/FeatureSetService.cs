@@ -141,45 +141,31 @@ namespace Services.API
             var pName = request.Name;
             var pPermissionTemplate = request.PermissionTemplate;
             var pRoles = GetVariable<Reference>(request, nameof(request.Roles), request.Roles?.ToList(), request.RolesIds?.ToList());
-
-            DocEntityFeatureSet entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityFeatureSet(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityFeatureSet.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<FeatureSet, bool>(request, DocConstantModelName.FEATURESET, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityFeatureSet,FeatureSet>(request, permission, session);
+
+            if (AllowPatchValue<FeatureSet, bool>(request, DocConstantModelName.FEATURESET, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<FeatureSet, string>(request, DocConstantModelName.FEATURESET, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<FeatureSet, string>(request, DocConstantModelName.FEATURESET, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<FeatureSet, string>(request, DocConstantModelName.FEATURESET, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<FeatureSet, string>(request, DocConstantModelName.FEATURESET, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<FeatureSet, string>(request, DocConstantModelName.FEATURESET, pPermissionTemplate, entity.PermissionTemplate, permission, nameof(request.PermissionTemplate), pPermissionTemplate != entity.PermissionTemplate))
+            if (AllowPatchValue<FeatureSet, string>(request, DocConstantModelName.FEATURESET, pPermissionTemplate, permission, nameof(request.PermissionTemplate), pPermissionTemplate != entity.PermissionTemplate))
             {
                 entity.PermissionTemplate = pPermissionTemplate;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<FeatureSet, bool>(request, DocConstantModelName.FEATURESET, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

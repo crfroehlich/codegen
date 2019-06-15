@@ -212,89 +212,75 @@ namespace Services.API
             var pRunNow = request.RunNow;
             var pStartAt = request.StartAt;
             var pTaskHistory = GetVariable<Reference>(request, nameof(request.TaskHistory), request.TaskHistory?.ToList(), request.TaskHistoryIds?.ToList());
-
-            DocEntityBackgroundTask entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityBackgroundTask(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityBackgroundTask.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityBackgroundTask,BackgroundTask>(request, permission, session);
+
+            if (AllowPatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<BackgroundTask, DocEntityApp>(request, DocConstantModelName.BACKGROUNDTASK, pApp, entity.App, permission, nameof(request.App), pApp != entity.App))
+            if (AllowPatchValue<BackgroundTask, DocEntityApp>(request, DocConstantModelName.BACKGROUNDTASK, pApp, permission, nameof(request.App), pApp != entity.App))
             {
                 entity.App = pApp;
             }
-            if (PatchValue<BackgroundTask, DocEntityQueueChannel>(request, DocConstantModelName.BACKGROUNDTASK, pChannel, entity.Channel, permission, nameof(request.Channel), pChannel != entity.Channel))
+            if (AllowPatchValue<BackgroundTask, DocEntityQueueChannel>(request, DocConstantModelName.BACKGROUNDTASK, pChannel, permission, nameof(request.Channel), pChannel != entity.Channel))
             {
                 entity.Channel = pChannel;
             }
-            if (PatchValue<BackgroundTask, string>(request, DocConstantModelName.BACKGROUNDTASK, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<BackgroundTask, string>(request, DocConstantModelName.BACKGROUNDTASK, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pEnabled, entity.Enabled, permission, nameof(request.Enabled), pEnabled != entity.Enabled))
+            if (AllowPatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pEnabled, permission, nameof(request.Enabled), pEnabled != entity.Enabled))
             {
                 entity.Enabled = pEnabled;
             }
-            if (PatchValue<BackgroundTask, int?>(request, DocConstantModelName.BACKGROUNDTASK, pFrequency, entity.Frequency, permission, nameof(request.Frequency), pFrequency != entity.Frequency))
+            if (AllowPatchValue<BackgroundTask, int?>(request, DocConstantModelName.BACKGROUNDTASK, pFrequency, permission, nameof(request.Frequency), pFrequency != entity.Frequency))
             {
                 if(null != pFrequency) entity.Frequency = (int) pFrequency;
             }
-            if (PatchValue<BackgroundTask, int?>(request, DocConstantModelName.BACKGROUNDTASK, pHistoryRetention, entity.HistoryRetention, permission, nameof(request.HistoryRetention), pHistoryRetention != entity.HistoryRetention))
+            if (AllowPatchValue<BackgroundTask, int?>(request, DocConstantModelName.BACKGROUNDTASK, pHistoryRetention, permission, nameof(request.HistoryRetention), pHistoryRetention != entity.HistoryRetention))
             {
                 entity.HistoryRetention = pHistoryRetention;
             }
-            if (PatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pKeepHistory, entity.KeepHistory, permission, nameof(request.KeepHistory), pKeepHistory != entity.KeepHistory))
+            if (AllowPatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pKeepHistory, permission, nameof(request.KeepHistory), pKeepHistory != entity.KeepHistory))
             {
                 entity.KeepHistory = pKeepHistory;
             }
-            if (PatchValue<BackgroundTask, string>(request, DocConstantModelName.BACKGROUNDTASK, pLastRunVersion, entity.LastRunVersion, permission, nameof(request.LastRunVersion), pLastRunVersion != entity.LastRunVersion))
+            if (AllowPatchValue<BackgroundTask, string>(request, DocConstantModelName.BACKGROUNDTASK, pLastRunVersion, permission, nameof(request.LastRunVersion), pLastRunVersion != entity.LastRunVersion))
             {
                 entity.LastRunVersion = pLastRunVersion;
             }
-            if (PatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pLogError, entity.LogError, permission, nameof(request.LogError), pLogError != entity.LogError))
+            if (AllowPatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pLogError, permission, nameof(request.LogError), pLogError != entity.LogError))
             {
                 entity.LogError = pLogError;
             }
-            if (PatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pLogInfo, entity.LogInfo, permission, nameof(request.LogInfo), pLogInfo != entity.LogInfo))
+            if (AllowPatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pLogInfo, permission, nameof(request.LogInfo), pLogInfo != entity.LogInfo))
             {
                 entity.LogInfo = pLogInfo;
             }
-            if (PatchValue<BackgroundTask, string>(request, DocConstantModelName.BACKGROUNDTASK, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<BackgroundTask, string>(request, DocConstantModelName.BACKGROUNDTASK, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<BackgroundTask, int?>(request, DocConstantModelName.BACKGROUNDTASK, pRowsToProcessPerIteration, entity.RowsToProcessPerIteration, permission, nameof(request.RowsToProcessPerIteration), pRowsToProcessPerIteration != entity.RowsToProcessPerIteration))
+            if (AllowPatchValue<BackgroundTask, int?>(request, DocConstantModelName.BACKGROUNDTASK, pRowsToProcessPerIteration, permission, nameof(request.RowsToProcessPerIteration), pRowsToProcessPerIteration != entity.RowsToProcessPerIteration))
             {
                 if(null != pRowsToProcessPerIteration) entity.RowsToProcessPerIteration = (int) pRowsToProcessPerIteration;
             }
-            if (PatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pRunNow, entity.RunNow, permission, nameof(request.RunNow), pRunNow != entity.RunNow))
+            if (AllowPatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pRunNow, permission, nameof(request.RunNow), pRunNow != entity.RunNow))
             {
                 entity.RunNow = pRunNow;
             }
-            if (PatchValue<BackgroundTask, string>(request, DocConstantModelName.BACKGROUNDTASK, pStartAt, entity.StartAt, permission, nameof(request.StartAt), pStartAt != entity.StartAt))
+            if (AllowPatchValue<BackgroundTask, string>(request, DocConstantModelName.BACKGROUNDTASK, pStartAt, permission, nameof(request.StartAt), pStartAt != entity.StartAt))
             {
                 entity.StartAt = pStartAt;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<BackgroundTask, bool>(request, DocConstantModelName.BACKGROUNDTASK, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

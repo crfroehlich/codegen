@@ -140,45 +140,31 @@ namespace Services.API
             var pCountry = request.Country;
             var pLanguage = request.Language;
             var pTimeZone = request.TimeZone;
-
-            DocEntityLocale entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityLocale(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityLocale.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Locale, bool>(request, DocConstantModelName.LOCALE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityLocale,Locale>(request, permission, session);
+
+            if (AllowPatchValue<Locale, bool>(request, DocConstantModelName.LOCALE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Locale, string>(request, DocConstantModelName.LOCALE, pCountry, entity.Country, permission, nameof(request.Country), pCountry != entity.Country))
+            if (AllowPatchValue<Locale, string>(request, DocConstantModelName.LOCALE, pCountry, permission, nameof(request.Country), pCountry != entity.Country))
             {
                 entity.Country = pCountry;
             }
-            if (PatchValue<Locale, string>(request, DocConstantModelName.LOCALE, pLanguage, entity.Language, permission, nameof(request.Language), pLanguage != entity.Language))
+            if (AllowPatchValue<Locale, string>(request, DocConstantModelName.LOCALE, pLanguage, permission, nameof(request.Language), pLanguage != entity.Language))
             {
                 entity.Language = pLanguage;
             }
-            if (PatchValue<Locale, string>(request, DocConstantModelName.LOCALE, pTimeZone, entity.TimeZone, permission, nameof(request.TimeZone), pTimeZone != entity.TimeZone))
+            if (AllowPatchValue<Locale, string>(request, DocConstantModelName.LOCALE, pTimeZone, permission, nameof(request.TimeZone), pTimeZone != entity.TimeZone))
             {
                 entity.TimeZone = pTimeZone;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Locale, bool>(request, DocConstantModelName.LOCALE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

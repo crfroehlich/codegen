@@ -253,113 +253,99 @@ namespace Services.API
             var pProjectName = request.ProjectName;
             var pStatus = request.Status;
             var pTimeCards = GetVariable<Reference>(request, nameof(request.TimeCards), request.TimeCards?.ToList(), request.TimeCardsIds?.ToList());
-
-            DocEntityProject entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityProject(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityProject.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Project, bool>(request, DocConstantModelName.PROJECT, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityProject,Project>(request, permission, session);
+
+            if (AllowPatchValue<Project, bool>(request, DocConstantModelName.PROJECT, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Project, DocEntityClient>(request, DocConstantModelName.PROJECT, pClient, entity.Client, permission, nameof(request.Client), pClient != entity.Client))
+            if (AllowPatchValue<Project, DocEntityClient>(request, DocConstantModelName.PROJECT, pClient, permission, nameof(request.Client), pClient != entity.Client))
             {
                 entity.Client = pClient;
             }
-            if (PatchValue<Project, DateTime?>(request, DocConstantModelName.PROJECT, pDatabaseDeadline, entity.DatabaseDeadline, permission, nameof(request.DatabaseDeadline), pDatabaseDeadline != entity.DatabaseDeadline))
+            if (AllowPatchValue<Project, DateTime?>(request, DocConstantModelName.PROJECT, pDatabaseDeadline, permission, nameof(request.DatabaseDeadline), pDatabaseDeadline != entity.DatabaseDeadline))
             {
                 entity.DatabaseDeadline = pDatabaseDeadline;
             }
-            if (PatchValue<Project, string>(request, DocConstantModelName.PROJECT, pDatabaseName, entity.DatabaseName, permission, nameof(request.DatabaseName), pDatabaseName != entity.DatabaseName))
+            if (AllowPatchValue<Project, string>(request, DocConstantModelName.PROJECT, pDatabaseName, permission, nameof(request.DatabaseName), pDatabaseName != entity.DatabaseName))
             {
                 entity.DatabaseName = pDatabaseName;
             }
-            if (PatchValue<Project, DocEntityDataSet>(request, DocConstantModelName.PROJECT, pDataset, entity.Dataset, permission, nameof(request.Dataset), pDataset != entity.Dataset))
+            if (AllowPatchValue<Project, DocEntityDataSet>(request, DocConstantModelName.PROJECT, pDataset, permission, nameof(request.Dataset), pDataset != entity.Dataset))
             {
                 entity.Dataset = pDataset;
             }
-            if (PatchValue<Project, DateTime?>(request, DocConstantModelName.PROJECT, pDeliverableDeadline, entity.DeliverableDeadline, permission, nameof(request.DeliverableDeadline), pDeliverableDeadline != entity.DeliverableDeadline))
+            if (AllowPatchValue<Project, DateTime?>(request, DocConstantModelName.PROJECT, pDeliverableDeadline, permission, nameof(request.DeliverableDeadline), pDeliverableDeadline != entity.DeliverableDeadline))
             {
                 entity.DeliverableDeadline = pDeliverableDeadline;
             }
-            if (PatchValue<Project, int?>(request, DocConstantModelName.PROJECT, pFqId, entity.FqId, permission, nameof(request.FqId), pFqId != entity.FqId))
+            if (AllowPatchValue<Project, int?>(request, DocConstantModelName.PROJECT, pFqId, permission, nameof(request.FqId), pFqId != entity.FqId))
             {
                 entity.FqId = pFqId;
             }
-            if (PatchValue<Project, DocEntityWorkflow>(request, DocConstantModelName.PROJECT, pFqWorkflow, entity.FqWorkflow, permission, nameof(request.FqWorkflow), pFqWorkflow != entity.FqWorkflow))
+            if (AllowPatchValue<Project, DocEntityWorkflow>(request, DocConstantModelName.PROJECT, pFqWorkflow, permission, nameof(request.FqWorkflow), pFqWorkflow != entity.FqWorkflow))
             {
                 entity.FqWorkflow = pFqWorkflow;
             }
-            if (PatchValue<Project, int?>(request, DocConstantModelName.PROJECT, pLegacyPackageId, entity.LegacyPackageId, permission, nameof(request.LegacyPackageId), pLegacyPackageId != entity.LegacyPackageId))
+            if (AllowPatchValue<Project, int?>(request, DocConstantModelName.PROJECT, pLegacyPackageId, permission, nameof(request.LegacyPackageId), pLegacyPackageId != entity.LegacyPackageId))
             {
                 entity.LegacyPackageId = pLegacyPackageId;
             }
-            if (PatchValue<Project, DocEntityLibrarySet>(request, DocConstantModelName.PROJECT, pLibrary, entity.Library, permission, nameof(request.Library), pLibrary != entity.Library))
+            if (AllowPatchValue<Project, DocEntityLibrarySet>(request, DocConstantModelName.PROJECT, pLibrary, permission, nameof(request.Library), pLibrary != entity.Library))
             {
                 entity.Library = pLibrary;
             }
-            if (PatchValue<Project, int?>(request, DocConstantModelName.PROJECT, pLibraryPackageId, entity.LibraryPackageId, permission, nameof(request.LibraryPackageId), pLibraryPackageId != entity.LibraryPackageId))
+            if (AllowPatchValue<Project, int?>(request, DocConstantModelName.PROJECT, pLibraryPackageId, permission, nameof(request.LibraryPackageId), pLibraryPackageId != entity.LibraryPackageId))
             {
                 entity.LibraryPackageId = pLibraryPackageId;
             }
-            if (PatchValue<Project, string>(request, DocConstantModelName.PROJECT, pLibraryPackageName, entity.LibraryPackageName, permission, nameof(request.LibraryPackageName), pLibraryPackageName != entity.LibraryPackageName))
+            if (AllowPatchValue<Project, string>(request, DocConstantModelName.PROJECT, pLibraryPackageName, permission, nameof(request.LibraryPackageName), pLibraryPackageName != entity.LibraryPackageName))
             {
                 entity.LibraryPackageName = pLibraryPackageName;
             }
-            if (PatchValue<Project, string>(request, DocConstantModelName.PROJECT, pNumber, entity.Number, permission, nameof(request.Number), pNumber != entity.Number))
+            if (AllowPatchValue<Project, string>(request, DocConstantModelName.PROJECT, pNumber, permission, nameof(request.Number), pNumber != entity.Number))
             {
                 entity.Number = pNumber;
             }
-            if (PatchValue<Project, string>(request, DocConstantModelName.PROJECT, pOperationsDeliverable, entity.OperationsDeliverable, permission, nameof(request.OperationsDeliverable), pOperationsDeliverable != entity.OperationsDeliverable))
+            if (AllowPatchValue<Project, string>(request, DocConstantModelName.PROJECT, pOperationsDeliverable, permission, nameof(request.OperationsDeliverable), pOperationsDeliverable != entity.OperationsDeliverable))
             {
                 entity.OperationsDeliverable = pOperationsDeliverable;
             }
-            if (PatchValue<Project, string>(request, DocConstantModelName.PROJECT, pOpportunityId, entity.OpportunityId, permission, nameof(request.OpportunityId), pOpportunityId != entity.OpportunityId))
+            if (AllowPatchValue<Project, string>(request, DocConstantModelName.PROJECT, pOpportunityId, permission, nameof(request.OpportunityId), pOpportunityId != entity.OpportunityId))
             {
                 entity.OpportunityId = pOpportunityId;
             }
-            if (PatchValue<Project, string>(request, DocConstantModelName.PROJECT, pOpportunityName, entity.OpportunityName, permission, nameof(request.OpportunityName), pOpportunityName != entity.OpportunityName))
+            if (AllowPatchValue<Project, string>(request, DocConstantModelName.PROJECT, pOpportunityName, permission, nameof(request.OpportunityName), pOpportunityName != entity.OpportunityName))
             {
                 entity.OpportunityName = pOpportunityName;
             }
-            if (PatchValue<Project, DocEntityProject>(request, DocConstantModelName.PROJECT, pParent, entity.Parent, permission, nameof(request.Parent), pParent != entity.Parent))
+            if (AllowPatchValue<Project, DocEntityProject>(request, DocConstantModelName.PROJECT, pParent, permission, nameof(request.Parent), pParent != entity.Parent))
             {
                 entity.Parent = pParent;
             }
-            if (PatchValue<Project, string>(request, DocConstantModelName.PROJECT, pPICO, entity.PICO, permission, nameof(request.PICO), pPICO != entity.PICO))
+            if (AllowPatchValue<Project, string>(request, DocConstantModelName.PROJECT, pPICO, permission, nameof(request.PICO), pPICO != entity.PICO))
             {
                 entity.PICO = pPICO;
             }
-            if (PatchValue<Project, string>(request, DocConstantModelName.PROJECT, pProjectId, entity.ProjectId, permission, nameof(request.ProjectId), pProjectId != entity.ProjectId))
+            if (AllowPatchValue<Project, string>(request, DocConstantModelName.PROJECT, pProjectId, permission, nameof(request.ProjectId), pProjectId != entity.ProjectId))
             {
                 entity.ProjectId = pProjectId;
             }
-            if (PatchValue<Project, string>(request, DocConstantModelName.PROJECT, pProjectName, entity.ProjectName, permission, nameof(request.ProjectName), pProjectName != entity.ProjectName))
+            if (AllowPatchValue<Project, string>(request, DocConstantModelName.PROJECT, pProjectName, permission, nameof(request.ProjectName), pProjectName != entity.ProjectName))
             {
                 entity.ProjectName = pProjectName;
             }
-            if (PatchValue<Project, ForeignKeyStatusEnm?>(request, DocConstantModelName.PROJECT, pStatus, entity.Status, permission, nameof(request.Status), pStatus != entity.Status))
+            if (AllowPatchValue<Project, ForeignKeyStatusEnm?>(request, DocConstantModelName.PROJECT, pStatus, permission, nameof(request.Status), pStatus != entity.Status))
             {
                 entity.Status = pStatus;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Project, bool>(request, DocConstantModelName.PROJECT, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

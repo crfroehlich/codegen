@@ -157,45 +157,31 @@ namespace Services.API
             var pEnum = DocEntityLookupTableEnum.Get(request.Enum);
             var pLookups = GetVariable<Reference>(request, nameof(request.Lookups), request.Lookups?.ToList(), request.LookupsIds?.ToList());
             var pParentCategory = (request.ParentCategory?.Id > 0) ? DocEntityLookupCategory.Get(request.ParentCategory.Id) : null;
-
-            DocEntityLookupCategory entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityLookupCategory(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityLookupCategory.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<LookupCategory, bool>(request, DocConstantModelName.LOOKUPCATEGORY, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityLookupCategory,LookupCategory>(request, permission, session);
+
+            if (AllowPatchValue<LookupCategory, bool>(request, DocConstantModelName.LOOKUPCATEGORY, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<LookupCategory, string>(request, DocConstantModelName.LOOKUPCATEGORY, pCategory, entity.Category, permission, nameof(request.Category), pCategory != entity.Category))
+            if (AllowPatchValue<LookupCategory, string>(request, DocConstantModelName.LOOKUPCATEGORY, pCategory, permission, nameof(request.Category), pCategory != entity.Category))
             {
                 entity.Category = pCategory;
             }
-            if (PatchValue<LookupCategory, DocEntityLookupTableEnum>(request, DocConstantModelName.LOOKUPCATEGORY, pEnum, entity.Enum, permission, nameof(request.Enum), pEnum != entity.Enum))
+            if (AllowPatchValue<LookupCategory, DocEntityLookupTableEnum>(request, DocConstantModelName.LOOKUPCATEGORY, pEnum, permission, nameof(request.Enum), pEnum != entity.Enum))
             {
                 entity.Enum = pEnum;
             }
-            if (PatchValue<LookupCategory, DocEntityLookupCategory>(request, DocConstantModelName.LOOKUPCATEGORY, pParentCategory, entity.ParentCategory, permission, nameof(request.ParentCategory), pParentCategory != entity.ParentCategory))
+            if (AllowPatchValue<LookupCategory, DocEntityLookupCategory>(request, DocConstantModelName.LOOKUPCATEGORY, pParentCategory, permission, nameof(request.ParentCategory), pParentCategory != entity.ParentCategory))
             {
                 entity.ParentCategory = pParentCategory;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<LookupCategory, bool>(request, DocConstantModelName.LOOKUPCATEGORY, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

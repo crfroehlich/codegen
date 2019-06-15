@@ -363,197 +363,183 @@ namespace Services.API
             var pTrialOutcome = request.TrialOutcome;
             var pVariableData = GetVariable<Reference>(request, nameof(request.VariableData), request.VariableData?.ToList(), request.VariableDataIds?.ToList());
             var pVolume = request.Volume;
-
-            DocEntityDocument entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityDocument(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityDocument.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Document, bool>(request, DocConstantModelName.DOCUMENT, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityDocument,Document>(request, permission, session);
+
+            if (AllowPatchValue<Document, bool>(request, DocConstantModelName.DOCUMENT, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pAbstract, entity.Abstract, permission, nameof(request.Abstract), pAbstract != entity.Abstract))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pAbstract, permission, nameof(request.Abstract), pAbstract != entity.Abstract))
             {
                 entity.Abstract = pAbstract;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pAccessionID, entity.AccessionID, permission, nameof(request.AccessionID), pAccessionID != entity.AccessionID))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pAccessionID, permission, nameof(request.AccessionID), pAccessionID != entity.AccessionID))
             {
                 entity.AccessionID = pAccessionID;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pAcronym, entity.Acronym, permission, nameof(request.Acronym), pAcronym != entity.Acronym))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pAcronym, permission, nameof(request.Acronym), pAcronym != entity.Acronym))
             {
                 entity.Acronym = pAcronym;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pArticleId, entity.ArticleId, permission, nameof(request.ArticleId), pArticleId != entity.ArticleId))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pArticleId, permission, nameof(request.ArticleId), pArticleId != entity.ArticleId))
             {
                 entity.ArticleId = pArticleId;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pAuthors, entity.Authors, permission, nameof(request.Authors), pAuthors != entity.Authors))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pAuthors, permission, nameof(request.Authors), pAuthors != entity.Authors))
             {
                 entity.Authors = pAuthors;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pCochraneID, entity.CochraneID, permission, nameof(request.CochraneID), pCochraneID != entity.CochraneID))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pCochraneID, permission, nameof(request.CochraneID), pCochraneID != entity.CochraneID))
             {
                 entity.CochraneID = pCochraneID;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pCorporateAuthor, entity.CorporateAuthor, permission, nameof(request.CorporateAuthor), pCorporateAuthor != entity.CorporateAuthor))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pCorporateAuthor, permission, nameof(request.CorporateAuthor), pCorporateAuthor != entity.CorporateAuthor))
             {
                 entity.CorporateAuthor = pCorporateAuthor;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pCountry, entity.Country, permission, nameof(request.Country), pCountry != entity.Country))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pCountry, permission, nameof(request.Country), pCountry != entity.Country))
             {
                 entity.Country = pCountry;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pCustomData, entity.CustomData, permission, nameof(request.CustomData), pCustomData != entity.CustomData))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pCustomData, permission, nameof(request.CustomData), pCustomData != entity.CustomData))
             {
                 entity.CustomData = pCustomData;
             }
-            if (PatchValue<Document, DocEntityLookupTable>(request, DocConstantModelName.DOCUMENT, pDatabaseType, entity.DatabaseType, permission, nameof(request.DatabaseType), pDatabaseType != entity.DatabaseType))
+            if (AllowPatchValue<Document, DocEntityLookupTable>(request, DocConstantModelName.DOCUMENT, pDatabaseType, permission, nameof(request.DatabaseType), pDatabaseType != entity.DatabaseType))
             {
                 entity.DatabaseType = pDatabaseType;
             }
-            if (PatchValue<Document, DocEntityLookupTable>(request, DocConstantModelName.DOCUMENT, pDocumentType, entity.DocumentType, permission, nameof(request.DocumentType), pDocumentType != entity.DocumentType))
+            if (AllowPatchValue<Document, DocEntityLookupTable>(request, DocConstantModelName.DOCUMENT, pDocumentType, permission, nameof(request.DocumentType), pDocumentType != entity.DocumentType))
             {
                 entity.DocumentType = pDocumentType;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pDOI, entity.DOI, permission, nameof(request.DOI), pDOI != entity.DOI))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pDOI, permission, nameof(request.DOI), pDOI != entity.DOI))
             {
                 entity.DOI = pDOI;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pEmbaseAccessionNumber, entity.EmbaseAccessionNumber, permission, nameof(request.EmbaseAccessionNumber), pEmbaseAccessionNumber != entity.EmbaseAccessionNumber))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pEmbaseAccessionNumber, permission, nameof(request.EmbaseAccessionNumber), pEmbaseAccessionNumber != entity.EmbaseAccessionNumber))
             {
                 entity.EmbaseAccessionNumber = pEmbaseAccessionNumber;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pEmtree, entity.Emtree, permission, nameof(request.Emtree), pEmtree != entity.Emtree))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pEmtree, permission, nameof(request.Emtree), pEmtree != entity.Emtree))
             {
                 entity.Emtree = pEmtree;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pErrataText, entity.ErrataText, permission, nameof(request.ErrataText), pErrataText != entity.ErrataText))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pErrataText, permission, nameof(request.ErrataText), pErrataText != entity.ErrataText))
             {
                 entity.ErrataText = pErrataText;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pFullText, entity.FullText, permission, nameof(request.FullText), pFullText != entity.FullText))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pFullText, permission, nameof(request.FullText), pFullText != entity.FullText))
             {
                 entity.FullText = pFullText;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pFullTextURL, entity.FullTextURL, permission, nameof(request.FullTextURL), pFullTextURL != entity.FullTextURL))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pFullTextURL, permission, nameof(request.FullTextURL), pFullTextURL != entity.FullTextURL))
             {
                 entity.FullTextURL = pFullTextURL;
             }
-            if (PatchValue<Document, DocEntityImportData>(request, DocConstantModelName.DOCUMENT, pImport, entity.Import, permission, nameof(request.Import), pImport != entity.Import))
+            if (AllowPatchValue<Document, DocEntityImportData>(request, DocConstantModelName.DOCUMENT, pImport, permission, nameof(request.Import), pImport != entity.Import))
             {
                 entity.Import = pImport;
             }
-            if (PatchValue<Document, DocEntityLookupTable>(request, DocConstantModelName.DOCUMENT, pImportType, entity.ImportType, permission, nameof(request.ImportType), pImportType != entity.ImportType))
+            if (AllowPatchValue<Document, DocEntityLookupTable>(request, DocConstantModelName.DOCUMENT, pImportType, permission, nameof(request.ImportType), pImportType != entity.ImportType))
             {
                 entity.ImportType = pImportType;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pInstitution, entity.Institution, permission, nameof(request.Institution), pInstitution != entity.Institution))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pInstitution, permission, nameof(request.Institution), pInstitution != entity.Institution))
             {
                 entity.Institution = pInstitution;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pISSN, entity.ISSN, permission, nameof(request.ISSN), pISSN != entity.ISSN))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pISSN, permission, nameof(request.ISSN), pISSN != entity.ISSN))
             {
                 entity.ISSN = pISSN;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pIssue, entity.Issue, permission, nameof(request.Issue), pIssue != entity.Issue))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pIssue, permission, nameof(request.Issue), pIssue != entity.Issue))
             {
                 entity.Issue = pIssue;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pJournalTitle, entity.JournalTitle, permission, nameof(request.JournalTitle), pJournalTitle != entity.JournalTitle))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pJournalTitle, permission, nameof(request.JournalTitle), pJournalTitle != entity.JournalTitle))
             {
                 entity.JournalTitle = pJournalTitle;
             }
-            if (PatchValue<Document, DateTime?>(request, DocConstantModelName.DOCUMENT, pLegacySync, entity.LegacySync, permission, nameof(request.LegacySync), pLegacySync != entity.LegacySync))
+            if (AllowPatchValue<Document, DateTime?>(request, DocConstantModelName.DOCUMENT, pLegacySync, permission, nameof(request.LegacySync), pLegacySync != entity.LegacySync))
             {
                 entity.LegacySync = pLegacySync;
             }
-            if (PatchValue<Document, int?>(request, DocConstantModelName.DOCUMENT, pMedlineID, entity.MedlineID, permission, nameof(request.MedlineID), pMedlineID != entity.MedlineID))
+            if (AllowPatchValue<Document, int?>(request, DocConstantModelName.DOCUMENT, pMedlineID, permission, nameof(request.MedlineID), pMedlineID != entity.MedlineID))
             {
                 entity.MedlineID = pMedlineID;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pMeSH, entity.MeSH, permission, nameof(request.MeSH), pMeSH != entity.MeSH))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pMeSH, permission, nameof(request.MeSH), pMeSH != entity.MeSH))
             {
                 entity.MeSH = pMeSH;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pPages, entity.Pages, permission, nameof(request.Pages), pPages != entity.Pages))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pPages, permission, nameof(request.Pages), pPages != entity.Pages))
             {
                 entity.Pages = pPages;
             }
-            if (PatchValue<Document, char?>(request, DocConstantModelName.DOCUMENT, pParentChildStatus, entity.ParentChildStatus, permission, nameof(request.ParentChildStatus), pParentChildStatus != entity.ParentChildStatus))
+            if (AllowPatchValue<Document, char?>(request, DocConstantModelName.DOCUMENT, pParentChildStatus, permission, nameof(request.ParentChildStatus), pParentChildStatus != entity.ParentChildStatus))
             {
                 entity.ParentChildStatus = pParentChildStatus;
             }
-            if (PatchValue<Document, int?>(request, DocConstantModelName.DOCUMENT, pParentID, entity.ParentID, permission, nameof(request.ParentID), pParentID != entity.ParentID))
+            if (AllowPatchValue<Document, int?>(request, DocConstantModelName.DOCUMENT, pParentID, permission, nameof(request.ParentID), pParentID != entity.ParentID))
             {
                 entity.ParentID = pParentID;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pPublicationDate, entity.PublicationDate, permission, nameof(request.PublicationDate), pPublicationDate != entity.PublicationDate))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pPublicationDate, permission, nameof(request.PublicationDate), pPublicationDate != entity.PublicationDate))
             {
                 entity.PublicationDate = pPublicationDate;
             }
-            if (PatchValue<Document, int?>(request, DocConstantModelName.DOCUMENT, pPublicationYear, entity.PublicationYear, permission, nameof(request.PublicationYear), pPublicationYear != entity.PublicationYear))
+            if (AllowPatchValue<Document, int?>(request, DocConstantModelName.DOCUMENT, pPublicationYear, permission, nameof(request.PublicationYear), pPublicationYear != entity.PublicationYear))
             {
                 entity.PublicationYear = pPublicationYear;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pPubType, entity.PubType, permission, nameof(request.PubType), pPubType != entity.PubType))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pPubType, permission, nameof(request.PubType), pPubType != entity.PubType))
             {
                 entity.PubType = pPubType;
             }
-            if (PatchValue<Document, int?>(request, DocConstantModelName.DOCUMENT, pReferenceStudy, entity.ReferenceStudy, permission, nameof(request.ReferenceStudy), pReferenceStudy != entity.ReferenceStudy))
+            if (AllowPatchValue<Document, int?>(request, DocConstantModelName.DOCUMENT, pReferenceStudy, permission, nameof(request.ReferenceStudy), pReferenceStudy != entity.ReferenceStudy))
             {
                 if(null != pReferenceStudy) entity.ReferenceStudy = (int) pReferenceStudy;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pSecondarySourceID, entity.SecondarySourceID, permission, nameof(request.SecondarySourceID), pSecondarySourceID != entity.SecondarySourceID))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pSecondarySourceID, permission, nameof(request.SecondarySourceID), pSecondarySourceID != entity.SecondarySourceID))
             {
                 entity.SecondarySourceID = pSecondarySourceID;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pSource, entity.Source, permission, nameof(request.Source), pSource != entity.Source))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pSource, permission, nameof(request.Source), pSource != entity.Source))
             {
                 entity.Source = pSource;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pStorageModel, entity.StorageModel, permission, nameof(request.StorageModel), pStorageModel != entity.StorageModel))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pStorageModel, permission, nameof(request.StorageModel), pStorageModel != entity.StorageModel))
             {
                 entity.StorageModel = pStorageModel;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pSupplementalFiles, entity.SupplementalFiles, permission, nameof(request.SupplementalFiles), pSupplementalFiles != entity.SupplementalFiles))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pSupplementalFiles, permission, nameof(request.SupplementalFiles), pSupplementalFiles != entity.SupplementalFiles))
             {
                 entity.SupplementalFiles = pSupplementalFiles;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pTaStudyDesign, entity.TaStudyDesign, permission, nameof(request.TaStudyDesign), pTaStudyDesign != entity.TaStudyDesign))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pTaStudyDesign, permission, nameof(request.TaStudyDesign), pTaStudyDesign != entity.TaStudyDesign))
             {
                 entity.TaStudyDesign = pTaStudyDesign;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pTitle, entity.Title, permission, nameof(request.Title), pTitle != entity.Title))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pTitle, permission, nameof(request.Title), pTitle != entity.Title))
             {
                 entity.Title = pTitle;
             }
-            if (PatchValue<Document, short?>(request, DocConstantModelName.DOCUMENT, pTrialOutcome, entity.TrialOutcome, permission, nameof(request.TrialOutcome), pTrialOutcome != entity.TrialOutcome))
+            if (AllowPatchValue<Document, short?>(request, DocConstantModelName.DOCUMENT, pTrialOutcome, permission, nameof(request.TrialOutcome), pTrialOutcome != entity.TrialOutcome))
             {
                 entity.TrialOutcome = pTrialOutcome;
             }
-            if (PatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pVolume, entity.Volume, permission, nameof(request.Volume), pVolume != entity.Volume))
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pVolume, permission, nameof(request.Volume), pVolume != entity.Volume))
             {
                 entity.Volume = pVolume;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Document, bool>(request, DocConstantModelName.DOCUMENT, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

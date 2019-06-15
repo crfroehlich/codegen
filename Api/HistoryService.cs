@@ -193,65 +193,51 @@ namespace Services.API
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
             var pUserSession = (request.UserSession?.Id > 0) ? DocEntityUserSession.Get(request.UserSession.Id) : null;
             var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
-
-            DocEntityHistory entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityHistory(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityHistory.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<History, bool>(request, DocConstantModelName.HISTORY, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityHistory,History>(request, permission, session);
+
+            if (AllowPatchValue<History, bool>(request, DocConstantModelName.HISTORY, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<History, DocEntityApp>(request, DocConstantModelName.HISTORY, pApp, entity.App, permission, nameof(request.App), pApp != entity.App))
+            if (AllowPatchValue<History, DocEntityApp>(request, DocConstantModelName.HISTORY, pApp, permission, nameof(request.App), pApp != entity.App))
             {
                 entity.App = pApp;
             }
-            if (PatchValue<History, DocEntityDocumentSet>(request, DocConstantModelName.HISTORY, pDocumentSet, entity.DocumentSet, permission, nameof(request.DocumentSet), pDocumentSet != entity.DocumentSet))
+            if (AllowPatchValue<History, DocEntityDocumentSet>(request, DocConstantModelName.HISTORY, pDocumentSet, permission, nameof(request.DocumentSet), pDocumentSet != entity.DocumentSet))
             {
                 entity.DocumentSet = pDocumentSet;
             }
-            if (PatchValue<History, DocEntityImpersonation>(request, DocConstantModelName.HISTORY, pImpersonation, entity.Impersonation, permission, nameof(request.Impersonation), pImpersonation != entity.Impersonation))
+            if (AllowPatchValue<History, DocEntityImpersonation>(request, DocConstantModelName.HISTORY, pImpersonation, permission, nameof(request.Impersonation), pImpersonation != entity.Impersonation))
             {
                 entity.Impersonation = pImpersonation;
             }
-            if (PatchValue<History, DocEntityPage>(request, DocConstantModelName.HISTORY, pPage, entity.Page, permission, nameof(request.Page), pPage != entity.Page))
+            if (AllowPatchValue<History, DocEntityPage>(request, DocConstantModelName.HISTORY, pPage, permission, nameof(request.Page), pPage != entity.Page))
             {
                 entity.Page = pPage;
             }
-            if (PatchValue<History, string>(request, DocConstantModelName.HISTORY, pURL, entity.URL, permission, nameof(request.URL), pURL != entity.URL))
+            if (AllowPatchValue<History, string>(request, DocConstantModelName.HISTORY, pURL, permission, nameof(request.URL), pURL != entity.URL))
             {
                 entity.URL = pURL;
             }
-            if (PatchValue<History, DocEntityUser>(request, DocConstantModelName.HISTORY, pUser, entity.User, permission, nameof(request.User), pUser != entity.User))
+            if (AllowPatchValue<History, DocEntityUser>(request, DocConstantModelName.HISTORY, pUser, permission, nameof(request.User), pUser != entity.User))
             {
                 entity.User = pUser;
             }
-            if (PatchValue<History, DocEntityUserSession>(request, DocConstantModelName.HISTORY, pUserSession, entity.UserSession, permission, nameof(request.UserSession), pUserSession != entity.UserSession))
+            if (AllowPatchValue<History, DocEntityUserSession>(request, DocConstantModelName.HISTORY, pUserSession, permission, nameof(request.UserSession), pUserSession != entity.UserSession))
             {
                 entity.UserSession = pUserSession;
             }
-            if (PatchValue<History, DocEntityWorkflow>(request, DocConstantModelName.HISTORY, pWorkflow, entity.Workflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
+            if (AllowPatchValue<History, DocEntityWorkflow>(request, DocConstantModelName.HISTORY, pWorkflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
             {
                 entity.Workflow = pWorkflow;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<History, bool>(request, DocConstantModelName.HISTORY, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

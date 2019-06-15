@@ -165,53 +165,39 @@ namespace Services.API
             var pPreferred = request.Preferred;
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
             var pSynonym = request.Synonym;
-
-            DocEntityTermSynonym entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityTermSynonym(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityTermSynonym.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<TermSynonym, bool>(request, DocConstantModelName.TERMSYNONYM, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityTermSynonym,TermSynonym>(request, permission, session);
+
+            if (AllowPatchValue<TermSynonym, bool>(request, DocConstantModelName.TERMSYNONYM, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<TermSynonym, bool>(request, DocConstantModelName.TERMSYNONYM, pApproved, entity.Approved, permission, nameof(request.Approved), pApproved != entity.Approved))
+            if (AllowPatchValue<TermSynonym, bool>(request, DocConstantModelName.TERMSYNONYM, pApproved, permission, nameof(request.Approved), pApproved != entity.Approved))
             {
                 entity.Approved = pApproved;
             }
-            if (PatchValue<TermSynonym, DocEntityTermMaster>(request, DocConstantModelName.TERMSYNONYM, pMaster, entity.Master, permission, nameof(request.Master), pMaster != entity.Master))
+            if (AllowPatchValue<TermSynonym, DocEntityTermMaster>(request, DocConstantModelName.TERMSYNONYM, pMaster, permission, nameof(request.Master), pMaster != entity.Master))
             {
                 entity.Master = pMaster;
             }
-            if (PatchValue<TermSynonym, bool>(request, DocConstantModelName.TERMSYNONYM, pPreferred, entity.Preferred, permission, nameof(request.Preferred), pPreferred != entity.Preferred))
+            if (AllowPatchValue<TermSynonym, bool>(request, DocConstantModelName.TERMSYNONYM, pPreferred, permission, nameof(request.Preferred), pPreferred != entity.Preferred))
             {
                 entity.Preferred = pPreferred;
             }
-            if (PatchValue<TermSynonym, DocEntityScope>(request, DocConstantModelName.TERMSYNONYM, pScope, entity.Scope, permission, nameof(request.Scope), pScope != entity.Scope))
+            if (AllowPatchValue<TermSynonym, DocEntityScope>(request, DocConstantModelName.TERMSYNONYM, pScope, permission, nameof(request.Scope), pScope != entity.Scope))
             {
                 entity.Scope = pScope;
             }
-            if (PatchValue<TermSynonym, string>(request, DocConstantModelName.TERMSYNONYM, pSynonym, entity.Synonym, permission, nameof(request.Synonym), pSynonym != entity.Synonym))
+            if (AllowPatchValue<TermSynonym, string>(request, DocConstantModelName.TERMSYNONYM, pSynonym, permission, nameof(request.Synonym), pSynonym != entity.Synonym))
             {
                 entity.Synonym = pSynonym;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<TermSynonym, bool>(request, DocConstantModelName.TERMSYNONYM, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

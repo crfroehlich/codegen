@@ -383,129 +383,115 @@ namespace Services.API
             var pType = request.Type;
             var pUpdateFrequency = request.UpdateFrequency;
             var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
-
-            DocEntityLibrarySet entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityLibrarySet(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityLibrarySet.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<LibrarySet, bool>(request, DocConstantModelName.LIBRARYSET, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityLibrarySet,LibrarySet>(request, permission, session);
+
+            if (AllowPatchValue<LibrarySet, bool>(request, DocConstantModelName.LIBRARYSET, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pAdditionalCriteria, entity.AdditionalCriteria, permission, nameof(request.AdditionalCriteria), pAdditionalCriteria != entity.AdditionalCriteria))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pAdditionalCriteria, permission, nameof(request.AdditionalCriteria), pAdditionalCriteria != entity.AdditionalCriteria))
             {
                 entity.AdditionalCriteria = pAdditionalCriteria;
             }
-            if (PatchValue<LibrarySet, bool>(request, DocConstantModelName.LIBRARYSET, pConfidential, entity.Confidential, permission, nameof(request.Confidential), pConfidential != entity.Confidential))
+            if (AllowPatchValue<LibrarySet, bool>(request, DocConstantModelName.LIBRARYSET, pConfidential, permission, nameof(request.Confidential), pConfidential != entity.Confidential))
             {
                 entity.Confidential = pConfidential;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pGeneralScope, entity.GeneralScope, permission, nameof(request.GeneralScope), pGeneralScope != entity.GeneralScope))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pGeneralScope, permission, nameof(request.GeneralScope), pGeneralScope != entity.GeneralScope))
             {
                 entity.GeneralScope = pGeneralScope;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pIndications, entity.Indications, permission, nameof(request.Indications), pIndications != entity.Indications))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pIndications, permission, nameof(request.Indications), pIndications != entity.Indications))
             {
                 entity.Indications = pIndications;
             }
-            if (PatchValue<LibrarySet, int?>(request, DocConstantModelName.LIBRARYSET, pLegacyDocumentSetId, entity.LegacyDocumentSetId, permission, nameof(request.LegacyDocumentSetId), pLegacyDocumentSetId != entity.LegacyDocumentSetId))
+            if (AllowPatchValue<LibrarySet, int?>(request, DocConstantModelName.LIBRARYSET, pLegacyDocumentSetId, permission, nameof(request.LegacyDocumentSetId), pLegacyDocumentSetId != entity.LegacyDocumentSetId))
             {
                 entity.LegacyDocumentSetId = pLegacyDocumentSetId;
             }
-            if (PatchValue<LibrarySet, int?>(request, DocConstantModelName.LIBRARYSET, pLibraryPackageId, entity.LibraryPackageId, permission, nameof(request.LibraryPackageId), pLibraryPackageId != entity.LibraryPackageId))
+            if (AllowPatchValue<LibrarySet, int?>(request, DocConstantModelName.LIBRARYSET, pLibraryPackageId, permission, nameof(request.LibraryPackageId), pLibraryPackageId != entity.LibraryPackageId))
             {
                 entity.LibraryPackageId = pLibraryPackageId;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pNotes, entity.Notes, permission, nameof(request.Notes), pNotes != entity.Notes))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pNotes, permission, nameof(request.Notes), pNotes != entity.Notes))
             {
                 entity.Notes = pNotes;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalComparators, entity.OriginalComparators, permission, nameof(request.OriginalComparators), pOriginalComparators != entity.OriginalComparators))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalComparators, permission, nameof(request.OriginalComparators), pOriginalComparators != entity.OriginalComparators))
             {
                 entity.OriginalComparators = pOriginalComparators;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalDesigns, entity.OriginalDesigns, permission, nameof(request.OriginalDesigns), pOriginalDesigns != entity.OriginalDesigns))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalDesigns, permission, nameof(request.OriginalDesigns), pOriginalDesigns != entity.OriginalDesigns))
             {
                 entity.OriginalDesigns = pOriginalDesigns;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalInterventions, entity.OriginalInterventions, permission, nameof(request.OriginalInterventions), pOriginalInterventions != entity.OriginalInterventions))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalInterventions, permission, nameof(request.OriginalInterventions), pOriginalInterventions != entity.OriginalInterventions))
             {
                 entity.OriginalInterventions = pOriginalInterventions;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalOutcomes, entity.OriginalOutcomes, permission, nameof(request.OriginalOutcomes), pOriginalOutcomes != entity.OriginalOutcomes))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalOutcomes, permission, nameof(request.OriginalOutcomes), pOriginalOutcomes != entity.OriginalOutcomes))
             {
                 entity.OriginalOutcomes = pOriginalOutcomes;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalSearch, entity.OriginalSearch, permission, nameof(request.OriginalSearch), pOriginalSearch != entity.OriginalSearch))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pOriginalSearch, permission, nameof(request.OriginalSearch), pOriginalSearch != entity.OriginalSearch))
             {
                 entity.OriginalSearch = pOriginalSearch;
             }
-            if (PatchValue<LibrarySet, DocEntityDocumentSet>(request, DocConstantModelName.LIBRARYSET, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
+            if (AllowPatchValue<LibrarySet, DocEntityDocumentSet>(request, DocConstantModelName.LIBRARYSET, pOwner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
                 entity.Owner = pOwner;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pParticipants, entity.Participants, permission, nameof(request.Participants), pParticipants != entity.Participants))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pParticipants, permission, nameof(request.Participants), pParticipants != entity.Participants))
             {
                 entity.Participants = pParticipants;
             }
-            if (PatchValue<LibrarySet, DocEntityTeam>(request, DocConstantModelName.LIBRARYSET, pProjectTeam, entity.ProjectTeam, permission, nameof(request.ProjectTeam), pProjectTeam != entity.ProjectTeam))
+            if (AllowPatchValue<LibrarySet, DocEntityTeam>(request, DocConstantModelName.LIBRARYSET, pProjectTeam, permission, nameof(request.ProjectTeam), pProjectTeam != entity.ProjectTeam))
             {
                 entity.ProjectTeam = pProjectTeam;
             }
-            if (PatchValue<LibrarySet, DateTime?>(request, DocConstantModelName.LIBRARYSET, pSearchEnd, entity.SearchEnd, permission, nameof(request.SearchEnd), pSearchEnd != entity.SearchEnd))
+            if (AllowPatchValue<LibrarySet, DateTime?>(request, DocConstantModelName.LIBRARYSET, pSearchEnd, permission, nameof(request.SearchEnd), pSearchEnd != entity.SearchEnd))
             {
                 entity.SearchEnd = pSearchEnd;
             }
-            if (PatchValue<LibrarySet, DateTime?>(request, DocConstantModelName.LIBRARYSET, pSearchStart, entity.SearchStart, permission, nameof(request.SearchStart), pSearchStart != entity.SearchStart))
+            if (AllowPatchValue<LibrarySet, DateTime?>(request, DocConstantModelName.LIBRARYSET, pSearchStart, permission, nameof(request.SearchStart), pSearchStart != entity.SearchStart))
             {
                 entity.SearchStart = pSearchStart;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pSearchStrategy, entity.SearchStrategy, permission, nameof(request.SearchStrategy), pSearchStrategy != entity.SearchStrategy))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pSearchStrategy, permission, nameof(request.SearchStrategy), pSearchStrategy != entity.SearchStrategy))
             {
                 entity.SearchStrategy = pSearchStrategy;
             }
-            if (PatchValue<LibrarySet, DateTime?>(request, DocConstantModelName.LIBRARYSET, pSearchUpdated, entity.SearchUpdated, permission, nameof(request.SearchUpdated), pSearchUpdated != entity.SearchUpdated))
+            if (AllowPatchValue<LibrarySet, DateTime?>(request, DocConstantModelName.LIBRARYSET, pSearchUpdated, permission, nameof(request.SearchUpdated), pSearchUpdated != entity.SearchUpdated))
             {
                 entity.SearchUpdated = pSearchUpdated;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pSelectionCriteria, entity.SelectionCriteria, permission, nameof(request.SelectionCriteria), pSelectionCriteria != entity.SelectionCriteria))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pSelectionCriteria, permission, nameof(request.SelectionCriteria), pSelectionCriteria != entity.SelectionCriteria))
             {
                 entity.SelectionCriteria = pSelectionCriteria;
             }
-            if (PatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pSettings, entity.Settings, permission, nameof(request.Settings), pSettings != entity.Settings))
+            if (AllowPatchValue<LibrarySet, string>(request, DocConstantModelName.LIBRARYSET, pSettings, permission, nameof(request.Settings), pSettings != entity.Settings))
             {
                 entity.Settings = pSettings;
             }
-            if (PatchValue<LibrarySet, DocumentSetTypeEnm?>(request, DocConstantModelName.LIBRARYSET, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<LibrarySet, DocumentSetTypeEnm?>(request, DocConstantModelName.LIBRARYSET, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-            if (PatchValue<LibrarySet, int?>(request, DocConstantModelName.LIBRARYSET, pUpdateFrequency, entity.UpdateFrequency, permission, nameof(request.UpdateFrequency), pUpdateFrequency != entity.UpdateFrequency))
+            if (AllowPatchValue<LibrarySet, int?>(request, DocConstantModelName.LIBRARYSET, pUpdateFrequency, permission, nameof(request.UpdateFrequency), pUpdateFrequency != entity.UpdateFrequency))
             {
                 entity.UpdateFrequency = pUpdateFrequency;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<LibrarySet, bool>(request, DocConstantModelName.LIBRARYSET, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

@@ -244,73 +244,59 @@ namespace Services.API
             var pVariableRules = GetVariable<Reference>(request, nameof(request.VariableRules), request.VariableRules?.ToList(), request.VariableRulesIds?.ToList());
             var pView = request.View;
             var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
-
-            DocEntityScope entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityScope(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityScope.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityScope,Scope>(request, permission, session);
+
+            if (AllowPatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Scope, DocEntityApp>(request, DocConstantModelName.SCOPE, pApp, entity.App, permission, nameof(request.App), pApp != entity.App))
+            if (AllowPatchValue<Scope, DocEntityApp>(request, DocConstantModelName.SCOPE, pApp, permission, nameof(request.App), pApp != entity.App))
             {
                 entity.App = pApp;
             }
-            if (PatchValue<Scope, DocEntityClient>(request, DocConstantModelName.SCOPE, pClient, entity.Client, permission, nameof(request.Client), pClient != entity.Client))
+            if (AllowPatchValue<Scope, DocEntityClient>(request, DocConstantModelName.SCOPE, pClient, permission, nameof(request.Client), pClient != entity.Client))
             {
                 entity.Client = pClient;
             }
-            if (PatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pDelete, entity.Delete, permission, nameof(request.Delete), pDelete != entity.Delete))
+            if (AllowPatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pDelete, permission, nameof(request.Delete), pDelete != entity.Delete))
             {
                 entity.Delete = pDelete;
             }
-            if (PatchValue<Scope, DocEntityDocumentSet>(request, DocConstantModelName.SCOPE, pDocumentSet, entity.DocumentSet, permission, nameof(request.DocumentSet), pDocumentSet != entity.DocumentSet))
+            if (AllowPatchValue<Scope, DocEntityDocumentSet>(request, DocConstantModelName.SCOPE, pDocumentSet, permission, nameof(request.DocumentSet), pDocumentSet != entity.DocumentSet))
             {
                 entity.DocumentSet = pDocumentSet;
             }
-            if (PatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pEdit, entity.Edit, permission, nameof(request.Edit), pEdit != entity.Edit))
+            if (AllowPatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pEdit, permission, nameof(request.Edit), pEdit != entity.Edit))
             {
                 entity.Edit = pEdit;
             }
-            if (PatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pIsGlobal, entity.IsGlobal, permission, nameof(request.IsGlobal), pIsGlobal != entity.IsGlobal))
+            if (AllowPatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pIsGlobal, permission, nameof(request.IsGlobal), pIsGlobal != entity.IsGlobal))
             {
                 entity.IsGlobal = pIsGlobal;
             }
-            if (PatchValue<Scope, DocEntityTeam>(request, DocConstantModelName.SCOPE, pTeam, entity.Team, permission, nameof(request.Team), pTeam != entity.Team))
+            if (AllowPatchValue<Scope, DocEntityTeam>(request, DocConstantModelName.SCOPE, pTeam, permission, nameof(request.Team), pTeam != entity.Team))
             {
                 entity.Team = pTeam;
             }
-            if (PatchValue<Scope, ScopeEnm?>(request, DocConstantModelName.SCOPE, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<Scope, ScopeEnm?>(request, DocConstantModelName.SCOPE, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-            if (PatchValue<Scope, DocEntityUser>(request, DocConstantModelName.SCOPE, pUser, entity.User, permission, nameof(request.User), pUser != entity.User))
+            if (AllowPatchValue<Scope, DocEntityUser>(request, DocConstantModelName.SCOPE, pUser, permission, nameof(request.User), pUser != entity.User))
             {
                 entity.User = pUser;
             }
-            if (PatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pView, entity.View, permission, nameof(request.View), pView != entity.View))
+            if (AllowPatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pView, permission, nameof(request.View), pView != entity.View))
             {
                 entity.View = pView;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Scope, bool>(request, DocConstantModelName.SCOPE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

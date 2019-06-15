@@ -240,85 +240,71 @@ namespace Services.API
             var pStatus = request.Status;
             var pType = request.Type;
             var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
-
-            DocEntityReconcileDocument entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityReconcileDocument(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityReconcileDocument.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<ReconcileDocument, bool>(request, DocConstantModelName.RECONCILEDOCUMENT, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityReconcileDocument,ReconcileDocument>(request, permission, session);
+
+            if (AllowPatchValue<ReconcileDocument, bool>(request, DocConstantModelName.RECONCILEDOCUMENT, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pArticleId, entity.ArticleId, permission, nameof(request.ArticleId), pArticleId != entity.ArticleId))
+            if (AllowPatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pArticleId, permission, nameof(request.ArticleId), pArticleId != entity.ArticleId))
             {
                 entity.ArticleId = pArticleId;
             }
-            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pArticleLink, entity.ArticleLink, permission, nameof(request.ArticleLink), pArticleLink != entity.ArticleLink))
+            if (AllowPatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pArticleLink, permission, nameof(request.ArticleLink), pArticleLink != entity.ArticleLink))
             {
                 entity.ArticleLink = pArticleLink;
             }
-            if (PatchValue<ReconcileDocument, DocEntityUser>(request, DocConstantModelName.RECONCILEDOCUMENT, pAssignee, entity.Assignee, permission, nameof(request.Assignee), pAssignee != entity.Assignee))
+            if (AllowPatchValue<ReconcileDocument, DocEntityUser>(request, DocConstantModelName.RECONCILEDOCUMENT, pAssignee, permission, nameof(request.Assignee), pAssignee != entity.Assignee))
             {
                 entity.Assignee = pAssignee;
             }
-            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pData, entity.Data, permission, nameof(request.Data), pData != entity.Data))
+            if (AllowPatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pData, permission, nameof(request.Data), pData != entity.Data))
             {
                 entity.Data = pData;
             }
-            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<ReconcileDocument, DocEntityDocument>(request, DocConstantModelName.RECONCILEDOCUMENT, pDocument, entity.Document, permission, nameof(request.Document), pDocument != entity.Document))
+            if (AllowPatchValue<ReconcileDocument, DocEntityDocument>(request, DocConstantModelName.RECONCILEDOCUMENT, pDocument, permission, nameof(request.Document), pDocument != entity.Document))
             {
                 entity.Document = pDocument;
             }
-            if (PatchValue<ReconcileDocument, DateTime?>(request, DocConstantModelName.RECONCILEDOCUMENT, pDueDate, entity.DueDate, permission, nameof(request.DueDate), pDueDate != entity.DueDate))
+            if (AllowPatchValue<ReconcileDocument, DateTime?>(request, DocConstantModelName.RECONCILEDOCUMENT, pDueDate, permission, nameof(request.DueDate), pDueDate != entity.DueDate))
             {
                 entity.DueDate = pDueDate;
             }
-            if (PatchValue<ReconcileDocument, int?>(request, DocConstantModelName.RECONCILEDOCUMENT, pMatches, entity.Matches, permission, nameof(request.Matches), pMatches != entity.Matches))
+            if (AllowPatchValue<ReconcileDocument, int?>(request, DocConstantModelName.RECONCILEDOCUMENT, pMatches, permission, nameof(request.Matches), pMatches != entity.Matches))
             {
                 if(null != pMatches) entity.Matches = (int) pMatches;
             }
-            if (PatchValue<ReconcileDocument, DocEntityUser>(request, DocConstantModelName.RECONCILEDOCUMENT, pReporter, entity.Reporter, permission, nameof(request.Reporter), pReporter != entity.Reporter))
+            if (AllowPatchValue<ReconcileDocument, DocEntityUser>(request, DocConstantModelName.RECONCILEDOCUMENT, pReporter, permission, nameof(request.Reporter), pReporter != entity.Reporter))
             {
                 entity.Reporter = pReporter;
             }
-            if (PatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pSearchLink, entity.SearchLink, permission, nameof(request.SearchLink), pSearchLink != entity.SearchLink))
+            if (AllowPatchValue<ReconcileDocument, string>(request, DocConstantModelName.RECONCILEDOCUMENT, pSearchLink, permission, nameof(request.SearchLink), pSearchLink != entity.SearchLink))
             {
                 entity.SearchLink = pSearchLink;
             }
-            if (PatchValue<ReconcileDocument, ReconciliationStatusEnm?>(request, DocConstantModelName.RECONCILEDOCUMENT, pStatus, entity.Status, permission, nameof(request.Status), pStatus != entity.Status))
+            if (AllowPatchValue<ReconcileDocument, ReconciliationStatusEnm?>(request, DocConstantModelName.RECONCILEDOCUMENT, pStatus, permission, nameof(request.Status), pStatus != entity.Status))
             {
                 if(null != pStatus) entity.Status = pStatus.Value;
             }
-            if (PatchValue<ReconcileDocument, TaskTypeEnm?>(request, DocConstantModelName.RECONCILEDOCUMENT, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<ReconcileDocument, TaskTypeEnm?>(request, DocConstantModelName.RECONCILEDOCUMENT, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-            if (PatchValue<ReconcileDocument, DocEntityWorkflow>(request, DocConstantModelName.RECONCILEDOCUMENT, pWorkflow, entity.Workflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
+            if (AllowPatchValue<ReconcileDocument, DocEntityWorkflow>(request, DocConstantModelName.RECONCILEDOCUMENT, pWorkflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
             {
                 entity.Workflow = pWorkflow;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<ReconcileDocument, bool>(request, DocConstantModelName.RECONCILEDOCUMENT, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

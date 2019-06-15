@@ -182,65 +182,51 @@ namespace Services.API
             var pTargetType = request.TargetType;
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.JUNCTIONTYPE, request.Type?.Name, request.Type?.Id);
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
-
-            DocEntityJunction entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityJunction(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityJunction.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Junction, bool>(request, DocConstantModelName.JUNCTION, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityJunction,Junction>(request, permission, session);
+
+            if (AllowPatchValue<Junction, bool>(request, DocConstantModelName.JUNCTION, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Junction, string>(request, DocConstantModelName.JUNCTION, pData, entity.Data, permission, nameof(request.Data), pData != entity.Data))
+            if (AllowPatchValue<Junction, string>(request, DocConstantModelName.JUNCTION, pData, permission, nameof(request.Data), pData != entity.Data))
             {
                 entity.Data = pData;
             }
-            if (PatchValue<Junction, int?>(request, DocConstantModelName.JUNCTION, pOwnerId, entity.OwnerId, permission, nameof(request.OwnerId), pOwnerId != entity.OwnerId))
+            if (AllowPatchValue<Junction, int?>(request, DocConstantModelName.JUNCTION, pOwnerId, permission, nameof(request.OwnerId), pOwnerId != entity.OwnerId))
             {
                 entity.OwnerId = pOwnerId;
             }
-            if (PatchValue<Junction, string>(request, DocConstantModelName.JUNCTION, pOwnerType, entity.OwnerType, permission, nameof(request.OwnerType), pOwnerType != entity.OwnerType))
+            if (AllowPatchValue<Junction, string>(request, DocConstantModelName.JUNCTION, pOwnerType, permission, nameof(request.OwnerType), pOwnerType != entity.OwnerType))
             {
                 entity.OwnerType = pOwnerType;
             }
-            if (PatchValue<Junction, DocEntityJunction>(request, DocConstantModelName.JUNCTION, pParent, entity.Parent, permission, nameof(request.Parent), pParent != entity.Parent))
+            if (AllowPatchValue<Junction, DocEntityJunction>(request, DocConstantModelName.JUNCTION, pParent, permission, nameof(request.Parent), pParent != entity.Parent))
             {
                 entity.Parent = pParent;
             }
-            if (PatchValue<Junction, int?>(request, DocConstantModelName.JUNCTION, pTargetId, entity.TargetId, permission, nameof(request.TargetId), pTargetId != entity.TargetId))
+            if (AllowPatchValue<Junction, int?>(request, DocConstantModelName.JUNCTION, pTargetId, permission, nameof(request.TargetId), pTargetId != entity.TargetId))
             {
                 entity.TargetId = pTargetId;
             }
-            if (PatchValue<Junction, string>(request, DocConstantModelName.JUNCTION, pTargetType, entity.TargetType, permission, nameof(request.TargetType), pTargetType != entity.TargetType))
+            if (AllowPatchValue<Junction, string>(request, DocConstantModelName.JUNCTION, pTargetType, permission, nameof(request.TargetType), pTargetType != entity.TargetType))
             {
                 entity.TargetType = pTargetType;
             }
-            if (PatchValue<Junction, DocEntityLookupTable>(request, DocConstantModelName.JUNCTION, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<Junction, DocEntityLookupTable>(request, DocConstantModelName.JUNCTION, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 entity.Type = pType;
             }
-            if (PatchValue<Junction, DocEntityUser>(request, DocConstantModelName.JUNCTION, pUser, entity.User, permission, nameof(request.User), pUser != entity.User))
+            if (AllowPatchValue<Junction, DocEntityUser>(request, DocConstantModelName.JUNCTION, pUser, permission, nameof(request.User), pUser != entity.User))
             {
                 entity.User = pUser;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Junction, bool>(request, DocConstantModelName.JUNCTION, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

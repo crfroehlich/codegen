@@ -166,53 +166,39 @@ namespace Services.API
             var pCalendarType = request.CalendarType;
             var pFollowUp = (request.FollowUp?.Id > 0) ? DocEntityTimePoint.Get(request.FollowUp.Id) : null;
             var pTimeOfDay = (request.TimeOfDay?.Id > 0) ? DocEntityTimePoint.Get(request.TimeOfDay.Id) : null;
-
-            DocEntityInterval entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityInterval(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityInterval.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Interval, bool>(request, DocConstantModelName.INTERVAL, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityInterval,Interval>(request, permission, session);
+
+            if (AllowPatchValue<Interval, bool>(request, DocConstantModelName.INTERVAL, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Interval, DocEntityDateTime>(request, DocConstantModelName.INTERVAL, pCalendarDateEnd, entity.CalendarDateEnd, permission, nameof(request.CalendarDateEnd), pCalendarDateEnd != entity.CalendarDateEnd))
+            if (AllowPatchValue<Interval, DocEntityDateTime>(request, DocConstantModelName.INTERVAL, pCalendarDateEnd, permission, nameof(request.CalendarDateEnd), pCalendarDateEnd != entity.CalendarDateEnd))
             {
                 entity.CalendarDateEnd = pCalendarDateEnd;
             }
-            if (PatchValue<Interval, DocEntityDateTime>(request, DocConstantModelName.INTERVAL, pCalendarDateStart, entity.CalendarDateStart, permission, nameof(request.CalendarDateStart), pCalendarDateStart != entity.CalendarDateStart))
+            if (AllowPatchValue<Interval, DocEntityDateTime>(request, DocConstantModelName.INTERVAL, pCalendarDateStart, permission, nameof(request.CalendarDateStart), pCalendarDateStart != entity.CalendarDateStart))
             {
                 entity.CalendarDateStart = pCalendarDateStart;
             }
-            if (PatchValue<Interval, string>(request, DocConstantModelName.INTERVAL, pCalendarType, entity.CalendarType, permission, nameof(request.CalendarType), pCalendarType != entity.CalendarType))
+            if (AllowPatchValue<Interval, string>(request, DocConstantModelName.INTERVAL, pCalendarType, permission, nameof(request.CalendarType), pCalendarType != entity.CalendarType))
             {
                 entity.CalendarType = pCalendarType;
             }
-            if (PatchValue<Interval, DocEntityTimePoint>(request, DocConstantModelName.INTERVAL, pFollowUp, entity.FollowUp, permission, nameof(request.FollowUp), pFollowUp != entity.FollowUp))
+            if (AllowPatchValue<Interval, DocEntityTimePoint>(request, DocConstantModelName.INTERVAL, pFollowUp, permission, nameof(request.FollowUp), pFollowUp != entity.FollowUp))
             {
                 entity.FollowUp = pFollowUp;
             }
-            if (PatchValue<Interval, DocEntityTimePoint>(request, DocConstantModelName.INTERVAL, pTimeOfDay, entity.TimeOfDay, permission, nameof(request.TimeOfDay), pTimeOfDay != entity.TimeOfDay))
+            if (AllowPatchValue<Interval, DocEntityTimePoint>(request, DocConstantModelName.INTERVAL, pTimeOfDay, permission, nameof(request.TimeOfDay), pTimeOfDay != entity.TimeOfDay))
             {
                 entity.TimeOfDay = pTimeOfDay;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Interval, bool>(request, DocConstantModelName.INTERVAL, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

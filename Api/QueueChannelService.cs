@@ -168,61 +168,47 @@ namespace Services.API
             var pEnabled = request.Enabled;
             var pExclusive = request.Exclusive;
             var pName = request.Name;
-
-            DocEntityQueueChannel entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityQueueChannel(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityQueueChannel.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityQueueChannel,QueueChannel>(request, permission, session);
+
+            if (AllowPatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pAutoDelete, entity.AutoDelete, permission, nameof(request.AutoDelete), pAutoDelete != entity.AutoDelete))
+            if (AllowPatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pAutoDelete, permission, nameof(request.AutoDelete), pAutoDelete != entity.AutoDelete))
             {
                 entity.AutoDelete = pAutoDelete;
             }
-            if (PatchValue<QueueChannel, DocEntityBackgroundTask>(request, DocConstantModelName.QUEUECHANNEL, pBackgroundTask, entity.BackgroundTask, permission, nameof(request.BackgroundTask), pBackgroundTask != entity.BackgroundTask))
+            if (AllowPatchValue<QueueChannel, DocEntityBackgroundTask>(request, DocConstantModelName.QUEUECHANNEL, pBackgroundTask, permission, nameof(request.BackgroundTask), pBackgroundTask != entity.BackgroundTask))
             {
                 entity.BackgroundTask = pBackgroundTask;
             }
-            if (PatchValue<QueueChannel, string>(request, DocConstantModelName.QUEUECHANNEL, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<QueueChannel, string>(request, DocConstantModelName.QUEUECHANNEL, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pDurable, entity.Durable, permission, nameof(request.Durable), pDurable != entity.Durable))
+            if (AllowPatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pDurable, permission, nameof(request.Durable), pDurable != entity.Durable))
             {
                 entity.Durable = pDurable;
             }
-            if (PatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pEnabled, entity.Enabled, permission, nameof(request.Enabled), pEnabled != entity.Enabled))
+            if (AllowPatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pEnabled, permission, nameof(request.Enabled), pEnabled != entity.Enabled))
             {
                 entity.Enabled = pEnabled;
             }
-            if (PatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pExclusive, entity.Exclusive, permission, nameof(request.Exclusive), pExclusive != entity.Exclusive))
+            if (AllowPatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pExclusive, permission, nameof(request.Exclusive), pExclusive != entity.Exclusive))
             {
                 entity.Exclusive = pExclusive;
             }
-            if (PatchValue<QueueChannel, string>(request, DocConstantModelName.QUEUECHANNEL, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<QueueChannel, string>(request, DocConstantModelName.QUEUECHANNEL, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<QueueChannel, bool>(request, DocConstantModelName.QUEUECHANNEL, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

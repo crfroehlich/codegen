@@ -181,45 +181,31 @@ namespace Services.API
             DocEntityLookupTable pPayrollType = GetLookup(DocConstantLookupTable.USERPAYROLLTYPE, request.PayrollType?.Name, request.PayrollType?.Id);
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.USEREMPLOYEETYPE, request.Type?.Name, request.Type?.Id);
             var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
-
-            DocEntityUserType entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityUserType(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityUserType.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<UserType, bool>(request, DocConstantModelName.USERTYPE, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityUserType,UserType>(request, permission, session);
+
+            if (AllowPatchValue<UserType, bool>(request, DocConstantModelName.USERTYPE, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<UserType, DocEntityLookupTable>(request, DocConstantModelName.USERTYPE, pPayrollStatus, entity.PayrollStatus, permission, nameof(request.PayrollStatus), pPayrollStatus != entity.PayrollStatus))
+            if (AllowPatchValue<UserType, DocEntityLookupTable>(request, DocConstantModelName.USERTYPE, pPayrollStatus, permission, nameof(request.PayrollStatus), pPayrollStatus != entity.PayrollStatus))
             {
                 entity.PayrollStatus = pPayrollStatus;
             }
-            if (PatchValue<UserType, DocEntityLookupTable>(request, DocConstantModelName.USERTYPE, pPayrollType, entity.PayrollType, permission, nameof(request.PayrollType), pPayrollType != entity.PayrollType))
+            if (AllowPatchValue<UserType, DocEntityLookupTable>(request, DocConstantModelName.USERTYPE, pPayrollType, permission, nameof(request.PayrollType), pPayrollType != entity.PayrollType))
             {
                 entity.PayrollType = pPayrollType;
             }
-            if (PatchValue<UserType, DocEntityLookupTable>(request, DocConstantModelName.USERTYPE, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<UserType, DocEntityLookupTable>(request, DocConstantModelName.USERTYPE, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 entity.Type = pType;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<UserType, bool>(request, DocConstantModelName.USERTYPE, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

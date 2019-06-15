@@ -181,61 +181,47 @@ namespace Services.API
             var pSlack = request.Slack;
             var pUpdates = GetVariable<Reference>(request, nameof(request.Updates), request.Updates?.ToList(), request.UpdatesIds?.ToList());
             var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
-
-            DocEntityTeam entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityTeam(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityTeam.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Team, bool>(request, DocConstantModelName.TEAM, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityTeam,Team>(request, permission, session);
+
+            if (AllowPatchValue<Team, bool>(request, DocConstantModelName.TEAM, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Team, string>(request, DocConstantModelName.TEAM, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<Team, string>(request, DocConstantModelName.TEAM, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<Team, string>(request, DocConstantModelName.TEAM, pEmail, entity.Email, permission, nameof(request.Email), pEmail != entity.Email))
+            if (AllowPatchValue<Team, string>(request, DocConstantModelName.TEAM, pEmail, permission, nameof(request.Email), pEmail != entity.Email))
             {
                 entity.Email = pEmail;
             }
-            if (PatchValue<Team, bool>(request, DocConstantModelName.TEAM, pIsInternal, entity.IsInternal, permission, nameof(request.IsInternal), pIsInternal != entity.IsInternal))
+            if (AllowPatchValue<Team, bool>(request, DocConstantModelName.TEAM, pIsInternal, permission, nameof(request.IsInternal), pIsInternal != entity.IsInternal))
             {
                 entity.IsInternal = pIsInternal;
             }
-            if (PatchValue<Team, string>(request, DocConstantModelName.TEAM, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<Team, string>(request, DocConstantModelName.TEAM, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<Team, DocEntityUser>(request, DocConstantModelName.TEAM, pOwner, entity.Owner, permission, nameof(request.Owner), pOwner != entity.Owner))
+            if (AllowPatchValue<Team, DocEntityUser>(request, DocConstantModelName.TEAM, pOwner, permission, nameof(request.Owner), pOwner != entity.Owner))
             {
                 entity.Owner = pOwner;
             }
-            if (PatchValue<Team, string>(request, DocConstantModelName.TEAM, pSettings, entity.Settings, permission, nameof(request.Settings), pSettings != entity.Settings))
+            if (AllowPatchValue<Team, string>(request, DocConstantModelName.TEAM, pSettings, permission, nameof(request.Settings), pSettings != entity.Settings))
             {
                 entity.Settings = pSettings;
             }
-            if (PatchValue<Team, string>(request, DocConstantModelName.TEAM, pSlack, entity.Slack, permission, nameof(request.Slack), pSlack != entity.Slack))
+            if (AllowPatchValue<Team, string>(request, DocConstantModelName.TEAM, pSlack, permission, nameof(request.Slack), pSlack != entity.Slack))
             {
                 entity.Slack = pSlack;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Team, bool>(request, DocConstantModelName.TEAM, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

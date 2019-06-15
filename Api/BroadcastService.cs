@@ -196,61 +196,47 @@ namespace Services.API
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.BROADCASTSTATUS, request.Status?.Name, request.Status?.Id);
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.BROADCASTTYPE, request.Type?.Name, request.Type?.Id);
-
-            DocEntityBroadcast entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityBroadcast(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityBroadcast.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Broadcast, bool>(request, DocConstantModelName.BROADCAST, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityBroadcast,Broadcast>(request, permission, session);
+
+            if (AllowPatchValue<Broadcast, bool>(request, DocConstantModelName.BROADCAST, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Broadcast, DocEntityApp>(request, DocConstantModelName.BROADCAST, pApp, entity.App, permission, nameof(request.App), pApp != entity.App))
+            if (AllowPatchValue<Broadcast, DocEntityApp>(request, DocConstantModelName.BROADCAST, pApp, permission, nameof(request.App), pApp != entity.App))
             {
                 entity.App = pApp;
             }
-            if (PatchValue<Broadcast, string>(request, DocConstantModelName.BROADCAST, pConfluenceId, entity.ConfluenceId, permission, nameof(request.ConfluenceId), pConfluenceId != entity.ConfluenceId))
+            if (AllowPatchValue<Broadcast, string>(request, DocConstantModelName.BROADCAST, pConfluenceId, permission, nameof(request.ConfluenceId), pConfluenceId != entity.ConfluenceId))
             {
                 entity.ConfluenceId = pConfluenceId;
             }
-            if (PatchValue<Broadcast, string>(request, DocConstantModelName.BROADCAST, pName, entity.Name, permission, nameof(request.Name), pName != entity.Name))
+            if (AllowPatchValue<Broadcast, string>(request, DocConstantModelName.BROADCAST, pName, permission, nameof(request.Name), pName != entity.Name))
             {
                 entity.Name = pName;
             }
-            if (PatchValue<Broadcast, bool>(request, DocConstantModelName.BROADCAST, pReprocess, entity.Reprocess, permission, nameof(request.Reprocess), pReprocess != entity.Reprocess))
+            if (AllowPatchValue<Broadcast, bool>(request, DocConstantModelName.BROADCAST, pReprocess, permission, nameof(request.Reprocess), pReprocess != entity.Reprocess))
             {
                 entity.Reprocess = pReprocess;
             }
-            if (PatchValue<Broadcast, DateTime?>(request, DocConstantModelName.BROADCAST, pReprocessed, entity.Reprocessed, permission, nameof(request.Reprocessed), pReprocessed != entity.Reprocessed))
+            if (AllowPatchValue<Broadcast, DateTime?>(request, DocConstantModelName.BROADCAST, pReprocessed, permission, nameof(request.Reprocessed), pReprocessed != entity.Reprocessed))
             {
                 entity.Reprocessed = pReprocessed;
             }
-            if (PatchValue<Broadcast, DocEntityLookupTable>(request, DocConstantModelName.BROADCAST, pStatus, entity.Status, permission, nameof(request.Status), pStatus != entity.Status))
+            if (AllowPatchValue<Broadcast, DocEntityLookupTable>(request, DocConstantModelName.BROADCAST, pStatus, permission, nameof(request.Status), pStatus != entity.Status))
             {
                 entity.Status = pStatus;
             }
-            if (PatchValue<Broadcast, DocEntityLookupTable>(request, DocConstantModelName.BROADCAST, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<Broadcast, DocEntityLookupTable>(request, DocConstantModelName.BROADCAST, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 entity.Type = pType;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Broadcast, bool>(request, DocConstantModelName.BROADCAST, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

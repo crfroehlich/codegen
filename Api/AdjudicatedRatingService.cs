@@ -246,73 +246,59 @@ namespace Services.API
             var pReporter = (request.Reporter?.Id > 0) ? DocEntityUser.Get(request.Reporter.Id) : null;
             var pType = request.Type;
             var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
-
-            DocEntityAdjudicatedRating entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityAdjudicatedRating(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityAdjudicatedRating.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<AdjudicatedRating, bool>(request, DocConstantModelName.ADJUDICATEDRATING, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityAdjudicatedRating,AdjudicatedRating>(request, permission, session);
+
+            if (AllowPatchValue<AdjudicatedRating, bool>(request, DocConstantModelName.ADJUDICATEDRATING, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<AdjudicatedRating, DocEntityUser>(request, DocConstantModelName.ADJUDICATEDRATING, pAssignee, entity.Assignee, permission, nameof(request.Assignee), pAssignee != entity.Assignee))
+            if (AllowPatchValue<AdjudicatedRating, DocEntityUser>(request, DocConstantModelName.ADJUDICATEDRATING, pAssignee, permission, nameof(request.Assignee), pAssignee != entity.Assignee))
             {
                 entity.Assignee = pAssignee;
             }
-            if (PatchValue<AdjudicatedRating, string>(request, DocConstantModelName.ADJUDICATEDRATING, pData, entity.Data, permission, nameof(request.Data), pData != entity.Data))
+            if (AllowPatchValue<AdjudicatedRating, string>(request, DocConstantModelName.ADJUDICATEDRATING, pData, permission, nameof(request.Data), pData != entity.Data))
             {
                 entity.Data = pData;
             }
-            if (PatchValue<AdjudicatedRating, string>(request, DocConstantModelName.ADJUDICATEDRATING, pDescription, entity.Description, permission, nameof(request.Description), pDescription != entity.Description))
+            if (AllowPatchValue<AdjudicatedRating, string>(request, DocConstantModelName.ADJUDICATEDRATING, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
             }
-            if (PatchValue<AdjudicatedRating, DocEntityDocument>(request, DocConstantModelName.ADJUDICATEDRATING, pDocument, entity.Document, permission, nameof(request.Document), pDocument != entity.Document))
+            if (AllowPatchValue<AdjudicatedRating, DocEntityDocument>(request, DocConstantModelName.ADJUDICATEDRATING, pDocument, permission, nameof(request.Document), pDocument != entity.Document))
             {
                 entity.Document = pDocument;
             }
-            if (PatchValue<AdjudicatedRating, DateTime?>(request, DocConstantModelName.ADJUDICATEDRATING, pDueDate, entity.DueDate, permission, nameof(request.DueDate), pDueDate != entity.DueDate))
+            if (AllowPatchValue<AdjudicatedRating, DateTime?>(request, DocConstantModelName.ADJUDICATEDRATING, pDueDate, permission, nameof(request.DueDate), pDueDate != entity.DueDate))
             {
                 entity.DueDate = pDueDate;
             }
-            if (PatchValue<AdjudicatedRating, RatingEnm?>(request, DocConstantModelName.ADJUDICATEDRATING, pRating, entity.Rating, permission, nameof(request.Rating), pRating != entity.Rating))
+            if (AllowPatchValue<AdjudicatedRating, RatingEnm?>(request, DocConstantModelName.ADJUDICATEDRATING, pRating, permission, nameof(request.Rating), pRating != entity.Rating))
             {
                 if(null != pRating) entity.Rating = pRating.Value;
             }
-            if (PatchValue<AdjudicatedRating, ReasonRejectedEnm?>(request, DocConstantModelName.ADJUDICATEDRATING, pReasonRejected, entity.ReasonRejected, permission, nameof(request.ReasonRejected), pReasonRejected != entity.ReasonRejected))
+            if (AllowPatchValue<AdjudicatedRating, ReasonRejectedEnm?>(request, DocConstantModelName.ADJUDICATEDRATING, pReasonRejected, permission, nameof(request.ReasonRejected), pReasonRejected != entity.ReasonRejected))
             {
                 entity.ReasonRejected = pReasonRejected;
             }
-            if (PatchValue<AdjudicatedRating, DocEntityUser>(request, DocConstantModelName.ADJUDICATEDRATING, pReporter, entity.Reporter, permission, nameof(request.Reporter), pReporter != entity.Reporter))
+            if (AllowPatchValue<AdjudicatedRating, DocEntityUser>(request, DocConstantModelName.ADJUDICATEDRATING, pReporter, permission, nameof(request.Reporter), pReporter != entity.Reporter))
             {
                 entity.Reporter = pReporter;
             }
-            if (PatchValue<AdjudicatedRating, TaskTypeEnm?>(request, DocConstantModelName.ADJUDICATEDRATING, pType, entity.Type, permission, nameof(request.Type), pType != entity.Type))
+            if (AllowPatchValue<AdjudicatedRating, TaskTypeEnm?>(request, DocConstantModelName.ADJUDICATEDRATING, pType, permission, nameof(request.Type), pType != entity.Type))
             {
                 if(null != pType) entity.Type = pType.Value;
             }
-            if (PatchValue<AdjudicatedRating, DocEntityWorkflow>(request, DocConstantModelName.ADJUDICATEDRATING, pWorkflow, entity.Workflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
+            if (AllowPatchValue<AdjudicatedRating, DocEntityWorkflow>(request, DocConstantModelName.ADJUDICATEDRATING, pWorkflow, permission, nameof(request.Workflow), pWorkflow != entity.Workflow))
             {
                 entity.Workflow = pWorkflow;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<AdjudicatedRating, bool>(request, DocConstantModelName.ADJUDICATEDRATING, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();

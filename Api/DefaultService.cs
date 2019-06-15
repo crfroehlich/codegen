@@ -161,49 +161,35 @@ namespace Services.API
             var pRole = (request.Role?.Id > 0) ? DocEntityRole.Get(request.Role.Id) : null;
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
             var pTherapeuticArea = (request.TherapeuticArea?.Id > 0) ? DocEntityTherapeuticAreaSet.Get(request.TherapeuticArea.Id) : null;
-
-            DocEntityDefault entity = null;
-            if(permission == DocConstantPermission.ADD)
-            {
-                var now = DateTime.UtcNow;
-                entity = new DocEntityDefault(session)
-                {
-                    Created = now,
-                    Updated = now
-                };
-            }
-            else
-            {
-                entity = DocEntityDefault.Get(request.Id);
-                if(null == entity)
-                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
-            }
-
-            //Special case for Archived
             var pArchived = true == request.Archived;
-            if (PatchValue<Default, bool>(request, DocConstantModelName.DEFAULT, pArchived, entity.Archived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            var pLocked = request.Locked;
+
+            var entity = InitEntity<DocEntityDefault,Default>(request, permission, session);
+
+            if (AllowPatchValue<Default, bool>(request, DocConstantModelName.DEFAULT, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (PatchValue<Default, DocEntityDiseaseStateSet>(request, DocConstantModelName.DEFAULT, pDiseaseState, entity.DiseaseState, permission, nameof(request.DiseaseState), pDiseaseState != entity.DiseaseState))
+            if (AllowPatchValue<Default, DocEntityDiseaseStateSet>(request, DocConstantModelName.DEFAULT, pDiseaseState, permission, nameof(request.DiseaseState), pDiseaseState != entity.DiseaseState))
             {
                 entity.DiseaseState = pDiseaseState;
             }
-            if (PatchValue<Default, DocEntityRole>(request, DocConstantModelName.DEFAULT, pRole, entity.Role, permission, nameof(request.Role), pRole != entity.Role))
+            if (AllowPatchValue<Default, DocEntityRole>(request, DocConstantModelName.DEFAULT, pRole, permission, nameof(request.Role), pRole != entity.Role))
             {
                 entity.Role = pRole;
             }
-            if (PatchValue<Default, DocEntityScope>(request, DocConstantModelName.DEFAULT, pScope, entity.Scope, permission, nameof(request.Scope), pScope != entity.Scope))
+            if (AllowPatchValue<Default, DocEntityScope>(request, DocConstantModelName.DEFAULT, pScope, permission, nameof(request.Scope), pScope != entity.Scope))
             {
                 entity.Scope = pScope;
             }
-            if (PatchValue<Default, DocEntityTherapeuticAreaSet>(request, DocConstantModelName.DEFAULT, pTherapeuticArea, entity.TherapeuticArea, permission, nameof(request.TherapeuticArea), pTherapeuticArea != entity.TherapeuticArea))
+            if (AllowPatchValue<Default, DocEntityTherapeuticAreaSet>(request, DocConstantModelName.DEFAULT, pTherapeuticArea, permission, nameof(request.TherapeuticArea), pTherapeuticArea != entity.TherapeuticArea))
             {
                 entity.TherapeuticArea = pTherapeuticArea;
             }
-
-            if (request.Locked) entity.Locked = request.Locked;
-
+            if (request.Locked && AllowPatchValue<Default, bool>(request, DocConstantModelName.DEFAULT, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            {
+                entity.Archived = pArchived;
+            }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();
