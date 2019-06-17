@@ -88,17 +88,20 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameId { get { return Name?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityTermCategory ParentCategory { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentCategoryId { get { return ParentCategory?.Id; } private set { var noid = value; } }
 
+
         [Field(NullableOnUpgrade = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityScope Scope { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityTermMaster.Categories), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]

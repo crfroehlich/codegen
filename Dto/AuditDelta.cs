@@ -55,6 +55,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AuditId { get; set; }
 
+
         [ApiMember(Name = nameof(Delta), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Delta { get; set; }

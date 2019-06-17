@@ -67,6 +67,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DefaultLocaleId { get; set; }
 
+
         [ApiMember(Name = nameof(Divisions), Description = "Division", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Divisions { get; set; }
@@ -76,6 +77,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DivisionsCount), Description = "Division Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DivisionsCount { get; set; }
+
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -87,6 +89,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
@@ -96,6 +99,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
+
 
         [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -107,12 +111,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Role), Description = "Role", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Role { get; set; }
         [ApiMember(Name = nameof(RoleId), Description = "Primary Key of Role", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RoleId { get; set; }
+
 
         [ApiMember(Name = nameof(SalesforceAccountId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -124,6 +130,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SalesforceAccountIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Scopes { get; set; }
@@ -133,6 +140,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ScopesCount), Description = "Scope Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get; set; }
+
 
         [ApiMember(Name = nameof(Settings), Description = "ClientSettings", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

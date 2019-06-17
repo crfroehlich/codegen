@@ -60,6 +60,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get; set; }
 
+
         [ApiMember(Name = nameof(ExternalId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ExternalId { get; set; }
@@ -69,6 +70,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ExternalIdCount), Description = "ExternalId Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ExternalIdCount { get; set; }
+
 
         [ApiMember(Name = nameof(ExternalType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -80,6 +82,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ExternalTypeCount { get; set; }
 
+
         [ApiMember(Name = nameof(ObjectId), Description = "int?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ObjectId { get; set; }
@@ -90,6 +93,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ObjectIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(ObjectType), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ObjectType { get; set; }
@@ -99,6 +103,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ObjectTypeCount), Description = "ObjectType Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ObjectTypeCount { get; set; }
+
 
         [ApiMember(Name = nameof(StudySetStats), Description = "StatsStudySet", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

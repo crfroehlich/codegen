@@ -88,14 +88,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AuditRecordId { get { return AuditRecord?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field]
         public DateTime? Processed { get; set; }
 
+
         [Field]
         public string Status { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -105,6 +109,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TeamsCount { get { return Teams.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityUpdate> Updates { get; private set; }
@@ -112,6 +117,7 @@ namespace Services.Schema
         public List<int> UpdatesIds => Updates.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UpdatesCount { get { return Updates.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

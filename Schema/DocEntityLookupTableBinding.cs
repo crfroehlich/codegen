@@ -85,8 +85,10 @@ namespace Services.Schema
         [Field(DefaultValue = "{}", Length = int.MaxValue)]
         public string Binding { get; set; }
 
+
         [Field]
         public string BoundName { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -94,11 +96,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LookupTableId { get { return LookupTable?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityScope Scope { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Bindings), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -108,6 +112,7 @@ namespace Services.Schema
         public List<int> SynonymsIds => Synonyms.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityWorkflow.Bindings), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]

@@ -88,12 +88,15 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MeanVarianceTypeId { get { return MeanVarianceType?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocStructureUnits MidSpread { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = 0)]
         public int Order { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -103,15 +106,19 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnersCount { get { return Owners.Count(); } private set { var noid = value; } }
 
+
         [Field(Precision = 16, Scale = 6)]
         public decimal? Percent { get; set; }
+
 
         [Field(Precision = 16, Scale = 6)]
         public decimal? PercentLow { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocStructureUnitsRange Range { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

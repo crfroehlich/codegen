@@ -60,6 +60,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DiseaseStateId { get; set; }
 
+
         [ApiMember(Name = nameof(Role), Description = "Role", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Role { get; set; }
@@ -67,12 +68,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RoleId { get; set; }
 
+
         [ApiMember(Name = nameof(Scope), Description = "Scope", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Scope { get; set; }
         [ApiMember(Name = nameof(ScopeId), Description = "Primary Key of Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopeId { get; set; }
+
 
         [ApiMember(Name = nameof(TherapeuticArea), Description = "TherapeuticAreaSet", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

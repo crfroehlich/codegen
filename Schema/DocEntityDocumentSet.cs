@@ -91,8 +91,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClientsCount { get { return Clients.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = false)]
         public bool Confidential { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityDivision.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -103,6 +105,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DivisionsCount { get { return Divisions.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityDocument.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -111,6 +114,7 @@ namespace Services.Schema
         public List<int> DocumentsIds => Documents.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentsCount { get { return Documents.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityDocumentSet.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -121,6 +125,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityDocumentSetHistory.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -130,11 +135,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HistoriesCount { get { return Histories.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public int? LegacyDocumentSetId { get; set; }
 
+
         [Field(Nullable = false, Length = 400)]
         public string Name { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -142,11 +150,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityTeam ProjectTeam { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectTeamId { get { return ProjectTeam?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityScope.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -157,8 +167,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Settings { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityStatsStudySet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -169,9 +181,11 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatsCount { get { return Stats.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = DocumentSetTypeEnm.DATA_SET)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocumentSetTypeEnm Type { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityUser.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]

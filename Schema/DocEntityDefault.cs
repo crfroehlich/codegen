@@ -88,17 +88,20 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DiseaseStateId { get { return DiseaseState?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityRole Role { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityScope Scope { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

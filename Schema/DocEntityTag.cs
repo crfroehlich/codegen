@@ -85,6 +85,7 @@ namespace Services.Schema
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityScope.ScopedTags), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -93,6 +94,7 @@ namespace Services.Schema
         public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
+
 
         [Field]
         public string URI { get; set; }

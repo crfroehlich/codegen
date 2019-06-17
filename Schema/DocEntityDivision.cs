@@ -88,11 +88,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClientId { get { return Client?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLocale DefaultLocale { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DefaultLocaleId { get { return DefaultLocale?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -102,8 +104,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -111,8 +115,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Settings { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityUser.Division), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]

@@ -64,6 +64,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ApprovedCount { get; set; }
 
+
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Bindings { get; set; }
@@ -74,12 +75,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BindingsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Master), Description = "TermMaster", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Master { get; set; }
         [ApiMember(Name = nameof(MasterId), Description = "Primary Key of TermMaster", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MasterId { get; set; }
+
 
         [ApiMember(Name = nameof(Preferred), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -91,12 +94,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PreferredCount { get; set; }
 
+
         [ApiMember(Name = nameof(Scope), Description = "Scope", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Scope { get; set; }
         [ApiMember(Name = nameof(ScopeId), Description = "Primary Key of Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopeId { get; set; }
+
 
         [ApiMember(Name = nameof(Synonym), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

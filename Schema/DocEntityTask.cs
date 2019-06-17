@@ -88,14 +88,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AssigneeId { get { return Assignee?.Id; } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Data { get; set; }
+
 
         [Field(Nullable = false)]
         public string Description { get; set; }
 
+
         [Field]
         public DateTime? DueDate { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -103,9 +107,11 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReporterId { get { return Reporter?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = TaskTypeEnm.EVIDENCE_ON_DEMAND)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TaskTypeEnm Type { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

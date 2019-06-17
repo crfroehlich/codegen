@@ -85,6 +85,7 @@ namespace Services.Schema
         [Field]
         public DateTime? CompletedOn { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityDataSet> DataSets { get; private set; }
@@ -93,23 +94,29 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataSetsCount { get { return DataSets.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityDocument Document { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string ErrorData { get; set; }
+
 
         [Field]
         public string ExtractUrl { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool HighPriority { get; set; }
 
+
         [Field(DefaultValue = true)]
         public bool ImportFr { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -117,14 +124,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportLocationId { get { return ImportLocation?.Id; } private set { var noid = value; } }
 
+
         [Field(DefaultValue = false)]
         public bool ImportNewName { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool ImportTable { get; set; }
 
+
         [Field(DefaultValue = true)]
         public bool ImportText { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -132,14 +143,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportTypeId { get { return ImportType?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = false)]
         public bool IsLegacy { get; set; }
+
 
         [Field]
         public int? Order { get; set; }
 
+
         [Field(Nullable = false)]
         public int ReferenceId { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -147,11 +162,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RequestedById { get { return RequestedBy?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public DateTime? RequestedOn { get; set; }
 
+
         [Field]
         public DateTime? StartedOn { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

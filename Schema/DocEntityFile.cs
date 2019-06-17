@@ -85,18 +85,23 @@ namespace Services.Schema
         [Field(Precision = 8, Scale = 2)]
         public decimal? Cost { get; set; }
 
+
         [Field(Length = 200)]
         public string FileLabel { get; set; }
+
 
         [Field(Nullable = false, Length = 200)]
         public string FileName { get; set; }
 
+
         [Field(Length = 200)]
         public string OriginalFileName { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public FileRightsEnm? Rights { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityScope.ScopedFiles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -107,9 +112,11 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public FileSourceEnm? Source { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = FileTypeEnm.FULL_TEXT)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

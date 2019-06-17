@@ -59,6 +59,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FieldTypeId { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"AssociationMeasure",@"Boolean",@"CalendarDate",@"CalendarDates",@"Contact",@"DateTime",@"DateTimeRange",@"Decimal",@"DecimalRange",@"DesignNestedStudyIdLink",@"EventCounts",@"Facility",@"FixedDoseIntervention",@"Flag",@"Funding",@"ImportError",@"ImportErrors",@"Integer",@"Interval",@"Intervals",@"Lookup",@"Memo",@"NPersons",@"Participant",@"Participants",@"PopulationAnalyzed",@"PValue",@"Rate",@"SettingLocation",@"SettingLocationTotal",@"StudyDoc",@"StudyObjective",@"StudyReference",@"SubgroupDescriptor",@"Timepoint",@"Timepoints",@"UncollectedValue",@"UnitRange",@"Units",@"UnitsRange",@"UnitValue",@"YesNoNa"})]
         [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

@@ -88,17 +88,20 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PayrollStatusId { get { return PayrollStatus?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTable PayrollType { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PayrollTypeId { get { return PayrollType?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTable Type { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Type_Id { get { return Type?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

@@ -85,11 +85,14 @@ namespace Services.Schema
         [Field(Length = int.MaxValue)]
         public string DatabaseState { get; set; }
 
+
         [Field]
         public string Description { get; set; }
 
+
         [Field]
         public string Release { get; set; }
+
 
         [Field(Nullable = false)]
         public string VersionName { get; set; }

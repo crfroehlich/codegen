@@ -85,6 +85,7 @@ namespace Services.Schema
         [Field(Length = int.MaxValue)]
         public string AdditionalCriteria { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityTag> Characteristics { get; private set; }
@@ -92,6 +93,7 @@ namespace Services.Schema
         public List<int> CharacteristicsIds => Characteristics.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CharacteristicsCount { get { return Characteristics.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -101,23 +103,30 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ComparatorsCount { get { return Comparators.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string DataCollection { get; set; }
+
 
         [Field]
         public int? EvidencePortalId { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string ExtractionProtocol { get; set; }
+
 
         [Field]
         public int? FqId { get; set; }
 
+
         [Field]
         public int? FramedQuestionId { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string GeneralScope { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityImportData.DataSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -128,8 +137,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportsCount { get { return Imports.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Indications { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -139,23 +150,30 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? InterventionsCount { get { return Interventions.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Notes { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         public string OriginalComparators { get; set; }
 
+
         [Field]
         public string OriginalDatabase { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         public string OriginalDesigns { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string OriginalInterventions { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string OriginalOutcomes { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -165,14 +183,17 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OutcomesCount { get { return Outcomes.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Participants { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityWorkflow PrismaWorkflow { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PrismaWorkflowId { get { return PrismaWorkflow?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityProject.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -183,11 +204,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectsCount { get { return Projects.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = false)]
         public bool ShowEtw { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = false)]
         public bool ShowPublicationType { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

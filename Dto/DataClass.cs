@@ -81,6 +81,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AllowDeleteCount { get; set; }
 
+
         [ApiMember(Name = nameof(AllSelectByDefault), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool AllSelectByDefault { get; set; }
@@ -90,6 +91,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(AllSelectByDefaultCount), Description = "AllSelectByDefault Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AllSelectByDefaultCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"AdjudicatedRating",@"App",@"Attribute",@"AttributeInterval",@"AuditDelta",@"AuditRecord",@"BackgroundTask",@"BackgroundTaskHistory",@"BackgroundTaskItem",@"Broadcast",@"Client",@"Comment",@"DatabaseVersion",@"DataClass",@"DataProperty",@"DataSet",@"DataTab",@"DateTime",@"Default",@"DiseaseStateSet",@"Division",@"Document",@"DocumentSet",@"DocumentSetHistory",@"Entities",@"EoD",@"Event",@"Favorite",@"FeatureSet",@"File",@"Glossary",@"Help",@"History",@"Impersonation",@"ImportData",@"Interval",@"Junction",@"LibrarySet",@"Locale",@"LocaleLookup",@"LookupCategory",@"LookupTable",@"LookupTableBinding",@"LookupTableEnum",@"MeanRanges",@"MeanRangeValue",@"MeanVariances",@"MeanVarianceValue",@"Page",@"Project",@"QueueChannel",@"Rating",@"ReconcileDocument",@"Role",@"Scope",@"ServePortalSet",@"Stats",@"StatsRecord",@"StatsStudySet",@"StudyDesign",@"StudyType",@"Tag",@"Task",@"Team",@"TermCategory",@"TermMaster",@"TermSynonym",@"TherapeuticAreaSet",@"TimeCard",@"TimePoint",@"UnitConversionRules",@"UnitOfMeasure",@"Units",@"UnitValue",@"Update",@"User",@"UserRequest",@"UserSession",@"UserType",@"ValueType",@"VariableInstance",@"VariableRule",@"Workflow"})]
         [ApiMember(Name = nameof(Base), Description = "ModelNameEnm?", IsRequired = false)]
@@ -102,6 +104,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BaseCount { get; set; }
 
+
         [ApiMember(Name = nameof(CacheDuration), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CacheDuration { get; set; }
@@ -111,6 +114,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CacheDurationCount), Description = "CacheDuration Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CacheDurationCount { get; set; }
+
 
         [ApiMember(Name = nameof(ClassId), Description = "int?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -122,6 +126,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClassIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(CustomCollections), Description = "DataProperty", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> CustomCollections { get; set; }
@@ -131,6 +136,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CustomCollectionsCount), Description = "DataProperty Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CustomCollectionsCount { get; set; }
+
 
         [ApiMember(Name = nameof(DELETE), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -142,6 +148,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DELETECount { get; set; }
 
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
@@ -151,6 +158,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
+
 
         [ApiMember(Name = nameof(DontFlattenProperties), Description = "DataProperty", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -162,6 +170,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DontFlattenPropertiesCount { get; set; }
 
+
         [ApiMember(Name = nameof(DtoSuffix), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string DtoSuffix { get; set; }
@@ -171,6 +180,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DtoSuffixCount), Description = "DtoSuffix Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DtoSuffixCount { get; set; }
+
 
         [ApiMember(Name = nameof(FlattenReferences), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -182,6 +192,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FlattenReferencesCount { get; set; }
 
+
         [ApiMember(Name = nameof(GET), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool GET { get; set; }
@@ -191,6 +202,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(GETCount), Description = "GET Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? GETCount { get; set; }
+
 
         [ApiMember(Name = nameof(IgnoreProps), Description = "DataProperty", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -202,6 +214,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IgnorePropsCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsInsertOnly), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsInsertOnly { get; set; }
@@ -211,6 +224,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsInsertOnlyCount), Description = "IsInsertOnly Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsInsertOnlyCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsReadOnly), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -222,6 +236,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsReadOnlyCount { get; set; }
 
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
@@ -231,6 +246,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
+
 
         [ApiMember(Name = nameof(PATCH), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -242,6 +258,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PATCHCount { get; set; }
 
+
         [ApiMember(Name = nameof(POST), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool POST { get; set; }
@@ -251,6 +268,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(POSTCount), Description = "POST Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? POSTCount { get; set; }
+
 
         [ApiMember(Name = nameof(Properties), Description = "DataProperty", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -262,6 +280,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PropertiesCount { get; set; }
 
+
         [ApiMember(Name = nameof(PUT), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool PUT { get; set; }
@@ -271,6 +290,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(PUTCount), Description = "PUT Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PUTCount { get; set; }
+
 
         [ApiMember(Name = nameof(Tabs), Description = "DataTab", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

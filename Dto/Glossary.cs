@@ -63,12 +63,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DefinitionCount { get; set; }
 
+
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Enum { get; set; }
         [ApiMember(Name = nameof(EnumId), Description = "Primary Key of LookupTableEnum", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnumId { get; set; }
+
 
         [ApiMember(Name = nameof(Icon), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -80,12 +82,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IconCount { get; set; }
 
+
         [ApiMember(Name = nameof(Page), Description = "Page", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Page { get; set; }
         [ApiMember(Name = nameof(PageId), Description = "Primary Key of Page", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PageId { get; set; }
+
 
         [ApiMember(Name = nameof(Term), Description = "TermMaster", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

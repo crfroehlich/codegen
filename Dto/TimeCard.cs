@@ -69,12 +69,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
 
+
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Document { get; set; }
         [ApiMember(Name = nameof(DocumentId), Description = "Primary Key of Document", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get; set; }
+
 
         [ApiMember(Name = nameof(End), Description = "DateTime?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -86,12 +88,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EndCount { get; set; }
 
+
         [ApiMember(Name = nameof(Project), Description = "Project", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Project { get; set; }
         [ApiMember(Name = nameof(ProjectId), Description = "Primary Key of Project", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectId { get; set; }
+
 
         [ApiMember(Name = nameof(ReferenceId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -103,6 +107,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReferenceIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(Start), Description = "DateTime?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? Start { get; set; }
@@ -113,6 +118,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StartCount { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Approved",@"Pending",@"Rejected"})]
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -121,12 +127,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatusId { get; set; }
 
+
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference User { get; set; }
         [ApiMember(Name = nameof(UserId), Description = "Primary Key of User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get; set; }
+
 
         [ApiMember(Name = nameof(WorkType), Description = "LookupTable", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

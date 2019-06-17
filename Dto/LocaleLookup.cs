@@ -59,6 +59,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataCount { get; set; }
 
+
         [ApiMember(Name = nameof(IpAddress), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string IpAddress { get; set; }
@@ -68,6 +69,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IpAddressCount), Description = "IpAddress Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IpAddressCount { get; set; }
+
 
         [ApiMember(Name = nameof(Locale), Description = "Locale", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

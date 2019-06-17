@@ -70,6 +70,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BodyCount { get; set; }
 
+
         [ApiMember(Name = nameof(DeliveryStatus), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string DeliveryStatus { get; set; }
@@ -79,6 +80,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DeliveryStatusCount), Description = "DeliveryStatus Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DeliveryStatusCount { get; set; }
+
 
         [ApiMember(Name = nameof(EmailAttempts), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -90,6 +92,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EmailAttemptsCount { get; set; }
 
+
         [ApiMember(Name = nameof(EmailSent), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? EmailSent { get; set; }
@@ -99,6 +102,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(EmailSentCount), Description = "EmailSent Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EmailSentCount { get; set; }
+
 
         [ApiMember(Name = nameof(Events), Description = "Event", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -110,6 +114,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EventsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Link), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Link { get; set; }
@@ -119,6 +124,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(LinkCount), Description = "Link Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LinkCount { get; set; }
+
 
         [ApiMember(Name = nameof(Priority), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -130,6 +136,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PriorityCount { get; set; }
 
+
         [ApiMember(Name = nameof(Read), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? Read { get; set; }
@@ -139,6 +146,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ReadCount), Description = "Read Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReadCount { get; set; }
+
 
         [ApiMember(Name = nameof(SlackSent), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -150,6 +158,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SlackSentCount { get; set; }
 
+
         [ApiMember(Name = nameof(Subject), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Subject { get; set; }
@@ -160,12 +169,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SubjectCount { get; set; }
 
+
         [ApiMember(Name = nameof(Team), Description = "Team", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Team { get; set; }
         [ApiMember(Name = nameof(TeamId), Description = "Primary Key of Team", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TeamId { get; set; }
+
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

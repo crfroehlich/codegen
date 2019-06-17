@@ -64,6 +64,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CostCount { get; set; }
 
+
         [ApiMember(Name = nameof(FileLabel), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string FileLabel { get; set; }
@@ -73,6 +74,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(FileLabelCount), Description = "FileLabel Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FileLabelCount { get; set; }
+
 
         [ApiMember(Name = nameof(FileName), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -84,6 +86,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FileNameCount { get; set; }
 
+
         [ApiMember(Name = nameof(OriginalFileName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OriginalFileName { get; set; }
@@ -93,6 +96,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OriginalFileNameCount), Description = "OriginalFileName Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OriginalFileNameCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Free",@"Restricted"})]
         [ApiMember(Name = nameof(Rights), Description = "FileRightsEnm?", IsRequired = false)]
@@ -105,6 +109,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RightsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Scopes { get; set; }
@@ -114,6 +119,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ScopesCount), Description = "Scope Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Client Supplied",@"Document Delivery",@"PMC/BMC",@"Publisher",@"Subscription",@"UCLA"})]
         [ApiMember(Name = nameof(Source), Description = "FileSourceEnm?", IsRequired = false)]
@@ -125,6 +131,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SourceCount), Description = "Source Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SourceCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Document Set",@"Errata",@"Full Text",@"Protocol",@"Supplemental"})]
         [ApiMember(Name = nameof(Type), Description = "FileTypeEnm?", IsRequired = false)]

@@ -58,12 +58,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentCategoryId { get; set; }
 
+
         [ApiMember(Name = nameof(Scope), Description = "Scope", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Scope { get; set; }
         [ApiMember(Name = nameof(ScopeId), Description = "Primary Key of Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopeId { get; set; }
+
 
         [ApiMember(Name = nameof(Terms), Description = "TermMaster", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

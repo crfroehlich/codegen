@@ -59,6 +59,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DateDayCount { get; set; }
 
+
         [ApiMember(Name = nameof(DateMonth), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DateMonth { get; set; }
@@ -69,6 +70,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DateMonthCount { get; set; }
 
+
         [ApiMember(Name = nameof(DateTime), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? DateTime { get; set; }
@@ -78,6 +80,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DateTimeCount), Description = "DateTime Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DateTimeCount { get; set; }
+
 
         [ApiMember(Name = nameof(DateYear), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

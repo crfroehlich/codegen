@@ -72,12 +72,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get; set; }
 
+
         [ApiMember(Name = nameof(Channel), Description = "QueueChannel", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Channel { get; set; }
         [ApiMember(Name = nameof(ChannelId), Description = "Primary Key of QueueChannel", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChannelId { get; set; }
+
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -89,6 +91,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
 
+
         [ApiMember(Name = nameof(Enabled), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Enabled { get; set; }
@@ -98,6 +101,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(EnabledCount), Description = "Enabled Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnabledCount { get; set; }
+
 
         [ApiMember(Name = nameof(Frequency), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -109,6 +113,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FrequencyCount { get; set; }
 
+
         [ApiMember(Name = nameof(HistoryRetention), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HistoryRetention { get; set; }
@@ -118,6 +123,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(HistoryRetentionCount), Description = "HistoryRetention Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HistoryRetentionCount { get; set; }
+
 
         [ApiMember(Name = nameof(Items), Description = "BackgroundTaskItem", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -129,6 +135,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ItemsCount { get; set; }
 
+
         [ApiMember(Name = nameof(KeepHistory), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool KeepHistory { get; set; }
@@ -138,6 +145,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(KeepHistoryCount), Description = "KeepHistory Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? KeepHistoryCount { get; set; }
+
 
         [ApiMember(Name = nameof(LastRunVersion), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -149,6 +157,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LastRunVersionCount { get; set; }
 
+
         [ApiMember(Name = nameof(LogError), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool LogError { get; set; }
@@ -158,6 +167,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(LogErrorCount), Description = "LogError Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LogErrorCount { get; set; }
+
 
         [ApiMember(Name = nameof(LogInfo), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -169,6 +179,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LogInfoCount { get; set; }
 
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
@@ -178,6 +189,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
+
 
         [ApiMember(Name = nameof(RowsToProcessPerIteration), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -189,6 +201,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RowsToProcessPerIterationCount { get; set; }
 
+
         [ApiMember(Name = nameof(RunNow), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool RunNow { get; set; }
@@ -199,6 +212,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RunNowCount { get; set; }
 
+
         [ApiMember(Name = nameof(StartAt), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string StartAt { get; set; }
@@ -208,6 +222,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(StartAtCount), Description = "StartAt Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StartAtCount { get; set; }
+
 
         [ApiMember(Name = nameof(TaskHistory), Description = "BackgroundTaskHistory", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

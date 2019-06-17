@@ -62,12 +62,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsSICount { get; set; }
 
+
         [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Name { get; set; }
         [ApiMember(Name = nameof(NameId), Description = "Primary Key of LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameId { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Amount",@"Area",@"Concentration",@"Concentration Molar",@"Concentration Solution",@"Label",@"Length",@"Mass",@"Moles",@"NonTime",@"NonUnit",@"Radiation",@"Time",@"Volume",@"Weight"})]
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
@@ -76,6 +78,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Type_Id), Description = "Primary Key of LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Type_Id { get; set; }
+
 
         [ApiMember(Name = nameof(Unit), Description = "LookupTable", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

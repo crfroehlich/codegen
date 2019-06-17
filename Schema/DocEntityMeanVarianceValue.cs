@@ -86,9 +86,11 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocStructureUnits MeanVariance { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocStructureUnitsRange MeanVarianceRange { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -96,8 +98,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MeanVarianceTypeId { get { return MeanVarianceType?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = 0)]
         public int Order { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

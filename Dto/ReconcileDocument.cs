@@ -62,6 +62,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ArticleIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(ArticleLink), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ArticleLink { get; set; }
@@ -72,12 +73,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ArticleLinkCount { get; set; }
 
+
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Document { get; set; }
         [ApiMember(Name = nameof(DocumentId), Description = "Primary Key of Document", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get; set; }
+
 
         [ApiMember(Name = nameof(Matches), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -89,6 +92,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MatchesCount { get; set; }
 
+
         [ApiMember(Name = nameof(SearchLink), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SearchLink { get; set; }
@@ -98,6 +102,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SearchLinkCount), Description = "SearchLink Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SearchLinkCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Matched",@"Multiple Matches",@"No Match",@"One Match"})]
         [ApiMember(Name = nameof(Status), Description = "ReconciliationStatusEnm?", IsRequired = false)]

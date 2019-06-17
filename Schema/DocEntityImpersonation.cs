@@ -88,11 +88,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AuthenticatedUserId { get { return AuthenticatedUser?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityUser ImpersonatedUser { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImpersonatedUserId { get { return ImpersonatedUser?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

@@ -71,6 +71,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BoundTermsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Characteristics), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Characteristics { get; set; }
@@ -80,6 +81,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CharacteristicsCount), Description = "Characteristics Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CharacteristicsCount { get; set; }
+
 
         [ApiMember(Name = nameof(DataPoints), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -91,6 +93,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataPointsCount { get; set; }
 
+
         [ApiMember(Name = nameof(DesignCount), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DesignCount { get; set; }
@@ -100,6 +103,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DesignCountCount), Description = "DesignCount Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DesignCountCount { get; set; }
+
 
         [ApiMember(Name = nameof(DesignList), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -111,12 +115,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DesignListCount { get; set; }
 
+
         [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference DocumentSet { get; set; }
         [ApiMember(Name = nameof(DocumentSetId), Description = "Primary Key of DocumentSet", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetId { get; set; }
+
 
         [ApiMember(Name = nameof(Interventions), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -128,6 +134,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? InterventionsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Outcomes), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Outcomes { get; set; }
@@ -137,6 +144,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OutcomesCount), Description = "Outcomes Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OutcomesCount { get; set; }
+
 
         [ApiMember(Name = nameof(OutcomesReported), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -148,12 +156,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OutcomesReportedCount { get; set; }
 
+
         [ApiMember(Name = nameof(Stat), Description = "Stats", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Stat { get; set; }
         [ApiMember(Name = nameof(StatId), Description = "Primary Key of Stats", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatId { get; set; }
+
 
         [ApiMember(Name = nameof(Studies), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -165,6 +175,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StudiesCount { get; set; }
 
+
         [ApiMember(Name = nameof(TypeCount), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TypeCount { get; set; }
@@ -175,6 +186,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TypeCountCount { get; set; }
 
+
         [ApiMember(Name = nameof(TypeList), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TypeList { get; set; }
@@ -184,6 +196,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TypeListCount), Description = "TypeList Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TypeListCount { get; set; }
+
 
         [ApiMember(Name = nameof(UnboundTerms), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

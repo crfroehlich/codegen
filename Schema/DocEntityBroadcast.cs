@@ -88,17 +88,22 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string ConfluenceId { get; set; }
+
 
         [Field(Nullable = false)]
         public string Name { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = true)]
         public bool Reprocess { get; set; }
 
+
         [Field(DefaultValue = null)]
         public DateTime? Reprocessed { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -108,11 +113,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTable Status { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

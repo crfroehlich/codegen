@@ -102,6 +102,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AutoCreateMissingCount { get; set; }
 
+
         [ApiMember(Name = nameof(Children), Description = "DataProperty", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Children { get; set; }
@@ -112,12 +113,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChildrenCount { get; set; }
 
+
         [ApiMember(Name = nameof(Class), Description = "DataClass", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Class { get; set; }
         [ApiMember(Name = nameof(ClassId), Description = "Primary Key of DataClass", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClassId { get; set; }
+
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -129,6 +132,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
 
+
         [ApiMember(Name = nameof(DisplayName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string DisplayName { get; set; }
@@ -138,6 +142,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DisplayNameCount), Description = "DisplayName Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DisplayNameCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsAllowAddInForm), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -149,6 +154,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsAllowAddInFormCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsAllowCreateInForm), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsAllowCreateInForm { get; set; }
@@ -158,6 +164,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsAllowCreateInFormCount), Description = "IsAllowCreateInForm Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsAllowCreateInFormCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsAllowEditInForm), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -169,6 +176,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsAllowEditInFormCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsAllowFreeText), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsAllowFreeText { get; set; }
@@ -178,6 +186,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsAllowFreeTextCount), Description = "IsAllowFreeText Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsAllowFreeTextCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsAllowRemoveInForm), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -189,6 +198,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsAllowRemoveInFormCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsAudited), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsAudited { get; set; }
@@ -198,6 +208,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsAuditedCount), Description = "IsAudited Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsAuditedCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsCompressed), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -209,6 +220,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsCompressedCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsDisplayInForm), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsDisplayInForm { get; set; }
@@ -218,6 +230,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsDisplayInFormCount), Description = "IsDisplayInForm Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsDisplayInFormCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsDisplayInGrid), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -229,6 +242,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsDisplayInGridCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsEditColumn), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsEditColumn { get; set; }
@@ -238,6 +252,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsEditColumnCount), Description = "IsEditColumn Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsEditColumnCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsInsertOnly), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -249,6 +264,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsInsertOnlyCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsJSON), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsJSON { get; set; }
@@ -258,6 +274,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsJSONCount), Description = "IsJSON Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsJSONCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsLazy), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -269,6 +286,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsLazyCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsNullOnUpgrade), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsNullOnUpgrade { get; set; }
@@ -278,6 +296,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsNullOnUpgradeCount), Description = "IsNullOnUpgrade Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsNullOnUpgradeCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsReadOnly), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -289,6 +308,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsReadOnlyCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsRelationship), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsRelationship { get; set; }
@@ -298,6 +318,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsRelationshipCount), Description = "IsRelationship Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsRelationshipCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsRequired), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -309,6 +330,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsRequiredCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsRequiredInForm), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsRequiredInForm { get; set; }
@@ -318,6 +340,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsRequiredInFormCount), Description = "IsRequiredInForm Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsRequiredInFormCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsVirtual), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -329,6 +352,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsVirtualCount { get; set; }
 
+
         [ApiMember(Name = nameof(JsonType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string JsonType { get; set; }
@@ -339,12 +363,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? JsonTypeCount { get; set; }
 
+
         [ApiMember(Name = nameof(LookupTableEnum), Description = "LookupTableEnum", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference LookupTableEnum { get; set; }
         [ApiMember(Name = nameof(LookupTableEnumId), Description = "Primary Key of LookupTableEnum", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LookupTableEnumId { get; set; }
+
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -356,6 +382,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
 
+
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Order { get; set; }
@@ -366,12 +393,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OrderCount { get; set; }
 
+
         [ApiMember(Name = nameof(Owner), Description = "DataProperty", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Owner { get; set; }
         [ApiMember(Name = nameof(OwnerId), Description = "Primary Key of DataProperty", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get; set; }
+
 
         [ApiMember(Name = nameof(Precision), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -383,6 +412,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PrecisionCount { get; set; }
 
+
         [ApiMember(Name = nameof(RelationshipOnOwnerRemove), Description = "OnRemoveAction?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public OnRemoveAction? RelationshipOnOwnerRemove { get; set; }
@@ -392,6 +422,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(RelationshipOnOwnerRemoveCount), Description = "RelationshipOnOwnerRemove Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RelationshipOnOwnerRemoveCount { get; set; }
+
 
         [ApiMember(Name = nameof(RelationshipOnTargetRemove), Description = "OnRemoveAction?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -403,12 +434,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RelationshipOnTargetRemoveCount { get; set; }
 
+
         [ApiMember(Name = nameof(RelationshipPairTo), Description = "DataProperty", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference RelationshipPairTo { get; set; }
         [ApiMember(Name = nameof(RelationshipPairToId), Description = "Primary Key of DataProperty", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RelationshipPairToId { get; set; }
+
 
         [ApiMember(Name = nameof(Scale), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -420,6 +453,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScaleCount { get; set; }
 
+
         [ApiMember(Name = nameof(SetDefaultValue), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SetDefaultValue { get; set; }
@@ -430,6 +464,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SetDefaultValueCount { get; set; }
 
+
         [ApiMember(Name = nameof(Tab), Description = "DataTab", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Tab { get; set; }
@@ -437,12 +472,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TabId { get; set; }
 
+
         [ApiMember(Name = nameof(Target), Description = "DataClass", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Target { get; set; }
         [ApiMember(Name = nameof(TargetId), Description = "Primary Key of DataClass", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TargetId { get; set; }
+
 
         [ApiMember(Name = nameof(TargetAlias), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -454,6 +491,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TargetAliasCount { get; set; }
 
+
         [ApiMember(Name = nameof(Type), Description = "DataType?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DataType? Type { get; set; }
@@ -463,6 +501,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TypeCount), Description = "Type Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TypeCount { get; set; }
+
 
         [ApiMember(Name = nameof(UIType), Description = "UiType?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

@@ -85,6 +85,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get; set; }
 
+
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Bindings { get; set; }
@@ -94,6 +95,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(BindingsCount), Description = "LookupTableBinding Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BindingsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Broadcasts), Description = "Broadcast", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -105,12 +107,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BroadcastsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Client), Description = "Client", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Client { get; set; }
         [ApiMember(Name = nameof(ClientId), Description = "Primary Key of Client", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClientId { get; set; }
+
 
         [ApiMember(Name = nameof(Delete), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -122,12 +126,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DeleteCount { get; set; }
 
+
         [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference DocumentSet { get; set; }
         [ApiMember(Name = nameof(DocumentSetId), Description = "Primary Key of DocumentSet", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetId { get; set; }
+
 
         [ApiMember(Name = nameof(Edit), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -139,6 +145,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EditCount { get; set; }
 
+
         [ApiMember(Name = nameof(Help), Description = "Help", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Help { get; set; }
@@ -148,6 +155,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(HelpCount), Description = "Help Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HelpCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsGlobal), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -159,6 +167,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsGlobalCount { get; set; }
 
+
         [ApiMember(Name = nameof(ScopedComments), Description = "Comment", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> ScopedComments { get; set; }
@@ -168,6 +177,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ScopedCommentsCount), Description = "Comment Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopedCommentsCount { get; set; }
+
 
         [ApiMember(Name = nameof(ScopedFiles), Description = "File", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -179,6 +189,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopedFilesCount { get; set; }
 
+
         [ApiMember(Name = nameof(ScopedTags), Description = "Tag", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> ScopedTags { get; set; }
@@ -188,6 +199,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ScopedTagsCount), Description = "Tag Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopedTagsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Synonyms), Description = "TermSynonym", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -199,12 +211,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SynonymsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Team), Description = "Team", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Team { get; set; }
         [ApiMember(Name = nameof(TeamId), Description = "Primary Key of Team", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TeamId { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"App",@"Client",@"Compound",@"DocumentSet",@"Global",@"Team",@"User"})]
         [ApiMember(Name = nameof(Type), Description = "ScopeEnm?", IsRequired = false)]
@@ -217,12 +231,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TypeCount { get; set; }
 
+
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference User { get; set; }
         [ApiMember(Name = nameof(UserId), Description = "Primary Key of User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get; set; }
+
 
         [ApiMember(Name = nameof(VariableRules), Description = "VariableRule", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -234,6 +250,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? VariableRulesCount { get; set; }
 
+
         [ApiMember(Name = nameof(View), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool View { get; set; }
@@ -243,6 +260,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ViewCount), Description = "View Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ViewCount { get; set; }
+
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

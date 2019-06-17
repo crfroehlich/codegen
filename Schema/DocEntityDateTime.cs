@@ -85,11 +85,14 @@ namespace Services.Schema
         [Field]
         public int? DateDay { get; set; }
 
+
         [Field]
         public int? DateMonth { get; set; }
 
+
         [Field]
         public DateTime? DateTime { get; set; }
+
 
         [Field]
         public int? DateYear { get; set; }

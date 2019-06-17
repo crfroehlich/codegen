@@ -85,11 +85,13 @@ namespace Services.Schema
         [Field]
         public string ClientDepartment { get; set; }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityDivision Division { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DivisionId { get { return Division?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -99,20 +101,26 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string Email { get; set; }
+
 
         [Field]
         public DateTime? ExpireDate { get; set; }
 
+
         [Field(DefaultValue = 0)]
         public int FailedLoginCount { get; set; }
+
 
         [Field]
         public string FirstName { get; set; }
 
+
         [Field]
         public string Gravatar { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityHistory.User), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -123,6 +131,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HistoryCount { get { return History.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityImpersonation.ImpersonatedUser), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -131,6 +140,7 @@ namespace Services.Schema
         public List<int> ImpersonatedIds => Impersonated.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImpersonatedCount { get { return Impersonated.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityImpersonation.AuthenticatedUser), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -141,20 +151,26 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImpersonatingCount { get { return Impersonating.Count(); } private set { var noid = value; } }
 
+
         [Field(DefaultValue = false)]
         public bool? IsSystemUser { get; set; }
+
 
         [Field]
         public string JobTitle { get; set; }
 
+
         [Field]
         public DateTime? LastLogin { get; set; }
+
 
         [Field]
         public string LastName { get; set; }
 
+
         [Field]
         public string LegacyUsername { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -162,11 +178,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LocaleId { get { return Locale?.Id; } private set { var noid = value; } }
 
+
         [Field(DefaultValue = 0)]
         public int LoginCount { get; set; }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -175,6 +194,7 @@ namespace Services.Schema
         public List<int> RolesIds => Roles.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityScope.User), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -185,6 +205,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityUserSession.User), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -194,18 +215,23 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SessionsCount { get { return Sessions.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Settings { get; set; }
+
 
         [Field]
         public string Slack { get; set; }
 
+
         [Field]
         public DateTime? StartDate { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = StatusEnm.ACTIVE)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public StatusEnm Status { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityTeam.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -216,6 +242,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TeamsCount { get { return Teams.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityTimeCard.User), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -224,6 +251,7 @@ namespace Services.Schema
         public List<int> TimeCardsIds => TimeCards.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TimeCardsCount { get { return TimeCards.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityUpdate.User), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -234,11 +262,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UpdatesCount { get { return Updates.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityUserType UserType { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserTypeId { get { return UserType?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityWorkflow.User), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]

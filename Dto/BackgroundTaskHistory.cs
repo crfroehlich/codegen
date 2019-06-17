@@ -67,6 +67,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CompletedCount { get; set; }
 
+
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Data { get; set; }
@@ -76,6 +77,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataCount { get; set; }
+
 
         [ApiMember(Name = nameof(Ended), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -87,6 +89,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EndedCount { get; set; }
 
+
         [ApiMember(Name = nameof(Errors), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Errors { get; set; }
@@ -96,6 +99,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ErrorsCount), Description = "Errors Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ErrorsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Failed), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -107,6 +111,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FailedCount { get; set; }
 
+
         [ApiMember(Name = nameof(Items), Description = "BackgroundTaskItem", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Items { get; set; }
@@ -116,6 +121,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ItemsCount), Description = "BackgroundTaskItem Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ItemsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Logs), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -127,6 +133,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LogsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Succeeded), Description = "bool?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool? Succeeded { get; set; }
@@ -137,6 +144,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SucceededCount { get; set; }
 
+
         [ApiMember(Name = nameof(Summary), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Summary { get; set; }
@@ -146,6 +154,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SummaryCount), Description = "Summary Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SummaryCount { get; set; }
+
 
         [ApiMember(Name = nameof(Task), Description = "BackgroundTask", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

@@ -85,6 +85,7 @@ namespace Services.Schema
         [Field(DefaultValue = false)]
         public bool AutoCreateMissing { get; set; }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityDataProperty.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -94,77 +95,101 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityDataClass Class { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClassId { get { return Class?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field]
         public string DisplayName { get; set; }
 
+
         [Field(DefaultValue = true)]
         public bool IsAllowAddInForm { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool IsAllowCreateInForm { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool IsAllowEditInForm { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool IsAllowFreeText { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool IsAllowRemoveInForm { get; set; }
+
 
         [Field(DefaultValue = true)]
         public bool IsAudited { get; set; }
 
+
         [Field(DefaultValue = true)]
         public bool IsCompressed { get; set; }
+
 
         [Field(DefaultValue = true)]
         public bool IsDisplayInForm { get; set; }
 
+
         [Field(DefaultValue = true)]
         public bool IsDisplayInGrid { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool IsEditColumn { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool IsInsertOnly { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool IsJSON { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool IsLazy { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool IsNullOnUpgrade { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool IsReadOnly { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool IsRelationship { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool IsRequired { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool IsRequiredInForm { get; set; }
 
+
         [Field]
         public bool IsVirtual { get; set; }
 
+
         [Field]
         public string JsonType { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -172,11 +197,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LookupTableEnumId { get { return LookupTableEnum?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
 
+
         [Field(DefaultValue = 0)]
         public int Order { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -184,16 +212,20 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int? Precision { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public OnRemoveAction? RelationshipOnOwnerRemove { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public OnRemoveAction? RelationshipOnTargetRemove { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -201,11 +233,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RelationshipPairToId { get { return RelationshipPairTo?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int? Scale { get; set; }
 
+
         [Field]
         public string SetDefaultValue { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -213,18 +248,22 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TabId { get { return Tab?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityDataClass Target { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TargetId { get { return Target?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string TargetAlias { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DataType Type { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

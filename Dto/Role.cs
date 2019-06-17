@@ -68,6 +68,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AdminTeamId { get; set; }
 
+
         [ApiMember(Name = nameof(Apps), Description = "App", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Apps { get; set; }
@@ -77,6 +78,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(AppsCount), Description = "App Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -88,6 +90,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
 
+
         [ApiMember(Name = nameof(Features), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Features { get; set; }
@@ -97,6 +100,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(FeaturesCount), Description = "Features Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FeaturesCount { get; set; }
+
 
         [ApiMember(Name = nameof(FeatureSets), Description = "FeatureSet", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -108,6 +112,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FeatureSetsCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsInternal), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsInternal { get; set; }
@@ -117,6 +122,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsInternalCount), Description = "IsInternal Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsInternalCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsSuperAdmin), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -128,6 +134,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsSuperAdminCount { get; set; }
 
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
@@ -137,6 +144,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
+
 
         [ApiMember(Name = nameof(Pages), Description = "Page", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -148,6 +156,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PagesCount { get; set; }
 
+
         [ApiMember(Name = nameof(Permissions), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Permissions { get; set; }
@@ -157,6 +166,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(PermissionsCount), Description = "Permissions Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PermissionsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

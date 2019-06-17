@@ -88,11 +88,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DestinationUnitId { get { return DestinationUnit?.Id; } private set { var noid = value; } }
 
+
         [Field(DefaultValue = false)]
         public bool IsDefault { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool IsDestinationSi { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -100,8 +103,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ModifierTermId { get { return ModifierTerm?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, Precision = 38, Scale = 19)]
         public decimal Multiplier { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -109,11 +114,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityTermMaster RootTerm { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RootTermId { get { return RootTerm?.Id; } private set { var noid = value; } }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

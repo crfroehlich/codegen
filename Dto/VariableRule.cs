@@ -69,6 +69,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChildrenCount { get; set; }
 
+
         [ApiMember(Name = nameof(Definition), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Definition { get; set; }
@@ -78,6 +79,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DefinitionCount), Description = "Definition Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DefinitionCount { get; set; }
+
 
         [ApiMember(Name = nameof(Instances), Description = "VariableInstance", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -89,6 +91,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? InstancesCount { get; set; }
 
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
@@ -99,12 +102,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
 
+
         [ApiMember(Name = nameof(Owner), Description = "VariableRule", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Owner { get; set; }
         [ApiMember(Name = nameof(OwnerId), Description = "Primary Key of VariableRule", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Addition",@"Aggregation",@"Author Error",@"Correction",@"Customization",@"Inversion",@"Normalization",@"Study Edit"})]
         [ApiMember(Name = nameof(Rule), Description = "LookupTable", IsRequired = true)]
@@ -113,6 +118,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(RuleId), Description = "Primary Key of LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RuleId { get; set; }
+
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -123,6 +129,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ScopesCount), Description = "Scope Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Applied",@"Override",@"Template"})]
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]

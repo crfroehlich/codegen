@@ -60,6 +60,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get; set; }
 
+
         [ApiMember(Name = nameof(Text), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Text { get; set; }
@@ -69,6 +70,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TextCount), Description = "Text Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TextCount { get; set; }
+
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

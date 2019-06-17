@@ -68,6 +68,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClientIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(Hits), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Hits { get; set; }
@@ -77,6 +78,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(HitsCount), Description = "Hits Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HitsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Impersonations), Description = "Impersonation", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -88,6 +90,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImpersonationsCount { get; set; }
 
+
         [ApiMember(Name = nameof(IpAddress), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string IpAddress { get; set; }
@@ -97,6 +100,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IpAddressCount), Description = "IpAddress Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IpAddressCount { get; set; }
+
 
         [ApiMember(Name = nameof(Requests), Description = "UserRequest", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -108,6 +112,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RequestsCount { get; set; }
 
+
         [ApiMember(Name = nameof(SessionId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SessionId { get; set; }
@@ -117,6 +122,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SessionIdCount), Description = "SessionId Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SessionIdCount { get; set; }
+
 
         [ApiMember(Name = nameof(TemporarySessionId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -128,12 +134,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TemporarySessionIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference User { get; set; }
         [ApiMember(Name = nameof(UserId), Description = "Primary Key of User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get; set; }
+
 
         [ApiMember(Name = nameof(UserHistory), Description = "History", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

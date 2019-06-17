@@ -88,20 +88,24 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CalendarDateEndId { get { return CalendarDateEnd?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityDateTime CalendarDateStart { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CalendarDateStartId { get { return CalendarDateStart?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string CalendarType { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityTimePoint FollowUp { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FollowUpId { get { return FollowUp?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

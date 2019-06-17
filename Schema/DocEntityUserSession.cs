@@ -85,8 +85,10 @@ namespace Services.Schema
         [Field]
         public string ClientId { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = 0)]
         public int Hits { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityImpersonation.UserSession), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]
@@ -97,8 +99,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImpersonationsCount { get { return Impersonations.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string IpAddress { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityUserRequest.UserSession), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]
@@ -109,17 +113,21 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RequestsCount { get { return Requests.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string SessionId { get; set; }
 
+
         [Field]
         public string TemporarySessionId { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityUser User { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityHistory.UserSession), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]

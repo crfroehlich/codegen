@@ -65,6 +65,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DestinationUnitId { get; set; }
 
+
         [ApiMember(Name = nameof(IsDefault), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsDefault { get; set; }
@@ -74,6 +75,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsDefaultCount), Description = "IsDefault Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsDefaultCount { get; set; }
+
 
         [ApiMember(Name = nameof(IsDestinationSi), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -85,12 +87,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsDestinationSiCount { get; set; }
 
+
         [ApiMember(Name = nameof(ModifierTerm), Description = "TermMaster", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference ModifierTerm { get; set; }
         [ApiMember(Name = nameof(ModifierTermId), Description = "Primary Key of TermMaster", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ModifierTermId { get; set; }
+
 
         [ApiMember(Name = nameof(Multiplier), Description = "decimal", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -102,6 +106,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MultiplierCount { get; set; }
 
+
         [ApiMember(Name = nameof(Parent), Description = "LookupTable", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Parent { get; set; }
@@ -109,12 +114,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentId { get; set; }
 
+
         [ApiMember(Name = nameof(RootTerm), Description = "TermMaster", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference RootTerm { get; set; }
         [ApiMember(Name = nameof(RootTermId), Description = "Primary Key of TermMaster", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RootTermId { get; set; }
+
 
         [ApiMember(Name = nameof(SourceUnit), Description = "UnitOfMeasure", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

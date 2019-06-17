@@ -63,6 +63,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AuditRecordId { get; set; }
 
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
@@ -72,6 +73,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
+
 
         [ApiMember(Name = nameof(Processed), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -83,6 +85,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProcessedCount { get; set; }
 
+
         [ApiMember(Name = nameof(Status), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Status { get; set; }
@@ -92,6 +95,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(StatusCount), Description = "Status Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatusCount { get; set; }
+
 
         [ApiMember(Name = nameof(Teams), Description = "Team", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -103,6 +107,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TeamsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Updates), Description = "Update", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Updates { get; set; }
@@ -112,6 +117,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(UpdatesCount), Description = "Update Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UpdatesCount { get; set; }
+
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

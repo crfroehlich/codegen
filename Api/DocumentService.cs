@@ -117,42 +117,18 @@ namespace Services.API
                     entities = entities.Where(en => en.Country.Contains(request.Country));
                 if(!DocTools.IsNullOrEmpty(request.Countrys))
                     entities = entities.Where(en => en.Country.In(request.Countrys));
-                if(!DocTools.IsNullOrEmpty(request.DatabaseType) && !DocTools.IsNullOrEmpty(request.DatabaseType.Id))
-                {
-                    entities = entities.Where(en => en.DatabaseType.Id == request.DatabaseType.Id );
-                }
-                if(true == request.DatabaseTypeIds?.Any())
-                {
-                    entities = entities.Where(en => en.DatabaseType.Id.In(request.DatabaseTypeIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.DatabaseType) && !DocTools.IsNullOrEmpty(request.DatabaseType.Name))
-                {
-                    entities = entities.Where(en => en.DatabaseType.Name == request.DatabaseType.Name );
-                }
-                if(true == request.DatabaseTypeNames?.Any())
-                {
-                    entities = entities.Where(en => en.DatabaseType.Name.In(request.DatabaseTypeNames));
-                }
+                if(request.DatabaseType.HasValue)
+                    entities = entities.Where(en => request.DatabaseType.Value == en.DatabaseType);
+                if(!DocTools.IsNullOrEmpty(request.DatabaseTypes))
+                    entities = entities.Where(en => en.DatabaseType.In(request.DatabaseTypes));
                 if(true == request.DocumentSetsIds?.Any())
                 {
                     entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
                 }
-                if(!DocTools.IsNullOrEmpty(request.DocumentType) && !DocTools.IsNullOrEmpty(request.DocumentType.Id))
-                {
-                    entities = entities.Where(en => en.DocumentType.Id == request.DocumentType.Id );
-                }
-                if(true == request.DocumentTypeIds?.Any())
-                {
-                    entities = entities.Where(en => en.DocumentType.Id.In(request.DocumentTypeIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.DocumentType) && !DocTools.IsNullOrEmpty(request.DocumentType.Name))
-                {
-                    entities = entities.Where(en => en.DocumentType.Name == request.DocumentType.Name );
-                }
-                if(true == request.DocumentTypeNames?.Any())
-                {
-                    entities = entities.Where(en => en.DocumentType.Name.In(request.DocumentTypeNames));
-                }
+                if(request.DocumentType.HasValue)
+                    entities = entities.Where(en => request.DocumentType.Value == en.DocumentType);
+                if(!DocTools.IsNullOrEmpty(request.DocumentTypes))
+                    entities = entities.Where(en => en.DocumentType.In(request.DocumentTypes));
                 if(!DocTools.IsNullOrEmpty(request.DOI))
                     entities = entities.Where(en => en.DOI.Contains(request.DOI));
                 if(!DocTools.IsNullOrEmpty(request.DOIs))
@@ -185,22 +161,10 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Import.Id.In(request.ImportIds));
                 }
-                if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Id))
-                {
-                    entities = entities.Where(en => en.ImportType.Id == request.ImportType.Id );
-                }
-                if(true == request.ImportTypeIds?.Any())
-                {
-                    entities = entities.Where(en => en.ImportType.Id.In(request.ImportTypeIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Name))
-                {
-                    entities = entities.Where(en => en.ImportType.Name == request.ImportType.Name );
-                }
-                if(true == request.ImportTypeNames?.Any())
-                {
-                    entities = entities.Where(en => en.ImportType.Name.In(request.ImportTypeNames));
-                }
+                if(request.ImportType.HasValue)
+                    entities = entities.Where(en => request.ImportType.Value == en.ImportType);
+                if(!DocTools.IsNullOrEmpty(request.ImportTypes))
+                    entities = entities.Where(en => en.ImportType.In(request.ImportTypes));
                 if(!DocTools.IsNullOrEmpty(request.Institution))
                     entities = entities.Where(en => en.Institution.Contains(request.Institution));
                 if(!DocTools.IsNullOrEmpty(request.Institutions))
@@ -251,6 +215,14 @@ namespace Services.API
                     entities = entities.Where(en => en.PubType.Contains(request.PubType));
                 if(!DocTools.IsNullOrEmpty(request.PubTypes))
                     entities = entities.Where(en => en.PubType.In(request.PubTypes));
+                if(!DocTools.IsNullOrEmpty(request.Reconciliation) && !DocTools.IsNullOrEmpty(request.Reconciliation.Id))
+                {
+                    entities = entities.Where(en => en.Reconciliation.Id == request.Reconciliation.Id );
+                }
+                if(true == request.ReconciliationIds?.Any())
+                {
+                    entities = entities.Where(en => en.Reconciliation.Id.In(request.ReconciliationIds));
+                }
                 if(request.ReferenceStudy.HasValue)
                     entities = entities.Where(en => request.ReferenceStudy.Value == en.ReferenceStudy);
                 if(!DocTools.IsNullOrEmpty(request.SecondarySourceID))
@@ -330,9 +302,9 @@ namespace Services.API
             var pCorporateAuthor = request.CorporateAuthor;
             var pCountry = request.Country;
             var pCustomData = request.CustomData;
-            DocEntityLookupTable pDatabaseType = GetLookup(DocConstantLookupTable.DATABASETYPE, request.DatabaseType?.Name, request.DatabaseType?.Id);
+            var pDatabaseType = request.DatabaseType;
             var pDocumentSets = GetVariable<Reference>(request, nameof(request.DocumentSets), request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
-            DocEntityLookupTable pDocumentType = GetLookup(DocConstantLookupTable.DOCUMENTTYPE, request.DocumentType?.Name, request.DocumentType?.Id);
+            var pDocumentType = request.DocumentType;
             var pDOI = request.DOI;
             var pEmbaseAccessionNumber = request.EmbaseAccessionNumber;
             var pEmtree = request.Emtree;
@@ -340,7 +312,7 @@ namespace Services.API
             var pFullText = request.FullText;
             var pFullTextURL = request.FullTextURL;
             var pImport = (request.Import?.Id > 0) ? DocEntityImportData.Get(request.Import.Id) : null;
-            DocEntityLookupTable pImportType = GetLookup(DocConstantLookupTable.STUDYIMPORTTYPE, request.ImportType?.Name, request.ImportType?.Id);
+            var pImportType = request.ImportType;
             var pInstitution = request.Institution;
             var pISSN = request.ISSN;
             var pIssue = request.Issue;
@@ -355,6 +327,7 @@ namespace Services.API
             var pPublicationDate = request.PublicationDate;
             var pPublicationYear = request.PublicationYear;
             var pPubType = request.PubType;
+            var pReconciliation = (request.Reconciliation?.Id > 0) ? DocEntityReconcileDocument.Get(request.Reconciliation.Id) : null;
             var pReferenceStudy = request.ReferenceStudy;
             var pSecondarySourceID = request.SecondarySourceID;
             var pSource = request.Source;
@@ -410,11 +383,11 @@ namespace Services.API
             {
                 entity.CustomData = pCustomData;
             }
-            if (AllowPatchValue<Document, DocEntityLookupTable>(request, DocConstantModelName.DOCUMENT, pDatabaseType, permission, nameof(request.DatabaseType), pDatabaseType != entity.DatabaseType))
+            if (AllowPatchValue<Document, DatabaseTypeEnm?>(request, DocConstantModelName.DOCUMENT, pDatabaseType, permission, nameof(request.DatabaseType), pDatabaseType != entity.DatabaseType))
             {
                 entity.DatabaseType = pDatabaseType;
             }
-            if (AllowPatchValue<Document, DocEntityLookupTable>(request, DocConstantModelName.DOCUMENT, pDocumentType, permission, nameof(request.DocumentType), pDocumentType != entity.DocumentType))
+            if (AllowPatchValue<Document, DocumentTypeEnm?>(request, DocConstantModelName.DOCUMENT, pDocumentType, permission, nameof(request.DocumentType), pDocumentType != entity.DocumentType))
             {
                 entity.DocumentType = pDocumentType;
             }
@@ -446,7 +419,7 @@ namespace Services.API
             {
                 entity.Import = pImport;
             }
-            if (AllowPatchValue<Document, DocEntityLookupTable>(request, DocConstantModelName.DOCUMENT, pImportType, permission, nameof(request.ImportType), pImportType != entity.ImportType))
+            if (AllowPatchValue<Document, StudyImportTypeEnm?>(request, DocConstantModelName.DOCUMENT, pImportType, permission, nameof(request.ImportType), pImportType != entity.ImportType))
             {
                 entity.ImportType = pImportType;
             }
@@ -501,6 +474,10 @@ namespace Services.API
             if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pPubType, permission, nameof(request.PubType), pPubType != entity.PubType))
             {
                 entity.PubType = pPubType;
+            }
+            if (AllowPatchValue<Document, DocEntityReconcileDocument>(request, DocConstantModelName.DOCUMENT, pReconciliation, permission, nameof(request.Reconciliation), pReconciliation != entity.Reconciliation))
+            {
+                entity.Reconciliation = pReconciliation;
             }
             if (AllowPatchValue<Document, int?>(request, DocConstantModelName.DOCUMENT, pReferenceStudy, permission, nameof(request.ReferenceStudy), pReferenceStudy != entity.ReferenceStudy))
             {
@@ -722,6 +699,7 @@ namespace Services.API
                     var pPubType = entity.PubType;
                     if(!DocTools.IsNullOrEmpty(pPubType))
                         pPubType += " (Copy)";
+                    var pReconciliation = entity.Reconciliation;
                     var pReferenceStudy = entity.ReferenceStudy;
                     var pSecondarySourceID = entity.SecondarySourceID;
                     if(!DocTools.IsNullOrEmpty(pSecondarySourceID))
@@ -777,6 +755,7 @@ namespace Services.API
                                 , PublicationDate = pPublicationDate
                                 , PublicationYear = pPublicationYear
                                 , PubType = pPubType
+                                , Reconciliation = pReconciliation
                                 , ReferenceStudy = pReferenceStudy
                                 , SecondarySourceID = pSecondarySourceID
                                 , Source = pSource

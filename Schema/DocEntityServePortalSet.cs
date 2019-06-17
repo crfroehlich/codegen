@@ -90,6 +90,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DrugClassesCount { get { return DrugClasses.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityTermMaster> Interventions { get; private set; }

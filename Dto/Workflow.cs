@@ -76,6 +76,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BindingsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Data { get; set; }
@@ -85,6 +86,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataCount { get; set; }
+
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -96,6 +98,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
 
+
         [ApiMember(Name = nameof(Documents), Description = "Document", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Documents { get; set; }
@@ -105,6 +108,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DocumentsCount), Description = "Document Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -116,12 +120,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
 
+
         [ApiMember(Name = nameof(Owner), Description = "Workflow", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Owner { get; set; }
         [ApiMember(Name = nameof(OwnerId), Description = "Primary Key of Workflow", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get; set; }
+
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -132,6 +138,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ScopesCount), Description = "Scope Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
         [ApiMember(Name = nameof(Status), Description = "WorkflowStatusEnm?", IsRequired = false)]
@@ -144,6 +151,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatusCount { get; set; }
 
+
         [ApiMember(Name = nameof(Tasks), Description = "Task", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Tasks { get; set; }
@@ -153,6 +161,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TasksCount), Description = "Task Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TasksCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"Default Filter",@"Default Nameset",@"DIA Report",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"FAQ",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Library Ratings",@"Direct Meta Analysis",@"Nameset",@"PICO Rating",@"R Snippet",@"Rapid Review",@"Reconciliation",@"Response Letter",@"Risk of Bias",@"RMD Snippet",@"Systematic Review",@"View"})]
         [ApiMember(Name = nameof(Type), Description = "WorkflowEnm?", IsRequired = false)]
@@ -165,12 +174,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TypeCount { get; set; }
 
+
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference User { get; set; }
         [ApiMember(Name = nameof(UserId), Description = "Primary Key of User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get; set; }
+
 
         [ApiMember(Name = nameof(Variables), Description = "VariableInstance", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -181,6 +192,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(VariablesCount), Description = "VariableInstance Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? VariablesCount { get; set; }
+
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

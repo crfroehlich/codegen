@@ -56,6 +56,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Maybe Relevant",@"Not Rated",@"Not Relevant",@"Relevant"})]
         [ApiMember(Name = nameof(Rating), Description = "RatingEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -66,6 +67,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(RatingCount), Description = "Rating Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RatingCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Abstract with Insufficient Information",@"Animal study",@"Does not meet protocol",@"Duplicate Publication",@"Erroneous Data",@"In vitro study",@"Missing Characteristic(s)",@"Missing Outcome(s)",@"Not a Clinical Study",@"Not English",@"Not a treatment Study",@"Relevant misclassified reference",@"Study fits protocol, to be possibly added later",@"Wrong Comparison",@"Wrong Intervention",@"Wrong Number of Participants",@"Wrong Outcome Stratification",@"Wrong Outcome(s)",@"Wrong Population",@"Wrong Publication Date Cutoff",@"Wrong Setting",@"Wrong Study Design",@"Wrong Timing"})]
         [ApiMember(Name = nameof(ReasonRejected), Description = "ReasonRejectedEnm?", IsRequired = false)]

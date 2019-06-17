@@ -88,14 +88,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EqualityOperatorId { get { return EqualityOperator?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = 1)]
         public int Multiplier { get; set; }
+
 
         [Field(Precision = 38, Scale = 6)]
         public decimal? Number { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = 1)]
         public int Order { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -104,6 +108,7 @@ namespace Services.Schema
         public List<int> OwnersIds => Owners.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnersCount { get { return Owners.Count(); } private set { var noid = value; } }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

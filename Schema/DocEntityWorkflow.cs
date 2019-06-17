@@ -90,11 +90,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue, NullableOnUpgrade = true)]
         public string Data { get; set; }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -104,14 +107,17 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentsCount { get { return Documents.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         public string Name { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityWorkflow Owner { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityScope.Workflows), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -122,9 +128,11 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public WorkflowStatusEnm? Status { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityTask.Workflow), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -135,15 +143,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TasksCount { get { return Tasks.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = WorkflowEnm.FILTER)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public WorkflowEnm Type { get; set; }
+
 
         [Field(Nullable = false, NullableOnUpgrade = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityUser User { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -152,6 +163,7 @@ namespace Services.Schema
         public List<int> VariablesIds => Variables.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? VariablesCount { get { return Variables.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityWorkflow.Owner), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]

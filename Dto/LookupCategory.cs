@@ -62,12 +62,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CategoryCount { get; set; }
 
+
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Enum { get; set; }
         [ApiMember(Name = nameof(EnumId), Description = "Primary Key of LookupTableEnum", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnumId { get; set; }
+
 
         [ApiMember(Name = nameof(Lookups), Description = "LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -78,6 +80,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(LookupsCount), Description = "LookupTable Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LookupsCount { get; set; }
+
 
         [ApiMember(Name = nameof(ParentCategory), Description = "LookupCategory", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

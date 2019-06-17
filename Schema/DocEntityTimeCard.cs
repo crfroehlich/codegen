@@ -85,14 +85,17 @@ namespace Services.Schema
         [Field]
         public string Description { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityDocument Document { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         public DateTime End { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -100,11 +103,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectId { get { return Project?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int? ReferenceId { get; set; }
 
+
         [Field(Nullable = false)]
         public DateTime Start { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -112,11 +118,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityUser User { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

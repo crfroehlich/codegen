@@ -88,11 +88,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameId { get { return Name?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         public int OwnerId { get; set; }
 
+
         [Field(Nullable = false)]
         public string OwnerType { get; set; }
+
 
         [Field(Nullable = false)]
         public decimal Value { get; set; }

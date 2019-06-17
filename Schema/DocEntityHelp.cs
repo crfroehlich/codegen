@@ -85,14 +85,18 @@ namespace Services.Schema
         [Field]
         public string ConfluenceId { get; set; }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field(DefaultValue = "fa fa-question-circle")]
         public string Icon { get; set; }
 
+
         [Field]
         public int? Order { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -102,6 +106,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PagesCount { get { return Pages.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
@@ -110,8 +115,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         public string Title { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

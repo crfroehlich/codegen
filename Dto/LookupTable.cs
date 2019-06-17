@@ -64,6 +64,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BindingsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Categories), Description = "LookupCategory", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Categories { get; set; }
@@ -73,6 +74,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CategoriesCount), Description = "LookupCategory Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CategoriesCount { get; set; }
+
 
         [ApiMember(Name = nameof(Documents), Description = "Document", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -84,12 +86,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Enum { get; set; }
         [ApiMember(Name = nameof(EnumId), Description = "Primary Key of LookupTableEnum", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnumId { get; set; }
+
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

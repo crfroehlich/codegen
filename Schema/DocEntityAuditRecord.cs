@@ -85,14 +85,17 @@ namespace Services.Schema
         [Field]
         public string Action { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityBackgroundTask BackgroundTask { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BackgroundTaskId { get { return BackgroundTask?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         public DateTime ChangedOnDate { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -110,8 +113,10 @@ namespace Services.Schema
             }
         }
 
+
         [Field]
         public string DatabaseSessionId { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityAuditDelta.Audit), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]
@@ -122,14 +127,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DeltasCount { get { return Deltas.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public int EntityId { get; set; }
+
 
         [Field]
         public string EntityType { get; set; }
 
+
         [Field]
         public int? EntityVersion { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityEvent.AuditRecord), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -140,26 +149,32 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EventsCount { get { return Events.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityImpersonation Impersonation { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImpersonationId { get { return Impersonation?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int? TargetId { get; set; }
+
 
         [Field]
         public string TargetType { get; set; }
 
+
         [Field]
         public int? TargetVersion { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityUser User { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

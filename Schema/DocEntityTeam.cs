@@ -91,23 +91,29 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AdminRolesCount { get { return AdminRoles.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field]
         public string Email { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = false)]
         public bool IsInternal { get; set; }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityUser Owner { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityScope.Team), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -118,11 +124,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Settings { get; set; }
 
+
         [Field]
         public string Slack { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityUpdate.Team), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -132,6 +141,7 @@ namespace Services.Schema
         public List<int> UpdatesIds => Updates.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UpdatesCount { get { return Updates.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

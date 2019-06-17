@@ -88,6 +88,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DefaultLocaleId { get { return DefaultLocale?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityDivision.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -97,6 +98,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DivisionsCount { get { return Divisions.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
@@ -105,8 +107,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityProject.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -117,14 +121,17 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectsCount { get { return Projects.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityRole Role { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string SalesforceAccountId { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityScope.Client), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -134,6 +141,7 @@ namespace Services.Schema
         public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
+
 
         [Field(Length = int.MaxValue)]
         public string Settings { get; set; }

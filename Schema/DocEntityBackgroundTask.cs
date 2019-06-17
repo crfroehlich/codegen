@@ -88,23 +88,29 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityQueueChannel Channel { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChannelId { get { return Channel?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = true)]
         public bool Enabled { get; set; }
 
+
         [Field(DefaultValue = 60)]
         public int Frequency { get; set; }
 
+
         [Field(DefaultValue = 15)]
         public int? HistoryRetention { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityBackgroundTaskItem.Task), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -115,29 +121,38 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ItemsCount { get { return Items.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = true)]
         public bool KeepHistory { get; set; }
+
 
         [Field]
         public string LastRunVersion { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = true)]
         public bool LogError { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = false)]
         public bool LogInfo { get; set; }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
+
 
         [Field]
         public int RowsToProcessPerIteration { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = false)]
         public bool RunNow { get; set; }
 
+
         [Field(DefaultValue = "midnight")]
         public string StartAt { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityBackgroundTaskHistory.Task), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]

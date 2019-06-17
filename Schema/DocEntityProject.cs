@@ -91,17 +91,21 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityClient Client { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClientId { get { return Client?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public DateTime? DatabaseDeadline { get; set; }
 
+
         [Field]
         public string DatabaseName { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -109,11 +113,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DatasetId { get { return Dataset?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public DateTime? DeliverableDeadline { get; set; }
 
+
         [Field]
         public int? FqId { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -121,8 +128,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FqWorkflowId { get { return FqWorkflow?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int? LegacyPackageId { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -130,23 +139,30 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LibraryId { get { return Library?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int? LibraryPackageId { get; set; }
+
 
         [Field]
         public string LibraryPackageName { get; set; }
 
+
         [Field(DefaultValue = "001")]
         public string Number { get; set; }
+
 
         [Field]
         public string OperationsDeliverable { get; set; }
 
+
         [Field]
         public string OpportunityId { get; set; }
 
+
         [Field]
         public string OpportunityName { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -154,18 +170,23 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string PICO { get; set; }
+
 
         [Field]
         public string ProjectId { get; set; }
 
+
         [Field]
         public string ProjectName { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public ForeignKeyStatusEnm? Status { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityTimeCard.Project), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]

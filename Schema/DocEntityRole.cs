@@ -88,6 +88,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AdminTeamId { get { return AdminTeam?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityApp> Apps { get; private set; }
@@ -96,11 +97,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppsCount { get { return Apps.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string Description { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string Features { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityFeatureSet.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -111,14 +115,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FeatureSetsCount { get { return FeatureSets.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = false)]
         public bool IsInternal { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = false)]
         public bool IsSuperAdmin { get; set; }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -128,8 +136,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PagesCount { get { return Pages.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Permissions { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityUser.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]

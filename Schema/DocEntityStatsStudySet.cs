@@ -85,17 +85,22 @@ namespace Services.Schema
         [Field(Nullable = false, DefaultValue = 0)]
         public int BoundTerms { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = 0)]
         public int Characteristics { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = 0)]
         public int DataPoints { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = 0)]
         public int DesignCount { get; set; }
 
+
         [Field]
         public string DesignList { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -103,14 +108,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = 0)]
         public int Interventions { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = 0)]
         public int Outcomes { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = 0)]
         public int OutcomesReported { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -120,20 +129,25 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RecordsCount { get { return Records.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityStats Stat { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatId { get { return Stat?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int Studies { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = 0)]
         public int TypeCount { get; set; }
 
+
         [Field]
         public string TypeList { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = 0)]
         public int UnboundTerms { get; set; }

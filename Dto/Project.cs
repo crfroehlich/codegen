@@ -84,12 +84,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChildrenCount { get; set; }
 
+
         [ApiMember(Name = nameof(Client), Description = "Client", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Client { get; set; }
         [ApiMember(Name = nameof(ClientId), Description = "Primary Key of Client", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClientId { get; set; }
+
 
         [ApiMember(Name = nameof(DatabaseDeadline), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -101,6 +103,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DatabaseDeadlineCount { get; set; }
 
+
         [ApiMember(Name = nameof(DatabaseName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string DatabaseName { get; set; }
@@ -111,12 +114,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DatabaseNameCount { get; set; }
 
+
         [ApiMember(Name = nameof(Dataset), Description = "DataSet", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Dataset { get; set; }
         [ApiMember(Name = nameof(DatasetId), Description = "Primary Key of DataSet", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DatasetId { get; set; }
+
 
         [ApiMember(Name = nameof(DeliverableDeadline), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -128,6 +133,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DeliverableDeadlineCount { get; set; }
 
+
         [ApiMember(Name = nameof(FqId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FqId { get; set; }
@@ -138,12 +144,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FqIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(FqWorkflow), Description = "Workflow", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference FqWorkflow { get; set; }
         [ApiMember(Name = nameof(FqWorkflowId), Description = "Primary Key of Workflow", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FqWorkflowId { get; set; }
+
 
         [ApiMember(Name = nameof(LegacyPackageId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -155,12 +163,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LegacyPackageIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(Library), Description = "LibrarySet", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Library { get; set; }
         [ApiMember(Name = nameof(LibraryId), Description = "Primary Key of LibrarySet", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LibraryId { get; set; }
+
 
         [ApiMember(Name = nameof(LibraryPackageId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -172,6 +182,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LibraryPackageIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(LibraryPackageName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string LibraryPackageName { get; set; }
@@ -181,6 +192,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(LibraryPackageNameCount), Description = "LibraryPackageName Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LibraryPackageNameCount { get; set; }
+
 
         [ApiMember(Name = nameof(Number), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -192,6 +204,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NumberCount { get; set; }
 
+
         [ApiMember(Name = nameof(OperationsDeliverable), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OperationsDeliverable { get; set; }
@@ -201,6 +214,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OperationsDeliverableCount), Description = "OperationsDeliverable Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OperationsDeliverableCount { get; set; }
+
 
         [ApiMember(Name = nameof(OpportunityId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -212,6 +226,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OpportunityIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(OpportunityName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OpportunityName { get; set; }
@@ -222,12 +237,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OpportunityNameCount { get; set; }
 
+
         [ApiMember(Name = nameof(Parent), Description = "Project", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Parent { get; set; }
         [ApiMember(Name = nameof(ParentId), Description = "Primary Key of Project", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentId { get; set; }
+
 
         [ApiMember(Name = nameof(PICO), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -239,6 +256,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PICOCount { get; set; }
 
+
         [ApiMember(Name = nameof(ProjectId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ProjectId { get; set; }
@@ -248,6 +266,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ProjectIdCount), Description = "ProjectId Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectIdCount { get; set; }
+
 
         [ApiMember(Name = nameof(ProjectName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -259,6 +278,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectNameCount { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
         [ApiMember(Name = nameof(Status), Description = "ForeignKeyStatusEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -269,6 +289,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(StatusCount), Description = "Status Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatusCount { get; set; }
+
 
         [ApiMember(Name = nameof(TimeCards), Description = "TimeCard", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

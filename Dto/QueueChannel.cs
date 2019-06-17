@@ -63,12 +63,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AutoDeleteCount { get; set; }
 
+
         [ApiMember(Name = nameof(BackgroundTask), Description = "BackgroundTask", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference BackgroundTask { get; set; }
         [ApiMember(Name = nameof(BackgroundTaskId), Description = "Primary Key of BackgroundTask", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BackgroundTaskId { get; set; }
+
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -80,6 +82,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
 
+
         [ApiMember(Name = nameof(Durable), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Durable { get; set; }
@@ -89,6 +92,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DurableCount), Description = "Durable Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DurableCount { get; set; }
+
 
         [ApiMember(Name = nameof(Enabled), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -100,6 +104,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnabledCount { get; set; }
 
+
         [ApiMember(Name = nameof(Exclusive), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Exclusive { get; set; }
@@ -109,6 +114,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ExclusiveCount), Description = "Exclusive Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ExclusiveCount { get; set; }
+
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

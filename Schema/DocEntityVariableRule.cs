@@ -91,8 +91,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Definition { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityVariableInstance.Rule), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -103,8 +105,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? InstancesCount { get { return Instances.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         public string Name { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -112,11 +116,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTable Rule { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RuleId { get { return Rule?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -125,6 +131,7 @@ namespace Services.Schema
         public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

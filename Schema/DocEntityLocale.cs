@@ -85,8 +85,10 @@ namespace Services.Schema
         [Field(Nullable = false)]
         public string Country { get; set; }
 
+
         [Field(Nullable = false)]
         public string Language { get; set; }
+
 
         [Field(Nullable = false)]
         public string TimeZone { get; set; }

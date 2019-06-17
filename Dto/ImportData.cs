@@ -80,6 +80,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CompletedOnCount { get; set; }
 
+
         [ApiMember(Name = nameof(DataSets), Description = "DataSet", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> DataSets { get; set; }
@@ -90,12 +91,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataSetsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Document { get; set; }
         [ApiMember(Name = nameof(DocumentId), Description = "Primary Key of Document", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get; set; }
+
 
         [ApiMember(Name = nameof(ErrorData), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -107,6 +110,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ErrorDataCount { get; set; }
 
+
         [ApiMember(Name = nameof(ExtractUrl), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ExtractUrl { get; set; }
@@ -116,6 +120,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ExtractUrlCount), Description = "ExtractUrl Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ExtractUrlCount { get; set; }
+
 
         [ApiMember(Name = nameof(HighPriority), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -127,6 +132,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HighPriorityCount { get; set; }
 
+
         [ApiMember(Name = nameof(ImportFr), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool ImportFr { get; set; }
@@ -137,6 +143,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportFrCount { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Default",@"DocData",@"Extract",@"Import Data"})]
         [ApiMember(Name = nameof(ImportLocation), Description = "LookupTable", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -144,6 +151,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ImportLocationId), Description = "Primary Key of LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportLocationId { get; set; }
+
 
         [ApiMember(Name = nameof(ImportNewName), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -155,6 +163,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportNewNameCount { get; set; }
 
+
         [ApiMember(Name = nameof(ImportTable), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool ImportTable { get; set; }
@@ -164,6 +173,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ImportTableCount), Description = "ImportTable Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportTableCount { get; set; }
+
 
         [ApiMember(Name = nameof(ImportText), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -175,6 +185,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportTextCount { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
         [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -182,6 +193,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ImportTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportTypeId { get; set; }
+
 
         [ApiMember(Name = nameof(IsLegacy), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -193,6 +205,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsLegacyCount { get; set; }
 
+
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Order { get; set; }
@@ -202,6 +215,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OrderCount), Description = "Order Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OrderCount { get; set; }
+
 
         [ApiMember(Name = nameof(ReferenceId), Description = "int?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -213,12 +227,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReferenceIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(RequestedBy), Description = "User", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference RequestedBy { get; set; }
         [ApiMember(Name = nameof(RequestedById), Description = "Primary Key of User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RequestedById { get; set; }
+
 
         [ApiMember(Name = nameof(RequestedOn), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -230,6 +246,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RequestedOnCount { get; set; }
 
+
         [ApiMember(Name = nameof(StartedOn), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? StartedOn { get; set; }
@@ -239,6 +256,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(StartedOnCount), Description = "StartedOn Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StartedOnCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Already Imported",@"Cancelled",@"Failed",@"No JSON Found",@"Processing",@"Queued",@"Succeeded"})]
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = true)]

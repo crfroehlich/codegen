@@ -41,7 +41,7 @@ namespace Services.Dto
         public DocumentBase(int? id) : this(DocConvert.ToInt(id)) {}
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocumentBase(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pArticleId, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, Reference pDatabaseType, int? pDatabaseTypeId, List<Reference> pDocumentSets, int? pDocumentSetsCount, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : this(DocConvert.ToInt(pId)) 
+        public DocumentBase(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pArticleId, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, DatabaseTypeEnm? pDatabaseType, List<Reference> pDocumentSets, int? pDocumentSetsCount, DocumentTypeEnm? pDocumentType, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, StudyImportTypeEnm? pImportType, string pInstitution, string pISSN, string pIssue, string pJournalTitle, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, Reference pReconciliation, int? pReconciliationId, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : this(DocConvert.ToInt(pId)) 
         {
             Abstract = pAbstract;
             AccessionID = pAccessionID;
@@ -53,11 +53,9 @@ namespace Services.Dto
             Country = pCountry;
             CustomData = pCustomData;
             DatabaseType = pDatabaseType;
-            DatabaseTypeId = pDatabaseTypeId;
             DocumentSets = pDocumentSets;
             DocumentSetsCount = pDocumentSetsCount;
             DocumentType = pDocumentType;
-            DocumentTypeId = pDocumentTypeId;
             DOI = pDOI;
             EmbaseAccessionNumber = pEmbaseAccessionNumber;
             Emtree = pEmtree;
@@ -67,7 +65,6 @@ namespace Services.Dto
             Import = pImport;
             ImportId = pImportId;
             ImportType = pImportType;
-            ImportTypeId = pImportTypeId;
             Institution = pInstitution;
             ISSN = pISSN;
             Issue = pIssue;
@@ -83,6 +80,8 @@ namespace Services.Dto
             PublicationDate = pPublicationDate;
             PublicationYear = pPublicationYear;
             PubType = pPubType;
+            Reconciliation = pReconciliation;
+            ReconciliationId = pReconciliationId;
             ReferenceStudy = pReferenceStudy;
             SecondarySourceID = pSecondarySourceID;
             Source = pSource;
@@ -106,6 +105,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AbstractCount { get; set; }
 
+
         [ApiMember(Name = nameof(AccessionID), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string AccessionID { get; set; }
@@ -115,6 +115,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(AccessionIDCount), Description = "AccessionID Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AccessionIDCount { get; set; }
+
 
         [ApiMember(Name = nameof(Acronym), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -126,6 +127,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AcronymCount { get; set; }
 
+
         [ApiMember(Name = nameof(ArticleId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ArticleId { get; set; }
@@ -135,6 +137,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ArticleIdCount), Description = "ArticleId Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ArticleIdCount { get; set; }
+
 
         [ApiMember(Name = nameof(Authors), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -146,6 +149,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AuthorsCount { get; set; }
 
+
         [ApiMember(Name = nameof(CochraneID), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string CochraneID { get; set; }
@@ -155,6 +159,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CochraneIDCount), Description = "CochraneID Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CochraneIDCount { get; set; }
+
 
         [ApiMember(Name = nameof(CorporateAuthor), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -166,6 +171,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CorporateAuthorCount { get; set; }
 
+
         [ApiMember(Name = nameof(Country), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Country { get; set; }
@@ -175,6 +181,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CountryCount), Description = "Country Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CountryCount { get; set; }
+
 
         [ApiMember(Name = nameof(CustomData), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -186,13 +193,18 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CustomDataCount { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"ASCO",@"ClinicalTrials.gov",@"Cochrane",@"Embase",@"IOVS",@"Manual Entry",@"MEDLINE",@"Northern Light"})]
-        [ApiMember(Name = nameof(DatabaseType), Description = "LookupTable", IsRequired = false)]
-[GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public Reference DatabaseType { get; set; }
-        [ApiMember(Name = nameof(DatabaseTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
+        [ApiMember(Name = nameof(DatabaseType), Description = "DatabaseTypeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DatabaseTypeId { get; set; }
+        public DatabaseTypeEnm? DatabaseType { get; set; }
+        [ApiMember(Name = nameof(DatabaseTypeIds), Description = "DatabaseType Ids", IsRequired = false)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public List<int> DatabaseTypeIds { get; set; }
+        [ApiMember(Name = nameof(DatabaseTypeCount), Description = "DatabaseType Count", IsRequired = false)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public int? DatabaseTypeCount { get; set; }
+
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -204,13 +216,18 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetsCount { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"CTG",@"Data Hub",@"DOC Extract",@"DOC Library",@"PubMed"})]
-        [ApiMember(Name = nameof(DocumentType), Description = "LookupTable", IsRequired = false)]
-[GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public Reference DocumentType { get; set; }
-        [ApiMember(Name = nameof(DocumentTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
+        [ApiMember(Name = nameof(DocumentType), Description = "DocumentTypeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DocumentTypeId { get; set; }
+        public DocumentTypeEnm? DocumentType { get; set; }
+        [ApiMember(Name = nameof(DocumentTypeIds), Description = "DocumentType Ids", IsRequired = false)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public List<int> DocumentTypeIds { get; set; }
+        [ApiMember(Name = nameof(DocumentTypeCount), Description = "DocumentType Count", IsRequired = false)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public int? DocumentTypeCount { get; set; }
+
 
         [ApiMember(Name = nameof(DOI), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -222,6 +239,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DOICount { get; set; }
 
+
         [ApiMember(Name = nameof(EmbaseAccessionNumber), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string EmbaseAccessionNumber { get; set; }
@@ -231,6 +249,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(EmbaseAccessionNumberCount), Description = "EmbaseAccessionNumber Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EmbaseAccessionNumberCount { get; set; }
+
 
         [ApiMember(Name = nameof(Emtree), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -242,6 +261,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EmtreeCount { get; set; }
 
+
         [ApiMember(Name = nameof(ErrataText), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ErrataText { get; set; }
@@ -251,6 +271,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ErrataTextCount), Description = "ErrataText Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ErrataTextCount { get; set; }
+
 
         [ApiMember(Name = nameof(FullText), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -262,6 +283,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FullTextCount { get; set; }
 
+
         [ApiMember(Name = nameof(FullTextURL), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string FullTextURL { get; set; }
@@ -272,6 +294,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FullTextURLCount { get; set; }
 
+
         [ApiMember(Name = nameof(Import), Description = "ImportData", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Import { get; set; }
@@ -279,13 +302,18 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportId { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
-        [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
-[GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public Reference ImportType { get; set; }
-        [ApiMember(Name = nameof(ImportTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
+        [ApiMember(Name = nameof(ImportType), Description = "StudyImportTypeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ImportTypeId { get; set; }
+        public StudyImportTypeEnm? ImportType { get; set; }
+        [ApiMember(Name = nameof(ImportTypeIds), Description = "ImportType Ids", IsRequired = false)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public List<int> ImportTypeIds { get; set; }
+        [ApiMember(Name = nameof(ImportTypeCount), Description = "ImportType Count", IsRequired = false)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public int? ImportTypeCount { get; set; }
+
 
         [ApiMember(Name = nameof(Institution), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -297,6 +325,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? InstitutionCount { get; set; }
 
+
         [ApiMember(Name = nameof(ISSN), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ISSN { get; set; }
@@ -306,6 +335,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ISSNCount), Description = "ISSN Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ISSNCount { get; set; }
+
 
         [ApiMember(Name = nameof(Issue), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -317,6 +347,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IssueCount { get; set; }
 
+
         [ApiMember(Name = nameof(JournalTitle), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string JournalTitle { get; set; }
@@ -326,6 +357,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(JournalTitleCount), Description = "JournalTitle Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? JournalTitleCount { get; set; }
+
 
         [ApiMember(Name = nameof(LegacySync), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -337,6 +369,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LegacySyncCount { get; set; }
 
+
         [ApiMember(Name = nameof(LookupTables), Description = "LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> LookupTables { get; set; }
@@ -346,6 +379,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(LookupTablesCount), Description = "LookupTable Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LookupTablesCount { get; set; }
+
 
         [ApiMember(Name = nameof(MedlineID), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -357,6 +391,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MedlineIDCount { get; set; }
 
+
         [ApiMember(Name = nameof(MeSH), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string MeSH { get; set; }
@@ -366,6 +401,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(MeSHCount), Description = "MeSH Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MeSHCount { get; set; }
+
 
         [ApiMember(Name = nameof(Pages), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -377,6 +413,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PagesCount { get; set; }
 
+
         [ApiMember(Name = nameof(ParentChildStatus), Description = "char?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public char? ParentChildStatus { get; set; }
@@ -386,6 +423,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ParentChildStatusCount), Description = "ParentChildStatus Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentChildStatusCount { get; set; }
+
 
         [ApiMember(Name = nameof(ParentID), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -397,6 +435,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentIDCount { get; set; }
 
+
         [ApiMember(Name = nameof(PublicationDate), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string PublicationDate { get; set; }
@@ -406,6 +445,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(PublicationDateCount), Description = "PublicationDate Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PublicationDateCount { get; set; }
+
 
         [ApiMember(Name = nameof(PublicationYear), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -417,6 +457,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PublicationYearCount { get; set; }
 
+
         [ApiMember(Name = nameof(PubType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string PubType { get; set; }
@@ -426,6 +467,15 @@ namespace Services.Dto
         [ApiMember(Name = nameof(PubTypeCount), Description = "PubType Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PubTypeCount { get; set; }
+
+
+        [ApiMember(Name = nameof(Reconciliation), Description = "ReconcileDocument", IsRequired = false)]
+[GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public Reference Reconciliation { get; set; }
+        [ApiMember(Name = nameof(ReconciliationId), Description = "Primary Key of ReconcileDocument", IsRequired = false)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public int? ReconciliationId { get; set; }
+
 
         [ApiMember(Name = nameof(ReferenceStudy), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -437,6 +487,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReferenceStudyCount { get; set; }
 
+
         [ApiMember(Name = nameof(SecondarySourceID), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SecondarySourceID { get; set; }
@@ -446,6 +497,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SecondarySourceIDCount), Description = "SecondarySourceID Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SecondarySourceIDCount { get; set; }
+
 
         [ApiMember(Name = nameof(Source), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -457,6 +509,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SourceCount { get; set; }
 
+
         [ApiMember(Name = nameof(StorageModel), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string StorageModel { get; set; }
@@ -466,6 +519,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(StorageModelCount), Description = "StorageModel Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StorageModelCount { get; set; }
+
 
         [ApiMember(Name = nameof(SupplementalFiles), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -477,6 +531,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SupplementalFilesCount { get; set; }
 
+
         [ApiMember(Name = nameof(TaStudyDesign), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TaStudyDesign { get; set; }
@@ -486,6 +541,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TaStudyDesignCount), Description = "TaStudyDesign Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TaStudyDesignCount { get; set; }
+
 
         [ApiMember(Name = nameof(Title), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -497,6 +553,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TitleCount { get; set; }
 
+
         [ApiMember(Name = nameof(TrialOutcome), Description = "short?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public short? TrialOutcome { get; set; }
@@ -507,6 +564,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TrialOutcomeCount { get; set; }
 
+
         [ApiMember(Name = nameof(VariableData), Description = "VariableInstance", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> VariableData { get; set; }
@@ -516,6 +574,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(VariableDataCount), Description = "VariableInstance Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? VariableDataCount { get; set; }
+
 
         [ApiMember(Name = nameof(Volume), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -530,7 +589,7 @@ namespace Services.Dto
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public void Deconstruct(out string pAbstract, out string pAccessionID, out string pAcronym, out string pArticleId, out string pAuthors, out string pCochraneID, out string pCorporateAuthor, out string pCountry, out string pCustomData, out Reference pDatabaseType, out int? pDatabaseTypeId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out Reference pDocumentType, out int? pDocumentTypeId, out string pDOI, out string pEmbaseAccessionNumber, out string pEmtree, out string pErrataText, out string pFullText, out string pFullTextURL, out Reference pImport, out int? pImportId, out Reference pImportType, out int? pImportTypeId, out string pInstitution, out string pISSN, out string pIssue, out string pJournalTitle, out DateTime? pLegacySync, out List<Reference> pLookupTables, out int? pLookupTablesCount, out int? pMedlineID, out string pMeSH, out string pPages, out char? pParentChildStatus, out int? pParentID, out string pPublicationDate, out int? pPublicationYear, out string pPubType, out int? pReferenceStudy, out string pSecondarySourceID, out string pSource, out string pStorageModel, out string pSupplementalFiles, out string pTaStudyDesign, out string pTitle, out short? pTrialOutcome, out List<Reference> pVariableData, out int? pVariableDataCount, out string pVolume)
+        public void Deconstruct(out string pAbstract, out string pAccessionID, out string pAcronym, out string pArticleId, out string pAuthors, out string pCochraneID, out string pCorporateAuthor, out string pCountry, out string pCustomData, out DatabaseTypeEnm? pDatabaseType, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out DocumentTypeEnm? pDocumentType, out string pDOI, out string pEmbaseAccessionNumber, out string pEmtree, out string pErrataText, out string pFullText, out string pFullTextURL, out Reference pImport, out int? pImportId, out StudyImportTypeEnm? pImportType, out string pInstitution, out string pISSN, out string pIssue, out string pJournalTitle, out DateTime? pLegacySync, out List<Reference> pLookupTables, out int? pLookupTablesCount, out int? pMedlineID, out string pMeSH, out string pPages, out char? pParentChildStatus, out int? pParentID, out string pPublicationDate, out int? pPublicationYear, out string pPubType, out Reference pReconciliation, out int? pReconciliationId, out int? pReferenceStudy, out string pSecondarySourceID, out string pSource, out string pStorageModel, out string pSupplementalFiles, out string pTaStudyDesign, out string pTitle, out short? pTrialOutcome, out List<Reference> pVariableData, out int? pVariableDataCount, out string pVolume)
         {
             pAbstract = Abstract;
             pAccessionID = AccessionID;
@@ -542,11 +601,9 @@ namespace Services.Dto
             pCountry = Country;
             pCustomData = CustomData;
             pDatabaseType = DatabaseType;
-            pDatabaseTypeId = DatabaseTypeId;
             pDocumentSets = DocumentSets;
             pDocumentSetsCount = DocumentSetsCount;
             pDocumentType = DocumentType;
-            pDocumentTypeId = DocumentTypeId;
             pDOI = DOI;
             pEmbaseAccessionNumber = EmbaseAccessionNumber;
             pEmtree = Emtree;
@@ -556,7 +613,6 @@ namespace Services.Dto
             pImport = Import;
             pImportId = ImportId;
             pImportType = ImportType;
-            pImportTypeId = ImportTypeId;
             pInstitution = Institution;
             pISSN = ISSN;
             pIssue = Issue;
@@ -572,6 +628,8 @@ namespace Services.Dto
             pPublicationDate = PublicationDate;
             pPublicationYear = PublicationYear;
             pPubType = PubType;
+            pReconciliation = Reconciliation;
+            pReconciliationId = ReconciliationId;
             pReferenceStudy = ReferenceStudy;
             pSecondarySourceID = SecondarySourceID;
             pSource = Source;
@@ -587,8 +645,8 @@ namespace Services.Dto
 
         //Not ready until C# v8.?
         //[GeneratedCodeAttribute("T4", "1.0.0.0")]
-        //public DocumentBase With(int? pId = Id, string pAbstract = Abstract, string pAccessionID = AccessionID, string pAcronym = Acronym, string pArticleId = ArticleId, string pAuthors = Authors, string pCochraneID = CochraneID, string pCorporateAuthor = CorporateAuthor, string pCountry = Country, string pCustomData = CustomData, Reference pDatabaseType = DatabaseType, int? pDatabaseTypeId = DatabaseTypeId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, Reference pDocumentType = DocumentType, int? pDocumentTypeId = DocumentTypeId, string pDOI = DOI, string pEmbaseAccessionNumber = EmbaseAccessionNumber, string pEmtree = Emtree, string pErrataText = ErrataText, string pFullText = FullText, string pFullTextURL = FullTextURL, Reference pImport = Import, int? pImportId = ImportId, Reference pImportType = ImportType, int? pImportTypeId = ImportTypeId, string pInstitution = Institution, string pISSN = ISSN, string pIssue = Issue, string pJournalTitle = JournalTitle, DateTime? pLegacySync = LegacySync, List<Reference> pLookupTables = LookupTables, int? pLookupTablesCount = LookupTablesCount, int? pMedlineID = MedlineID, string pMeSH = MeSH, string pPages = Pages, char? pParentChildStatus = ParentChildStatus, int? pParentID = ParentID, string pPublicationDate = PublicationDate, int? pPublicationYear = PublicationYear, string pPubType = PubType, int? pReferenceStudy = ReferenceStudy, string pSecondarySourceID = SecondarySourceID, string pSource = Source, string pStorageModel = StorageModel, string pSupplementalFiles = SupplementalFiles, string pTaStudyDesign = TaStudyDesign, string pTitle = Title, short? pTrialOutcome = TrialOutcome, List<Reference> pVariableData = VariableData, int? pVariableDataCount = VariableDataCount, string pVolume = Volume) => 
-        //	new DocumentBase(pId, pAbstract, pAccessionID, pAcronym, pArticleId, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDatabaseTypeId, pDocumentSets, pDocumentSetsCount, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume);
+        //public DocumentBase With(int? pId = Id, string pAbstract = Abstract, string pAccessionID = AccessionID, string pAcronym = Acronym, string pArticleId = ArticleId, string pAuthors = Authors, string pCochraneID = CochraneID, string pCorporateAuthor = CorporateAuthor, string pCountry = Country, string pCustomData = CustomData, DatabaseTypeEnm? pDatabaseType = DatabaseType, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, DocumentTypeEnm? pDocumentType = DocumentType, string pDOI = DOI, string pEmbaseAccessionNumber = EmbaseAccessionNumber, string pEmtree = Emtree, string pErrataText = ErrataText, string pFullText = FullText, string pFullTextURL = FullTextURL, Reference pImport = Import, int? pImportId = ImportId, StudyImportTypeEnm? pImportType = ImportType, string pInstitution = Institution, string pISSN = ISSN, string pIssue = Issue, string pJournalTitle = JournalTitle, DateTime? pLegacySync = LegacySync, List<Reference> pLookupTables = LookupTables, int? pLookupTablesCount = LookupTablesCount, int? pMedlineID = MedlineID, string pMeSH = MeSH, string pPages = Pages, char? pParentChildStatus = ParentChildStatus, int? pParentID = ParentID, string pPublicationDate = PublicationDate, int? pPublicationYear = PublicationYear, string pPubType = PubType, Reference pReconciliation = Reconciliation, int? pReconciliationId = ReconciliationId, int? pReferenceStudy = ReferenceStudy, string pSecondarySourceID = SecondarySourceID, string pSource = Source, string pStorageModel = StorageModel, string pSupplementalFiles = SupplementalFiles, string pTaStudyDesign = TaStudyDesign, string pTitle = Title, short? pTrialOutcome = TrialOutcome, List<Reference> pVariableData = VariableData, int? pVariableDataCount = VariableDataCount, string pVolume = Volume) => 
+        //	new DocumentBase(pId, pAbstract, pAccessionID, pAcronym, pArticleId, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDocumentSets, pDocumentSetsCount, pDocumentType, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pInstitution, pISSN, pIssue, pJournalTitle, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReconciliation, pReconciliationId, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume);
 
     }
 
@@ -605,14 +663,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Document(int id) : base(id) {}
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public Document(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pArticleId, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, Reference pDatabaseType, int? pDatabaseTypeId, List<Reference> pDocumentSets, int? pDocumentSetsCount, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) :
-            base(pId, pAbstract, pAccessionID, pAcronym, pArticleId, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDatabaseTypeId, pDocumentSets, pDocumentSetsCount, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume) { }
+        public Document(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pArticleId, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, DatabaseTypeEnm? pDatabaseType, List<Reference> pDocumentSets, int? pDocumentSetsCount, DocumentTypeEnm? pDocumentType, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, StudyImportTypeEnm? pImportType, string pInstitution, string pISSN, string pIssue, string pJournalTitle, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, Reference pReconciliation, int? pReconciliationId, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) :
+            base(pId, pAbstract, pAccessionID, pAcronym, pArticleId, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDocumentSets, pDocumentSetsCount, pDocumentType, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pInstitution, pISSN, pIssue, pJournalTitle, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReconciliation, pReconciliationId, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume) { }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public static List<string> Fields => DocTools.Fields<Document>();
 
         private List<string> _Select;
         [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Abstract),nameof(AccessionID),nameof(Acronym),nameof(ArticleId),nameof(Authors),nameof(CochraneID),nameof(CorporateAuthor),nameof(Country),nameof(Created),nameof(CreatorId),nameof(CustomData),nameof(DatabaseType),nameof(DatabaseTypeId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(DocumentType),nameof(DocumentTypeId),nameof(DOI),nameof(EmbaseAccessionNumber),nameof(Emtree),nameof(ErrataText),nameof(FullText),nameof(FullTextURL),nameof(Gestalt),nameof(Import),nameof(ImportId),nameof(ImportType),nameof(ImportTypeId),nameof(Institution),nameof(ISSN),nameof(Issue),nameof(JournalTitle),nameof(LegacySync),nameof(Locked),nameof(LookupTables),nameof(LookupTablesCount),nameof(MedlineID),nameof(MeSH),nameof(Pages),nameof(ParentChildStatus),nameof(ParentID),nameof(PublicationDate),nameof(PublicationYear),nameof(PubType),nameof(ReferenceStudy),nameof(SecondarySourceID),nameof(Source),nameof(StorageModel),nameof(SupplementalFiles),nameof(TaStudyDesign),nameof(Title),nameof(TrialOutcome),nameof(Updated),nameof(VariableData),nameof(VariableDataCount),nameof(VersionNo),nameof(Volume)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Abstract),nameof(AccessionID),nameof(Acronym),nameof(ArticleId),nameof(Authors),nameof(CochraneID),nameof(CorporateAuthor),nameof(Country),nameof(Created),nameof(CreatorId),nameof(CustomData),nameof(DatabaseType),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(DocumentType),nameof(DOI),nameof(EmbaseAccessionNumber),nameof(Emtree),nameof(ErrataText),nameof(FullText),nameof(FullTextURL),nameof(Gestalt),nameof(Import),nameof(ImportId),nameof(ImportType),nameof(Institution),nameof(ISSN),nameof(Issue),nameof(JournalTitle),nameof(LegacySync),nameof(Locked),nameof(LookupTables),nameof(LookupTablesCount),nameof(MedlineID),nameof(MeSH),nameof(Pages),nameof(ParentChildStatus),nameof(ParentID),nameof(PublicationDate),nameof(PublicationYear),nameof(PubType),nameof(Reconciliation),nameof(ReconciliationId),nameof(ReferenceStudy),nameof(SecondarySourceID),nameof(Source),nameof(StorageModel),nameof(SupplementalFiles),nameof(TaStudyDesign),nameof(Title),nameof(TrialOutcome),nameof(Updated),nameof(VariableData),nameof(VariableDataCount),nameof(VersionNo),nameof(Volume)})]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public override List<string> Select
         {
@@ -682,15 +740,13 @@ namespace Services.Dto
         public List<string> Countrys { get; set; }
         public string CustomData { get; set; }
         public List<string> CustomDatas { get; set; }
-        public Reference DatabaseType { get; set; }
-        public List<int> DatabaseTypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"ASCO",@"ClinicalTrials.gov",@"Cochrane",@"Embase",@"IOVS",@"Manual Entry",@"MEDLINE",@"Northern Light"})]
-        public List<string> DatabaseTypeNames { get; set; }
+        public DatabaseTypeEnm? DatabaseType { get; set; }
+        public List<DatabaseTypeEnm?> DatabaseTypes { get; set; }
         public List<int> DocumentSetsIds { get; set; }
-        public Reference DocumentType { get; set; }
-        public List<int> DocumentTypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"CTG",@"Data Hub",@"DOC Extract",@"DOC Library",@"PubMed"})]
-        public List<string> DocumentTypeNames { get; set; }
+        public DocumentTypeEnm? DocumentType { get; set; }
+        public List<DocumentTypeEnm?> DocumentTypes { get; set; }
         public string DOI { get; set; }
         public List<string> DOIs { get; set; }
         public string EmbaseAccessionNumber { get; set; }
@@ -705,10 +761,9 @@ namespace Services.Dto
         public List<string> FullTextURLs { get; set; }
         public Reference Import { get; set; }
         public List<int> ImportIds { get; set; }
-        public Reference ImportType { get; set; }
-        public List<int> ImportTypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
-        public List<string> ImportTypeNames { get; set; }
+        public StudyImportTypeEnm? ImportType { get; set; }
+        public List<StudyImportTypeEnm?> ImportTypes { get; set; }
         public string Institution { get; set; }
         public List<string> Institutions { get; set; }
         public string ISSN { get; set; }
@@ -733,6 +788,8 @@ namespace Services.Dto
         public int? PublicationYear { get; set; }
         public string PubType { get; set; }
         public List<string> PubTypes { get; set; }
+        public Reference Reconciliation { get; set; }
+        public List<int> ReconciliationIds { get; set; }
         public int? ReferenceStudy { get; set; }
         public string SecondarySourceID { get; set; }
         public List<string> SecondarySourceIDs { get; set; }
@@ -818,6 +875,7 @@ namespace Services.Dto
         public bool doPublicationDate { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.PublicationDate))); }
         public bool doPublicationYear { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.PublicationYear))); }
         public bool doPubType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.PubType))); }
+        public bool doReconciliation { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Reconciliation))); }
         public bool doReferenceStudy { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.ReferenceStudy))); }
         public bool doSecondarySourceID { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.SecondarySourceID))); }
         public bool doSource { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Source))); }

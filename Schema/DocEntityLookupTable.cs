@@ -91,6 +91,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityLookupCategory> Categories { get; private set; }
@@ -98,6 +99,7 @@ namespace Services.Schema
         public List<int> CategoriesIds => Categories.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CategoriesCount { get { return Categories.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityDocument.LookupTables), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -108,11 +110,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentsCount { get { return Documents.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTableEnum Enum { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
+
 
         [Field(Nullable = false)]
         public string Name { get; set; }

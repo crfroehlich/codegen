@@ -85,6 +85,7 @@ namespace Services.Schema
         [Field]
         public string BioPortal { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityTermCategory> Categories { get; private set; }
@@ -93,8 +94,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CategoriesCount { get { return Categories.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string CUI { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -102,17 +105,22 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string MedDRA { get; set; }
+
 
         [Field(Nullable = false, Length = 800)]
         public string Name { get; set; }
 
+
         [Field]
         public string RxNorm { get; set; }
 
+
         [Field]
         public string SNOWMED { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Master), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -123,8 +131,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string TUI { get; set; }
+
 
         [Field]
         public string URI { get; set; }

@@ -68,6 +68,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChildrenCount { get; set; }
 
+
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Data { get; set; }
@@ -77,6 +78,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataCount { get; set; }
+
 
         [ApiMember(Name = nameof(OwnerId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -88,6 +90,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(OwnerType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OwnerType { get; set; }
@@ -98,12 +101,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerTypeCount { get; set; }
 
+
         [ApiMember(Name = nameof(Parent), Description = "Junction", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Parent { get; set; }
         [ApiMember(Name = nameof(ParentId), Description = "Primary Key of Junction", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentId { get; set; }
+
 
         [ApiMember(Name = nameof(TargetId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -115,6 +120,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TargetIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(TargetType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TargetType { get; set; }
@@ -125,6 +131,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TargetTypeCount { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Approval",@"Comment",@"Flagged for Approval",@"Rating"})]
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -132,6 +139,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Type_Id), Description = "Primary Key of LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Type_Id { get; set; }
+
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

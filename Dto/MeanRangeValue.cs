@@ -64,9 +64,11 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MeanVarianceTypeId { get; set; }
 
+
         [ApiMember(Name = nameof(MidSpread), Description = "Units", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TypeUnits MidSpread { get; set; }
+
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -78,6 +80,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OrderCount { get; set; }
 
+
         [ApiMember(Name = nameof(Owners), Description = "MeanRanges", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<MeanRanges> Owners { get; set; }
@@ -87,6 +90,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OwnersCount), Description = "MeanRanges Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnersCount { get; set; }
+
 
         [ApiMember(Name = nameof(Percent), Description = "decimal?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -98,6 +102,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PercentCount { get; set; }
 
+
         [ApiMember(Name = nameof(PercentLow), Description = "decimal?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public decimal? PercentLow { get; set; }
@@ -108,9 +113,11 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PercentLowCount { get; set; }
 
+
         [ApiMember(Name = nameof(Range), Description = "UnitsRange", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TypeUnitsRange Range { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"CI",@"IQR",@"Percentile",@"Total",@"Variance CI",@"Variance IQR",@"Variance Percentile",@"Variance Total"})]
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]

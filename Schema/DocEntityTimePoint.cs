@@ -85,17 +85,21 @@ namespace Services.Schema
         [Field(DefaultValue = true)]
         public bool IsAbsolute { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocStructureMeanBase MeanValue { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocStructureUnitValue SingleValue { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocStructureUnitRange TotalValue { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

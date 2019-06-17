@@ -61,17 +61,21 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsAbsoluteCount { get; set; }
 
+
         [ApiMember(Name = nameof(MeanValue), Description = "MeanBase", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TypeMeanBase MeanValue { get; set; }
+
 
         [ApiMember(Name = nameof(SingleValue), Description = "UnitValue", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TypeUnitValue SingleValue { get; set; }
 
+
         [ApiMember(Name = nameof(TotalValue), Description = "UnitRange", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TypeUnitRange TotalValue { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"After",@"Average",@"Before",@"Duration",@"During",@"Max Range",@"Maximum",@"Mean",@"Median",@"N/A",@"None",@"Not Reported",@"Time Zero",@"Total",@"Varies"})]
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]

@@ -65,6 +65,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BindingCount { get; set; }
 
+
         [ApiMember(Name = nameof(BoundName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string BoundName { get; set; }
@@ -75,6 +76,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BoundNameCount { get; set; }
 
+
         [ApiMember(Name = nameof(LookupTable), Description = "LookupTable", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference LookupTable { get; set; }
@@ -82,12 +84,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LookupTableId { get; set; }
 
+
         [ApiMember(Name = nameof(Scope), Description = "Scope", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Scope { get; set; }
         [ApiMember(Name = nameof(ScopeId), Description = "Primary Key of Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopeId { get; set; }
+
 
         [ApiMember(Name = nameof(Synonyms), Description = "TermSynonym", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -98,6 +102,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SynonymsCount), Description = "TermSynonym Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SynonymsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

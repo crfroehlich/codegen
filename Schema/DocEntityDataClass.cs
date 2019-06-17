@@ -85,18 +85,23 @@ namespace Services.Schema
         [Field(DefaultValue = true)]
         public bool AllowDelete { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool AllSelectByDefault { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public ModelNameEnm? Base { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = 5)]
         public int CacheDuration { get; set; }
 
+
         [Field(Nullable = false)]
         public int ClassId { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -106,11 +111,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CustomCollectionsCount { get { return CustomCollections.Count(); } private set { var noid = value; } }
 
+
         [Field(DefaultValue = false)]
         public bool DELETE { get; set; }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -120,14 +128,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DontFlattenPropertiesCount { get { return DontFlattenProperties.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string DtoSuffix { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool FlattenReferences { get; set; }
 
+
         [Field(DefaultValue = true)]
         public bool GET { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -137,20 +149,26 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IgnorePropsCount { get { return IgnoreProps.Count(); } private set { var noid = value; } }
 
+
         [Field(DefaultValue = false)]
         public bool IsInsertOnly { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool IsReadOnly { get; set; }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
+
 
         [Field(DefaultValue = false)]
         public bool PATCH { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool POST { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityDataProperty.Class), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -161,8 +179,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PropertiesCount { get { return Properties.Count(); } private set { var noid = value; } }
 
+
         [Field(DefaultValue = false)]
         public bool PUT { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityDataTab.Class), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]

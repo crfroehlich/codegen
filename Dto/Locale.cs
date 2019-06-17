@@ -58,6 +58,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CountryCount { get; set; }
 
+
         [ApiMember(Name = nameof(Language), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Language { get; set; }
@@ -67,6 +68,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(LanguageCount), Description = "Language Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LanguageCount { get; set; }
+
 
         [ApiMember(Name = nameof(TimeZone), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

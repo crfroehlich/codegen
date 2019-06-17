@@ -88,6 +88,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityLookupTableBinding.Scope), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -96,6 +97,7 @@ namespace Services.Schema
         public List<int> BindingsIds => Bindings.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityBroadcast.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -106,14 +108,17 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BroadcastsCount { get { return Broadcasts.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityClient Client { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ClientId { get { return Client?.Id; } private set { var noid = value; } }
 
+
         [Field(DefaultValue = false)]
         public bool Delete { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -121,8 +126,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
+
         [Field(DefaultValue = false)]
         public bool Edit { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityHelp.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -133,8 +140,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HelpCount { get { return Help.Count(); } private set { var noid = value; } }
 
+
         [Field(DefaultValue = false)]
         public bool IsGlobal { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -144,6 +153,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopedCommentsCount { get { return ScopedComments.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityFile> ScopedFiles { get; private set; }
@@ -152,6 +162,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopedFilesCount { get { return ScopedFiles.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityTag> ScopedTags { get; private set; }
@@ -159,6 +170,7 @@ namespace Services.Schema
         public List<int> ScopedTagsIds => ScopedTags.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopedTagsCount { get { return ScopedTags.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Scope), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -169,21 +181,25 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityTeam Team { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TeamId { get { return Team?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = ScopeEnm.COMPOUND)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public ScopeEnm Type { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityUser User { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityVariableRule.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -194,8 +210,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? VariableRulesCount { get { return VariableRules.Count(); } private set { var noid = value; } }
 
+
         [Field(DefaultValue = true)]
         public bool View { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

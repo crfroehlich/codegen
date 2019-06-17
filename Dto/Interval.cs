@@ -61,12 +61,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CalendarDateEndId { get; set; }
 
+
         [ApiMember(Name = nameof(CalendarDateStart), Description = "DateTime", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTimeDto CalendarDateStart { get; set; }
         [ApiMember(Name = nameof(CalendarDateStartId), Description = "Primary Key of DateTime", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CalendarDateStartId { get; set; }
+
 
         [ApiMember(Name = nameof(CalendarType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -78,12 +80,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CalendarTypeCount { get; set; }
 
+
         [ApiMember(Name = nameof(FollowUp), Description = "TimePoint", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TimePoint FollowUp { get; set; }
         [ApiMember(Name = nameof(FollowUpId), Description = "Primary Key of TimePoint", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FollowUpId { get; set; }
+
 
         [ApiMember(Name = nameof(TimeOfDay), Description = "TimePoint", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

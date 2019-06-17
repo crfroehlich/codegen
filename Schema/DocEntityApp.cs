@@ -85,8 +85,10 @@ namespace Services.Schema
         [Field]
         public string Description { get; set; }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityPage.Apps), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -97,6 +99,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PagesCount { get { return Pages.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityRole.Apps), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -105,6 +108,7 @@ namespace Services.Schema
         public List<int> RolesIds => Roles.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityScope.App), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]

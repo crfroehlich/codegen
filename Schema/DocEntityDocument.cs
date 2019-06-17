@@ -85,35 +85,43 @@ namespace Services.Schema
         [Field(Length = int.MaxValue, LazyLoad = true)]
         public string Abstract { get; set; }
 
+
         [Field]
         public string AccessionID { get; set; }
+
 
         [Field]
         public string Acronym { get; set; }
 
+
         [Field(Length = 100)]
         public string ArticleId { get; set; }
+
 
         [Field]
         public string Authors { get; set; }
 
+
         [Field]
         public string CochraneID { get; set; }
+
 
         [Field]
         public string CorporateAuthor { get; set; }
 
+
         [Field]
         public string Country { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         public string CustomData { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocEntityLookupTable DatabaseType { get; set; }
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DatabaseTypeId { get { return DatabaseType?.Id; } private set { var noid = value; } }
+        public DatabaseTypeEnm? DatabaseType { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -123,29 +131,35 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocEntityLookupTable DocumentType { get; set; }
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DocumentTypeId { get { return DocumentType?.Id; } private set { var noid = value; } }
+        public DocumentTypeEnm? DocumentType { get; set; }
+
 
         [Field]
         public string DOI { get; set; }
 
+
         [Field]
         public string EmbaseAccessionNumber { get; set; }
+
 
         [Field]
         public string Emtree { get; set; }
 
+
         [Field]
         public string ErrataText { get; set; }
+
 
         [Field]
         public string FullText { get; set; }
 
+
         [Field]
         public string FullTextURL { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -153,26 +167,31 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImportId { get { return Import?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocEntityLookupTable ImportType { get; set; }
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ImportTypeId { get { return ImportType?.Id; } private set { var noid = value; } }
+        public StudyImportTypeEnm? ImportType { get; set; }
+
 
         [Field]
         public string Institution { get; set; }
 
+
         [Field]
         public string ISSN { get; set; }
+
 
         [Field]
         public string Issue { get; set; }
 
+
         [Field]
         public string JournalTitle { get; set; }
 
+
         [Field]
         public DateTime? LegacySync { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -182,38 +201,57 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LookupTablesCount { get { return LookupTables.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public int? MedlineID { get; set; }
+
 
         [Field]
         public string MeSH { get; set; }
 
+
         [Field]
         public string Pages { get; set; }
+
 
         [Field]
         public char? ParentChildStatus { get; set; }
 
+
         [Field]
         public int? ParentID { get; set; }
+
 
         [Field]
         public string PublicationDate { get; set; }
 
+
         [Field]
         public int? PublicationYear { get; set; }
+
 
         [Field]
         public string PubType { get; set; }
 
+
+        [Field]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public DocEntityReconcileDocument Reconciliation { get; set; }
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public int? ReconciliationId { get { return Reconciliation?.Id; } private set { var noid = value; } }
+
+
         [Field]
         public int ReferenceStudy { get; set; }
+
 
         [Field]
         public string SecondarySourceID { get; set; }
 
+
         [Field]
         public string Source { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -231,17 +269,22 @@ namespace Services.Schema
             }
         }
 
+
         [Field(DefaultValue = "{}", Length = int.MaxValue)]
         public string SupplementalFiles { get; set; }
+
 
         [Field]
         public string TaStudyDesign { get; set; }
 
+
         [Field]
         public string Title { get; set; }
 
+
         [Field]
         public short? TrialOutcome { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityVariableInstance.Document), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -251,6 +294,7 @@ namespace Services.Schema
         public List<int> VariableDataIds => VariableData.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? VariableDataCount { get { return VariableData.Count(); } private set { var noid = value; } }
+
 
         [Field]
         public string Volume { get; set; }
@@ -364,21 +408,7 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(null != DatabaseType && DatabaseType?.Enum?.Name != "DatabaseType")
-                {
-                    isValid = false;
-                    message += " DatabaseType is a " + DatabaseType?.Enum?.Name + ", but must be a DatabaseType.";
-                }
-                if(null != DocumentType && DocumentType?.Enum?.Name != "DocumentType")
-                {
-                    isValid = false;
-                    message += " DocumentType is a " + DocumentType?.Enum?.Name + ", but must be a DocumentType.";
-                }
-                if(null != ImportType && ImportType?.Enum?.Name != "StudyImportType")
-                {
-                    isValid = false;
-                    message += " ImportType is a " + ImportType?.Enum?.Name + ", but must be a StudyImportType.";
-                }
+
 
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;

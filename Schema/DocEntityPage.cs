@@ -90,8 +90,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppsCount { get { return Apps.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityGlossary.Page), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -102,6 +104,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? GlossaryCount { get { return Glossary.Count(); } private set { var noid = value; } }
 
+
         [Field]
         [Association(PairTo = nameof(DocEntityHelp.Pages), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -111,8 +114,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HelpCount { get { return Help.Count(); } private set { var noid = value; } }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityRole.Pages), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]

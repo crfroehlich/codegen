@@ -85,8 +85,10 @@ namespace Services.Schema
         [Field(Nullable = false, DefaultValue = true)]
         public bool IsBindable { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = true)]
         public bool IsGlobal { get; set; }
+
 
         [Field(Nullable = false, Length = 800)]
         public string Name { get; set; }

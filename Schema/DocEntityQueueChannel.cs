@@ -85,23 +85,29 @@ namespace Services.Schema
         [Field(Nullable = false, DefaultValue = false)]
         public bool AutoDelete { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityBackgroundTask BackgroundTask { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BackgroundTaskId { get { return BackgroundTask?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = true)]
         public bool Durable { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = true)]
         public bool Enabled { get; set; }
 
+
         [Field(Nullable = false, DefaultValue = true)]
         public bool Exclusive { get; set; }
+
 
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }

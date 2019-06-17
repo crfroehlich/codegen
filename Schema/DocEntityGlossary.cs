@@ -85,20 +85,24 @@ namespace Services.Schema
         [Field(Length = int.MaxValue)]
         public string Definition { get; set; }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTableEnum Enum { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
 
+
         [Field(DefaultValue = "fa fa-info-circle")]
         public string Icon { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityPage Page { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PageId { get { return Page?.Id; } private set { var noid = value; } }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

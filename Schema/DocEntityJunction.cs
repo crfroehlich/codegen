@@ -91,14 +91,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Data { get; set; }
+
 
         [Field]
         public int? OwnerId { get; set; }
 
+
         [Field]
         public string OwnerType { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -106,17 +110,21 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int? TargetId { get; set; }
 
+
         [Field]
         public string TargetType { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTable Type { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Type_Id { get { return Type?.Id; } private set { var noid = value; } }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

@@ -59,6 +59,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DrugClassesCount { get; set; }
 
+
         [ApiMember(Name = nameof(Interventions), Description = "TermMaster", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Interventions { get; set; }

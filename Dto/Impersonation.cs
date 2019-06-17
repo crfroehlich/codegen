@@ -58,12 +58,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AuthenticatedUserId { get; set; }
 
+
         [ApiMember(Name = nameof(ImpersonatedUser), Description = "User", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference ImpersonatedUser { get; set; }
         [ApiMember(Name = nameof(ImpersonatedUserId), Description = "Primary Key of User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImpersonatedUserId { get; set; }
+
 
         [ApiMember(Name = nameof(UserSession), Description = "UserSession", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

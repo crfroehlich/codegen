@@ -55,6 +55,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
         [ApiMember(Name = nameof(Status), Description = "EoDStatusEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

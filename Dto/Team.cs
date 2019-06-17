@@ -71,6 +71,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AdminRolesCount { get; set; }
 
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
@@ -80,6 +81,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
+
 
         [ApiMember(Name = nameof(Email), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -91,6 +93,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EmailCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsInternal), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsInternal { get; set; }
@@ -100,6 +103,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsInternalCount), Description = "IsInternal Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsInternalCount { get; set; }
+
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -111,12 +115,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
 
+
         [ApiMember(Name = nameof(Owner), Description = "User", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Owner { get; set; }
         [ApiMember(Name = nameof(OwnerId), Description = "Primary Key of User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get; set; }
+
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -128,6 +134,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get; set; }
 
+
         [ApiMember(Name = nameof(Settings), Description = "TeamSettings", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TeamSettings Settings { get; set; }
@@ -137,6 +144,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SettingsCount), Description = "Settings Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SettingsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Slack), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -148,6 +156,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SlackCount { get; set; }
 
+
         [ApiMember(Name = nameof(Updates), Description = "Update", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Updates { get; set; }
@@ -157,6 +166,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(UpdatesCount), Description = "Update Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UpdatesCount { get; set; }
+
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

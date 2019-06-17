@@ -88,9 +88,11 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
+
         [Field(DefaultValue = RatingEnm.NOT_RATED)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public RatingEnm Rating { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

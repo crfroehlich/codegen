@@ -84,6 +84,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AdditionalCriteriaCount { get; set; }
 
+
         [ApiMember(Name = nameof(Characteristics), Description = "Tag", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Characteristics { get; set; }
@@ -93,6 +94,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CharacteristicsCount), Description = "Tag Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CharacteristicsCount { get; set; }
+
 
         [ApiMember(Name = nameof(Comparators), Description = "Tag", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -104,6 +106,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ComparatorsCount { get; set; }
 
+
         [ApiMember(Name = nameof(GeneralScope), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string GeneralScope { get; set; }
@@ -113,6 +116,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(GeneralScopeCount), Description = "GeneralScope Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? GeneralScopeCount { get; set; }
+
 
         [ApiMember(Name = nameof(Indications), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -124,6 +128,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IndicationsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Interventions), Description = "Tag", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Interventions { get; set; }
@@ -133,6 +138,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(InterventionsCount), Description = "Tag Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? InterventionsCount { get; set; }
+
 
         [ApiMember(Name = nameof(LibraryPackageId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -144,6 +150,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LibraryPackageIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(Notes), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Notes { get; set; }
@@ -153,6 +160,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(NotesCount), Description = "Notes Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NotesCount { get; set; }
+
 
         [ApiMember(Name = nameof(OriginalComparators), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -164,6 +172,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OriginalComparatorsCount { get; set; }
 
+
         [ApiMember(Name = nameof(OriginalDesigns), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OriginalDesigns { get; set; }
@@ -173,6 +182,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OriginalDesignsCount), Description = "OriginalDesigns Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OriginalDesignsCount { get; set; }
+
 
         [ApiMember(Name = nameof(OriginalInterventions), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -184,6 +194,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OriginalInterventionsCount { get; set; }
 
+
         [ApiMember(Name = nameof(OriginalOutcomes), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OriginalOutcomes { get; set; }
@@ -193,6 +204,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OriginalOutcomesCount), Description = "OriginalOutcomes Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OriginalOutcomesCount { get; set; }
+
 
         [ApiMember(Name = nameof(OriginalSearch), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -204,6 +216,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OriginalSearchCount { get; set; }
 
+
         [ApiMember(Name = nameof(Outcomes), Description = "Tag", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Outcomes { get; set; }
@@ -213,6 +226,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OutcomesCount), Description = "Tag Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OutcomesCount { get; set; }
+
 
         [ApiMember(Name = nameof(Participants), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -224,6 +238,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParticipantsCount { get; set; }
 
+
         [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Projects { get; set; }
@@ -233,6 +248,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ProjectsCount), Description = "Project Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectsCount { get; set; }
+
 
         [ApiMember(Name = nameof(SearchEnd), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -244,6 +260,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SearchEndCount { get; set; }
 
+
         [ApiMember(Name = nameof(SearchStart), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? SearchStart { get; set; }
@@ -253,6 +270,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SearchStartCount), Description = "SearchStart Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SearchStartCount { get; set; }
+
 
         [ApiMember(Name = nameof(SearchStrategy), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -264,6 +282,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SearchStrategyCount { get; set; }
 
+
         [ApiMember(Name = nameof(SearchUpdated), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? SearchUpdated { get; set; }
@@ -273,6 +292,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SearchUpdatedCount), Description = "SearchUpdated Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SearchUpdatedCount { get; set; }
+
 
         [ApiMember(Name = nameof(SelectionCriteria), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -284,6 +304,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SelectionCriteriaCount { get; set; }
 
+
         [ApiMember(Name = nameof(StudyDesigns), Description = "StudyDesign", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> StudyDesigns { get; set; }
@@ -293,6 +314,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(StudyDesignsCount), Description = "StudyDesign Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StudyDesignsCount { get; set; }
+
 
         [ApiMember(Name = nameof(UpdateFrequency), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

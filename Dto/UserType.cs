@@ -61,6 +61,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PayrollStatusId { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Hourly",@"Salary"})]
         [ApiMember(Name = nameof(PayrollType), Description = "LookupTable", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -69,6 +70,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PayrollTypeId { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Client",@"Contractor",@"Employee",@"Vendor"})]
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -76,6 +78,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Type_Id), Description = "Primary Key of LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Type_Id { get; set; }
+
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

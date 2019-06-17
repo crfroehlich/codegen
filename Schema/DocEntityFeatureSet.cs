@@ -85,11 +85,14 @@ namespace Services.Schema
         [Field]
         public string Description { get; set; }
 
+
         [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string PermissionTemplate { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

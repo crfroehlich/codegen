@@ -61,6 +61,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get; set; }
 
+
         [ApiMember(Name = nameof(Method), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Method { get; set; }
@@ -71,12 +72,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MethodCount { get; set; }
 
+
         [ApiMember(Name = nameof(Page), Description = "Page", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Page { get; set; }
         [ApiMember(Name = nameof(PageId), Description = "Primary Key of Page", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PageId { get; set; }
+
 
         [ApiMember(Name = nameof(Path), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -88,6 +91,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PathCount { get; set; }
 
+
         [ApiMember(Name = nameof(URL), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string URL { get; set; }
@@ -97,6 +101,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(URLCount), Description = "URL Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? URLCount { get; set; }
+
 
         [ApiMember(Name = nameof(UserSession), Description = "UserSession", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

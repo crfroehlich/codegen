@@ -85,17 +85,20 @@ namespace Services.Schema
         [Field(Nullable = false, DefaultValue = false)]
         public bool IsSI { get; set; }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTable Name { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameId { get { return Name?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTable Type { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Type_Id { get { return Type?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

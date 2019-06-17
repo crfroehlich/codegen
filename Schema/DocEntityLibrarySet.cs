@@ -85,6 +85,7 @@ namespace Services.Schema
         [Field(Length = int.MaxValue)]
         public string AdditionalCriteria { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntitySet<DocEntityTag> Characteristics { get; private set; }
@@ -92,6 +93,7 @@ namespace Services.Schema
         public List<int> CharacteristicsIds => Characteristics.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CharacteristicsCount { get { return Characteristics.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -101,11 +103,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ComparatorsCount { get { return Comparators.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string GeneralScope { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string Indications { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -115,26 +120,34 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? InterventionsCount { get { return Interventions.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public int? LibraryPackageId { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         public string Notes { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string OriginalComparators { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         public string OriginalDesigns { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string OriginalInterventions { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         public string OriginalOutcomes { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string OriginalSearch { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -144,8 +157,10 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OutcomesCount { get { return Outcomes.Count(); } private set { var noid = value; } }
 
+
         [Field(Length = int.MaxValue)]
         public string Participants { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityProject.Library), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -156,20 +171,26 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ProjectsCount { get { return Projects.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public DateTime? SearchEnd { get; set; }
+
 
         [Field]
         public DateTime? SearchStart { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string SearchStrategy { get; set; }
+
 
         [Field]
         public DateTime? SearchUpdated { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string SelectionCriteria { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -178,6 +199,7 @@ namespace Services.Schema
         public List<int> StudyDesignsIds => StudyDesigns.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StudyDesignsCount { get { return StudyDesigns.Count(); } private set { var noid = value; } }
+
 
         [Field]
         public int? UpdateFrequency { get; set; }

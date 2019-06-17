@@ -88,6 +88,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
+
         [Field(DefaultValue = EoDStatusEnm.REQUESTED)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public EoDStatusEnm Status { get; set; }

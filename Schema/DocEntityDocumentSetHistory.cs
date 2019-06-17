@@ -88,14 +88,18 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int EvidencePortalID { get; set; }
+
 
         [Field]
         public int? FqId { get; set; }
 
+
         [Field]
         public int? StudyCount { get; set; }
+
 
         [Field]
         public int? StudyCountFQ { get; set; }

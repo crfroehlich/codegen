@@ -85,6 +85,7 @@ namespace Services.Schema
         [Field(DefaultValue = 0)]
         public int? Completed { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public byte[] DataCompressed { get; set; }
@@ -101,8 +102,10 @@ namespace Services.Schema
             }
         }
 
+
         [Field]
         public DateTime? Ended { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -120,8 +123,10 @@ namespace Services.Schema
             }
         }
 
+
         [Field(DefaultValue = 0)]
         public int? Failed { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityBackgroundTaskItem.TaskHistory), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -131,6 +136,7 @@ namespace Services.Schema
         public List<int> ItemsIds => Items.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ItemsCount { get { return Items.Count(); } private set { var noid = value; } }
+
 
         [Field(Length = int.MaxValue)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -148,8 +154,10 @@ namespace Services.Schema
             }
         }
 
+
         [Field(DefaultValue = false)]
         public bool? Succeeded { get; set; }
+
 
         [Field(Length = int.MaxValue)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -166,6 +174,7 @@ namespace Services.Schema
                 SummaryCompressed = DocZip.Zip(_Summary);
             }
         }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

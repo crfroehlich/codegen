@@ -64,6 +64,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AttributeNameId { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Change",@"Duration",@"Not In Study",@"% Change",@"Standard",@"Time Since",@"Time To"})]
         [ApiMember(Name = nameof(AttributeType), Description = "LookupTable", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -72,12 +73,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AttributeTypeId { get; set; }
 
+
         [ApiMember(Name = nameof(Interval), Description = "AttributeInterval", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public AttributeInterval Interval { get; set; }
         [ApiMember(Name = nameof(IntervalId), Description = "Primary Key of AttributeInterval", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IntervalId { get; set; }
+
 
         [ApiMember(Name = nameof(IsCharacteristic), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -89,6 +92,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsCharacteristicCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsOutcome), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsOutcome { get; set; }
@@ -99,6 +103,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsOutcomeCount { get; set; }
 
+
         [ApiMember(Name = nameof(IsPositive), Description = "bool?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool? IsPositive { get; set; }
@@ -108,6 +113,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsPositiveCount), Description = "IsPositive Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IsPositiveCount { get; set; }
+
 
         [ApiMember(Name = nameof(UniqueKey), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

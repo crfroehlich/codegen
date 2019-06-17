@@ -70,12 +70,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AttemptsCount { get; set; }
 
+
         [ApiMember(Name = nameof(AuditRecord), Description = "AuditRecord", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference AuditRecord { get; set; }
         [ApiMember(Name = nameof(AuditRecordId), Description = "Primary Key of AuditRecord", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AuditRecordId { get; set; }
+
 
         [ApiMember(Name = nameof(Data), Description = "JsonObject", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -87,6 +89,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataCount { get; set; }
 
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
@@ -96,6 +99,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
+
 
         [ApiMember(Name = nameof(Ended), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -107,6 +111,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EndedCount { get; set; }
 
+
         [ApiMember(Name = nameof(EntityId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EntityId { get; set; }
@@ -116,6 +121,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(EntityIdCount), Description = "EntityId Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EntityIdCount { get; set; }
+
 
         [ApiMember(Name = nameof(ExecutionTime), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -127,6 +133,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ExecutionTimeCount { get; set; }
 
+
         [ApiMember(Name = nameof(Started), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? Started { get; set; }
@@ -136,6 +143,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(StartedCount), Description = "Started Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StartedCount { get; set; }
+
 
         [ApiMember(Name = nameof(Status), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -147,6 +155,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatusCount { get; set; }
 
+
         [ApiMember(Name = nameof(Succeeded), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Succeeded { get; set; }
@@ -157,12 +166,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SucceededCount { get; set; }
 
+
         [ApiMember(Name = nameof(Task), Description = "BackgroundTask", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Task { get; set; }
         [ApiMember(Name = nameof(TaskId), Description = "Primary Key of BackgroundTask", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TaskId { get; set; }
+
 
         [ApiMember(Name = nameof(TaskHistory), Description = "BackgroundTaskHistory", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

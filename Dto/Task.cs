@@ -62,6 +62,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AssigneeId { get; set; }
 
+
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Data { get; set; }
@@ -71,6 +72,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataCount { get; set; }
+
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -82,6 +84,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
 
+
         [ApiMember(Name = nameof(DueDate), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? DueDate { get; set; }
@@ -92,12 +95,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DueDateCount { get; set; }
 
+
         [ApiMember(Name = nameof(Reporter), Description = "User", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Reporter { get; set; }
         [ApiMember(Name = nameof(ReporterId), Description = "Primary Key of User", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReporterId { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Document Adjudication",@"Document Rating",@"Document Search Reconciliation",@"Evidence on Demand"})]
         [ApiMember(Name = nameof(Type), Description = "TaskTypeEnm?", IsRequired = false)]
@@ -109,6 +114,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TypeCount), Description = "Type Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TypeCount { get; set; }
+
 
         [ApiMember(Name = nameof(Workflow), Description = "Workflow", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

@@ -88,11 +88,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityDocumentSet DocumentSet { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -100,14 +102,17 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImpersonationId { get { return Impersonation?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityPage Page { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PageId { get { return Page?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public string URL { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -115,11 +120,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityUserSession UserSession { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserSessionId { get { return UserSession?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

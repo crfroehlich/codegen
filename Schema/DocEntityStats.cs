@@ -88,17 +88,22 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
+
         [Field]
         public int ExternalId { get; set; }
+
 
         [Field]
         public string ExternalType { get; set; }
 
+
         [Field(Nullable = false)]
         public int ObjectId { get; set; }
 
+
         [Field(Nullable = false)]
         public string ObjectType { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

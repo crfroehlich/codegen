@@ -85,14 +85,18 @@ namespace Services.Schema
         [Field(Length = int.MaxValue)]
         public string Body { get; set; }
 
+
         [Field(Length = int.MaxValue)]
         public string DeliveryStatus { get; set; }
+
 
         [Field(DefaultValue = 0)]
         public int EmailAttempts { get; set; }
 
+
         [Field]
         public DateTime? EmailSent { get; set; }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityEvent.Updates), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -103,26 +107,33 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EventsCount { get { return Events.Count(); } private set { var noid = value; } }
 
+
         [Field]
         public string Link { get; set; }
+
 
         [Field(DefaultValue = 5)]
         public int Priority { get; set; }
 
+
         [Field]
         public DateTime? Read { get; set; }
+
 
         [Field]
         public DateTime? SlackSent { get; set; }
 
+
         [Field]
         public string Subject { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityTeam Team { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TeamId { get { return Team?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

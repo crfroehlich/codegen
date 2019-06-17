@@ -66,6 +66,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ConfluenceIdCount { get; set; }
 
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
@@ -75,6 +76,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
+
 
         [ApiMember(Name = nameof(Icon), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -86,6 +88,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IconCount { get; set; }
 
+
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Order { get; set; }
@@ -95,6 +98,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OrderCount), Description = "Order Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OrderCount { get; set; }
+
 
         [ApiMember(Name = nameof(Pages), Description = "Page", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -106,6 +110,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PagesCount { get; set; }
 
+
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Scopes { get; set; }
@@ -116,6 +121,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get; set; }
 
+
         [ApiMember(Name = nameof(Title), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Title { get; set; }
@@ -125,6 +131,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TitleCount), Description = "Title Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TitleCount { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Dialog",@"Manual",@"Section",@"Sidebar"})]
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]

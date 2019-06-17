@@ -67,12 +67,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get; set; }
 
+
         [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference DocumentSet { get; set; }
         [ApiMember(Name = nameof(DocumentSetId), Description = "Primary Key of DocumentSet", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentSetId { get; set; }
+
 
         [ApiMember(Name = nameof(Impersonation), Description = "Impersonation", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -81,12 +83,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ImpersonationId { get; set; }
 
+
         [ApiMember(Name = nameof(Page), Description = "Page", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Page { get; set; }
         [ApiMember(Name = nameof(PageId), Description = "Primary Key of Page", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PageId { get; set; }
+
 
         [ApiMember(Name = nameof(URL), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -98,6 +102,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? URLCount { get; set; }
 
+
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference User { get; set; }
@@ -105,12 +110,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserId { get; set; }
 
+
         [ApiMember(Name = nameof(UserSession), Description = "UserSession", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference UserSession { get; set; }
         [ApiMember(Name = nameof(UserSessionId), Description = "Primary Key of UserSession", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UserSessionId { get; set; }
+
 
         [ApiMember(Name = nameof(Workflow), Description = "Workflow", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

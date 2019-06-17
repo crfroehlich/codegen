@@ -85,17 +85,20 @@ namespace Services.Schema
         [Field(DefaultValue = "{}", Length = int.MaxValue)]
         public string Data { get; set; }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityDocument Document { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityVariableRule Rule { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RuleId { get { return Rule?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityWorkflow.Variables), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]

@@ -90,11 +90,13 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AttributeNameId { get { return AttributeName?.Id; } private set { var noid = value; } }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTable AttributeType { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AttributeTypeId { get { return AttributeType?.Id; } private set { var noid = value; } }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -102,17 +104,22 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? IntervalId { get { return Interval?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = false)]
         public bool IsCharacteristic { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = false)]
         public bool IsOutcome { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool? IsPositive { get; set; }
 
+
         [Field]
         public string UniqueKey { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

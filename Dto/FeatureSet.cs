@@ -60,6 +60,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DescriptionCount { get; set; }
 
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
@@ -70,6 +71,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
 
+
         [ApiMember(Name = nameof(PermissionTemplate), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string PermissionTemplate { get; set; }
@@ -79,6 +81,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(PermissionTemplateCount), Description = "PermissionTemplate Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PermissionTemplateCount { get; set; }
+
 
         [ApiMember(Name = nameof(Roles), Description = "Role", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

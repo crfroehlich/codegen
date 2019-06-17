@@ -69,6 +69,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BioPortalCount { get; set; }
 
+
         [ApiMember(Name = nameof(Categories), Description = "TermCategory", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<TermCategory> Categories { get; set; }
@@ -78,6 +79,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CategoriesCount), Description = "TermCategory Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CategoriesCount { get; set; }
+
 
         [ApiMember(Name = nameof(CUI), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -89,12 +91,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? CUICount { get; set; }
 
+
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Enum { get; set; }
         [ApiMember(Name = nameof(EnumId), Description = "Primary Key of LookupTableEnum", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnumId { get; set; }
+
 
         [ApiMember(Name = nameof(MedDRA), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -106,6 +110,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MedDRACount { get; set; }
 
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
@@ -115,6 +120,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
+
 
         [ApiMember(Name = nameof(RxNorm), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -126,6 +132,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RxNormCount { get; set; }
 
+
         [ApiMember(Name = nameof(SNOWMED), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SNOWMED { get; set; }
@@ -135,6 +142,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SNOWMEDCount), Description = "SNOWMED Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SNOWMEDCount { get; set; }
+
 
         [ApiMember(Name = nameof(Synonyms), Description = "TermSynonym", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -146,6 +154,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? SynonymsCount { get; set; }
 
+
         [ApiMember(Name = nameof(TUI), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TUI { get; set; }
@@ -155,6 +164,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TUICount), Description = "TUI Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TUICount { get; set; }
+
 
         [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

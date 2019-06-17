@@ -85,11 +85,13 @@ namespace Services.Schema
         [Field(Nullable = false, Length = 800)]
         public string Category { get; set; }
 
+
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityLookupTableEnum Enum { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [Association(PairTo = nameof(DocEntityLookupTable.Categories), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -99,6 +101,7 @@ namespace Services.Schema
         public List<int> LookupsIds => Lookups.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LookupsCount { get { return Lookups.Count(); } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

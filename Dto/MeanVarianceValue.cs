@@ -56,9 +56,11 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TypeUnits MeanVariance { get; set; }
 
+
         [ApiMember(Name = nameof(MeanVarianceRange), Description = "UnitsRange", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TypeUnitsRange MeanVarianceRange { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"CV",@"IQR Difference",@"SD",@"SE",@"Semi IQR",@"Unknown"})]
         [ApiMember(Name = nameof(MeanVarianceType), Description = "LookupTable", IsRequired = true)]
@@ -67,6 +69,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(MeanVarianceTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MeanVarianceTypeId { get; set; }
+
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -77,6 +80,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OrderCount), Description = "Order Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OrderCount { get; set; }
+
 
         [ApiMember(Name = nameof(Owners), Description = "MeanVariances", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

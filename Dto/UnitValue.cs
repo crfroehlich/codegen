@@ -60,6 +60,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EqualityOperatorId { get; set; }
 
+
         [ApiMember(Name = nameof(Multiplier), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Multiplier { get; set; }
@@ -69,6 +70,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(MultiplierCount), Description = "Multiplier Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MultiplierCount { get; set; }
+
 
         [ApiMember(Name = nameof(Number), Description = "decimal?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -80,6 +82,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NumberCount { get; set; }
 
+
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Order { get; set; }
@@ -89,6 +92,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OrderCount), Description = "Order Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OrderCount { get; set; }
+
 
         [ApiMember(Name = nameof(Unit), Description = "UnitOfMeasure", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]

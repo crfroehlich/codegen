@@ -85,8 +85,10 @@ namespace Services.Schema
         [Field]
         public string ArticleId { get; set; }
 
+
         [Field]
         public string ArticleLink { get; set; }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -94,11 +96,14 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
+
         [Field(Nullable = false, DefaultValue = 0)]
         public int Matches { get; set; }
 
+
         [Field]
         public string SearchLink { get; set; }
+
 
         [Field(Nullable = false, DefaultValue = ReconciliationStatusEnm.NO_MATCH)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

@@ -64,6 +64,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AppId { get; set; }
 
+
         [ApiMember(Name = nameof(ConfluenceId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ConfluenceId { get; set; }
@@ -73,6 +74,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ConfluenceIdCount), Description = "ConfluenceId Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ConfluenceIdCount { get; set; }
+
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -84,6 +86,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? NameCount { get; set; }
 
+
         [ApiMember(Name = nameof(Reprocess), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Reprocess { get; set; }
@@ -93,6 +96,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ReprocessCount), Description = "Reprocess Count", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReprocessCount { get; set; }
+
 
         [ApiMember(Name = nameof(Reprocessed), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -104,6 +108,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReprocessedCount { get; set; }
 
+
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public List<Reference> Scopes { get; set; }
@@ -114,6 +119,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ScopesCount { get; set; }
 
+
         [ApiAllowableValues("Includes", Values = new string[] {@"Draft",@"Release"})]
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -121,6 +127,7 @@ namespace Services.Dto
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StatusId { get; set; }
+
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Change Log",@"Scope Specific",@"System Alert",@"Terms of Service"})]
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]

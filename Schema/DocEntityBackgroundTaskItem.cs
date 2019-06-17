@@ -85,11 +85,13 @@ namespace Services.Schema
         [Field(DefaultValue = 0)]
         public int? Attempts { get; set; }
 
+
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityAuditRecord AuditRecord { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? AuditRecordId { get { return AuditRecord?.Id; } private set { var noid = value; } }
+
 
         [Field(Length = int.MaxValue)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -107,32 +109,41 @@ namespace Services.Schema
             }
         }
 
+
         [Field]
         public string Description { get; set; }
+
 
         [Field]
         public DateTime? Ended { get; set; }
 
+
         [Field]
         public int? EntityId { get; set; }
+
 
         [Field]
         public string ExecutionTime { get; set; }
 
+
         [Field]
         public DateTime? Started { get; set; }
+
 
         [Field]
         public string Status { get; set; }
 
+
         [Field(DefaultValue = false)]
         public bool Succeeded { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocEntityBackgroundTask Task { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TaskId { get { return Task?.Id; } private set { var noid = value; } }
+
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

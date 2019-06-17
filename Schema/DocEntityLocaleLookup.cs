@@ -85,8 +85,10 @@ namespace Services.Schema
         [Field(Length = int.MaxValue)]
         public string Data { get; set; }
 
+
         [Field(Nullable = false)]
         public string IpAddress { get; set; }
+
 
         [Field(Nullable = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]

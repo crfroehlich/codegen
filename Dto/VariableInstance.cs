@@ -62,6 +62,7 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataCount { get; set; }
 
+
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Document { get; set; }
@@ -69,12 +70,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentId { get; set; }
 
+
         [ApiMember(Name = nameof(Rule), Description = "VariableRule", IsRequired = true)]
 [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Reference Rule { get; set; }
         [ApiMember(Name = nameof(RuleId), Description = "Primary Key of VariableRule", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RuleId { get; set; }
+
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
