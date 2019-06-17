@@ -122,35 +122,26 @@ namespace Services.Schema
         public DocEntitySet<DocEntityWorkflowComment> Children { get; private set; }
         public List<int> ChildrenIds => Children.Select(e => e.Id).ToList();
 
-
-
-
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
-
 
         [Field()]
         [FieldMapping(nameof(Parent))]
         public DocEntityWorkflowComment Parent { get; set; }
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
-
         [Field(Length = int.MaxValue)]
         [FieldMapping(nameof(Text))]
         public string Text { get; set; }
-
 
         [Field(Nullable = false)]
         [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
-
         [Field(Nullable = false)]
         [FieldMapping(nameof(Workflow))]
         public DocEntityWorkflow Workflow { get; set; }
         public int? WorkflowId { get { return Workflow?.Id; } private set { var noid = value; } }
-
-
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }

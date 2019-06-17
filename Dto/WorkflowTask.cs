@@ -79,24 +79,19 @@ namespace Services.Dto
         [ApiMember(Name = nameof(AssigneeId), Description = "Primary Key of User", IsRequired = false)]
         public int? AssigneeId { get; set; }
 
-
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         public string Data { get; set; }
-
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = true)]
         public string Description { get; set; }
 
-
         [ApiMember(Name = nameof(DueDate), Description = "DateTime?", IsRequired = false)]
         public DateTime? DueDate { get; set; }
-
 
         [ApiMember(Name = nameof(Reporter), Description = "User", IsRequired = true)]
         public Reference Reporter { get; set; }
         [ApiMember(Name = nameof(ReporterId), Description = "Primary Key of User", IsRequired = false)]
         public int? ReporterId { get; set; }
-
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
@@ -104,20 +99,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
 
-
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Evidence on Demand"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
 
-
         [ApiMember(Name = nameof(Workflow), Description = "Workflow", IsRequired = true)]
         public Reference Workflow { get; set; }
         [ApiMember(Name = nameof(WorkflowId), Description = "Primary Key of Workflow", IsRequired = false)]
         public int? WorkflowId { get; set; }
-
-
 
         public void Deconstruct(out Reference pAssignee, out int? pAssigneeId, out string pData, out string pDescription, out DateTime? pDueDate, out Reference pReporter, out int? pReporterId, out Reference pStatus, out int? pStatusId, out Reference pType, out int? pTypeId, out Reference pWorkflow, out int? pWorkflowId)
         {
@@ -141,7 +132,6 @@ namespace Services.Dto
         //	new WorkflowTaskBase(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pStatus, pStatusId, pType, pTypeId, pWorkflow, pWorkflowId);
 
     }
-
 
     [Route("/workflowtask", "POST")]
     [Route("/workflowtask/{Id}", "GET, PATCH, PUT, DELETE")]
@@ -183,7 +173,6 @@ namespace Services.Dto
                 if(null == _VisibleFields)
                 {
 
-
                     _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
 
                 }
@@ -191,7 +180,6 @@ namespace Services.Dto
             }
             set
             {
-
 
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
@@ -201,7 +189,6 @@ namespace Services.Dto
         }
 
         #endregion Fields
-
 
         public object Clone() => this.Copy<WorkflowTask>();
     }
@@ -233,7 +220,6 @@ namespace Services.Dto
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }
-
 
     [Route("/workflowtask", "GET")]
     [Route("/workflowtask/version", "GET, POST")]
@@ -267,10 +253,8 @@ namespace Services.Dto
         public bool doWorkflow { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Workflow))); }
     }
 
-
     [Route("/workflowtask/batch", "DELETE, PATCH, POST, PUT")]
 
     public partial class WorkflowTaskBatch : List<WorkflowTask> { }
-
 
 }

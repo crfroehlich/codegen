@@ -69,23 +69,17 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Branch), Description = "string", IsRequired = true)]
         public string Branch { get; set; }
 
-
         [ApiMember(Name = nameof(Release), Description = "string", IsRequired = true)]
         public string Release { get; set; }
-
 
         [ApiMember(Name = nameof(Server), Description = "string", IsRequired = true)]
         public string Server { get; set; }
 
-
         [ApiMember(Name = nameof(URL), Description = "string", IsRequired = true)]
         public string URL { get; set; }
 
-
         [ApiMember(Name = nameof(Version), Description = "string", IsRequired = true)]
         public string Version { get; set; }
-
-
 
         public void Deconstruct(out string pBranch, out string pRelease, out string pServer, out string pURL, out string pVersion)
         {
@@ -101,7 +95,6 @@ namespace Services.Dto
         //	new ReleaseStatusBase(pId, pBranch, pRelease, pServer, pURL, pVersion);
 
     }
-
 
     [Route("/releasestatus", "POST")]
     [Route("/releasestatus/{Id}", "GET, PATCH, PUT, DELETE")]
@@ -143,7 +136,6 @@ namespace Services.Dto
                 if(null == _VisibleFields)
                 {
 
-
                     _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
 
                 }
@@ -151,7 +143,6 @@ namespace Services.Dto
             }
             set
             {
-
 
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
@@ -161,7 +152,6 @@ namespace Services.Dto
         }
 
         #endregion Fields
-
 
         public object Clone() => this.Copy<ReleaseStatus>();
     }
@@ -179,7 +169,6 @@ namespace Services.Dto
         public string URL { get; set; }
         public string Version { get; set; }
     }
-
 
     [Route("/releasestatus", "GET")]
     [Route("/releasestatus/version", "GET, POST")]
@@ -210,10 +199,8 @@ namespace Services.Dto
         public bool doVersion { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ReleaseStatus.Version))); }
     }
 
-
     [Route("/releasestatus/batch", "DELETE, PATCH, POST, PUT")]
 
     public partial class ReleaseStatusBatch : List<ReleaseStatus> { }
-
 
 }

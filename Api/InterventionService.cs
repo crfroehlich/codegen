@@ -131,8 +131,6 @@ namespace Services.API
 
         public object Get(Intervention request) => GetEntityWithCache<Intervention>(DocConstantModelName.INTERVENTION, request, GetIntervention);
 
-
-
         private Intervention _AssignValues(Intervention request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -266,7 +264,6 @@ namespace Services.API
             return ret;
         }
 
-
         public Intervention Post(Intervention request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
@@ -376,8 +373,6 @@ namespace Services.API
             return ret;
         }
 
-
-
         public List<Intervention> Put(InterventionBatch request)
         {
             return Patch(request);
@@ -387,7 +382,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
 
         public List<Intervention> Patch(InterventionBatch request)
         {
@@ -452,7 +446,6 @@ namespace Services.API
             }
             return ret;
         }
-
 
         public void Delete(InterventionBatch request)
         {
@@ -531,7 +524,6 @@ namespace Services.API
             });
         }
 
-
         public object Get(InterventionJunction request)
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
@@ -542,7 +534,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for intervention/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         public object Post(InterventionJunction request)
         {
@@ -565,7 +556,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for intervention/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         private Intervention GetIntervention(Intervention request)
         {

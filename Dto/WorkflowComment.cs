@@ -75,29 +75,23 @@ namespace Services.Dto
         public List<int> ChildrenIds { get; set; }
         public int? ChildrenCount { get; set; }
 
-
         [ApiMember(Name = nameof(Parent), Description = "WorkflowComment", IsRequired = false)]
         public Reference Parent { get; set; }
         [ApiMember(Name = nameof(ParentId), Description = "Primary Key of WorkflowComment", IsRequired = false)]
         public int? ParentId { get; set; }
 
-
         [ApiMember(Name = nameof(Text), Description = "string", IsRequired = false)]
         public string Text { get; set; }
-
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
         public Reference User { get; set; }
         [ApiMember(Name = nameof(UserId), Description = "Primary Key of User", IsRequired = false)]
         public int? UserId { get; set; }
 
-
         [ApiMember(Name = nameof(Workflow), Description = "Workflow", IsRequired = true)]
         public Reference Workflow { get; set; }
         [ApiMember(Name = nameof(WorkflowId), Description = "Primary Key of Workflow", IsRequired = false)]
         public int? WorkflowId { get; set; }
-
-
 
         public void Deconstruct(out List<Reference> pChildren, out int? pChildrenCount, out Reference pParent, out int? pParentId, out string pText, out Reference pUser, out int? pUserId, out Reference pWorkflow, out int? pWorkflowId)
         {
@@ -117,7 +111,6 @@ namespace Services.Dto
         //	new WorkflowCommentBase(pId, pChildren, pChildrenCount, pParent, pParentId, pText, pUser, pUserId, pWorkflow, pWorkflowId);
 
     }
-
 
     [Route("/workflowcomment", "POST")]
     [Route("/workflowcomment/{Id}", "GET, PATCH, PUT, DELETE")]
@@ -159,7 +152,6 @@ namespace Services.Dto
                 if(null == _VisibleFields)
                 {
 
-
                     _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
 
                 }
@@ -167,7 +159,6 @@ namespace Services.Dto
             }
             set
             {
-
 
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
@@ -183,7 +174,6 @@ namespace Services.Dto
             nameof(Children), nameof(ChildrenCount)
         };
         private List<string> collections { get { return _collections; } }
-
 
         public object Clone() => this.Copy<WorkflowComment>();
     }
@@ -204,7 +194,6 @@ namespace Services.Dto
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }
-
 
     [Route("/workflowcomment", "GET")]
     [Route("/workflowcomment/version", "GET, POST")]
@@ -235,16 +224,12 @@ namespace Services.Dto
         public bool doWorkflow { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowComment.Workflow))); }
     }
 
-
     [Route("/workflowcomment/batch", "DELETE, PATCH, POST, PUT")]
 
     public partial class WorkflowCommentBatch : List<WorkflowComment> { }
 
-
     [Route("/workflowcomment/{Id}/{Junction}/version", "GET, POST")]
     [Route("/workflowcomment/{Id}/{Junction}", "GET, POST, DELETE")]
     public class WorkflowCommentJunction : WorkflowCommentSearchBase {}
-
-
 
 }

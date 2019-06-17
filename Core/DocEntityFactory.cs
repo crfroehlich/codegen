@@ -588,8 +588,6 @@ namespace Services.Schema
             return ret;
         }
 
-
-
         public static T GetEntity<T>(int id, DocConstantModelName model = null) where T : DocEntityBase, new()
         {
             model = model ?? GetEnumModelName<T>();

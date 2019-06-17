@@ -131,8 +131,6 @@ namespace Services.API
 
         public object Get(Comparator request) => GetEntityWithCache<Comparator>(DocConstantModelName.COMPARATOR, request, GetComparator);
 
-
-
         private Comparator _AssignValues(Comparator request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -266,7 +264,6 @@ namespace Services.API
             return ret;
         }
 
-
         public Comparator Post(Comparator request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
@@ -376,8 +373,6 @@ namespace Services.API
             return ret;
         }
 
-
-
         public List<Comparator> Put(ComparatorBatch request)
         {
             return Patch(request);
@@ -387,7 +382,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
 
         public List<Comparator> Patch(ComparatorBatch request)
         {
@@ -452,7 +446,6 @@ namespace Services.API
             }
             return ret;
         }
-
 
         public void Delete(ComparatorBatch request)
         {
@@ -531,7 +524,6 @@ namespace Services.API
             });
         }
 
-
         public object Get(ComparatorJunction request)
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
@@ -542,7 +534,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for comparator/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         public object Post(ComparatorJunction request)
         {
@@ -565,7 +556,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for comparator/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         private Comparator GetComparator(Comparator request)
         {

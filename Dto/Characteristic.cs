@@ -70,15 +70,11 @@ namespace Services.Dto
         public List<int> DocumentSetsIds { get; set; }
         public int? DocumentSetsCount { get; set; }
 
-
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
 
-
         [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
         public string URI { get; set; }
-
-
 
         public void Deconstruct(out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out string pURI)
         {
@@ -93,7 +89,6 @@ namespace Services.Dto
         //	new CharacteristicBase(pId, pDocumentSets, pDocumentSetsCount, pName, pURI);
 
     }
-
 
     [Route("/characteristic", "POST")]
     [Route("/characteristic/{Id}", "GET, PATCH, PUT, DELETE")]
@@ -135,7 +130,6 @@ namespace Services.Dto
                 if(null == _VisibleFields)
                 {
 
-
                     _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
 
                 }
@@ -143,7 +137,6 @@ namespace Services.Dto
             }
             set
             {
-
 
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
@@ -160,7 +153,6 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-
         public object Clone() => this.Copy<Characteristic>();
     }
     
@@ -175,7 +167,6 @@ namespace Services.Dto
         public string Name { get; set; }
         public string URI { get; set; }
     }
-
 
     [Route("/characteristic", "GET")]
     [Route("/characteristic/version", "GET, POST")]
@@ -204,16 +195,12 @@ namespace Services.Dto
         public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Characteristic.URI))); }
     }
 
-
     [Route("/characteristic/batch", "DELETE, PATCH, POST, PUT")]
 
     public partial class CharacteristicBatch : List<Characteristic> { }
 
-
     [Route("/characteristic/{Id}/{Junction}/version", "GET, POST")]
     [Route("/characteristic/{Id}/{Junction}", "GET, POST, DELETE")]
     public class CharacteristicJunction : CharacteristicSearchBase {}
-
-
 
 }

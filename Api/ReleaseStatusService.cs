@@ -133,8 +133,6 @@ namespace Services.API
 
         public object Get(ReleaseStatus request) => GetEntityWithCache<ReleaseStatus>(DocConstantModelName.RELEASESTATUS, request, GetReleaseStatus);
 
-
-
         private ReleaseStatus _AssignValues(ReleaseStatus request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -250,7 +248,6 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-
             DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, nameof(ReleaseStatus), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -259,7 +256,6 @@ namespace Services.API
 
             return ret;
         }
-
 
         public ReleaseStatus Post(ReleaseStatus request)
         {
@@ -377,8 +373,6 @@ namespace Services.API
             return ret;
         }
 
-
-
         public List<ReleaseStatus> Put(ReleaseStatusBatch request)
         {
             return Patch(request);
@@ -388,7 +382,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
 
         public List<ReleaseStatus> Patch(ReleaseStatusBatch request)
         {
@@ -453,7 +446,6 @@ namespace Services.API
             }
             return ret;
         }
-
 
         public void Delete(ReleaseStatusBatch request)
         {
@@ -531,9 +523,6 @@ namespace Services.API
                 Delete(match);
             });
         }
-
-
-
 
         private ReleaseStatus GetReleaseStatus(ReleaseStatus request)
         {

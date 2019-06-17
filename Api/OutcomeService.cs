@@ -131,8 +131,6 @@ namespace Services.API
 
         public object Get(Outcome request) => GetEntityWithCache<Outcome>(DocConstantModelName.OUTCOME, request, GetOutcome);
 
-
-
         private Outcome _AssignValues(Outcome request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -266,7 +264,6 @@ namespace Services.API
             return ret;
         }
 
-
         public Outcome Post(Outcome request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
@@ -376,8 +373,6 @@ namespace Services.API
             return ret;
         }
 
-
-
         public List<Outcome> Put(OutcomeBatch request)
         {
             return Patch(request);
@@ -387,7 +382,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
 
         public List<Outcome> Patch(OutcomeBatch request)
         {
@@ -452,7 +446,6 @@ namespace Services.API
             }
             return ret;
         }
-
 
         public void Delete(OutcomeBatch request)
         {
@@ -531,7 +524,6 @@ namespace Services.API
             });
         }
 
-
         public object Get(OutcomeJunction request)
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
@@ -542,7 +534,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for outcome/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         public object Post(OutcomeJunction request)
         {
@@ -565,7 +556,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for outcome/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         private Outcome GetOutcome(Outcome request)
         {

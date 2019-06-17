@@ -121,22 +121,15 @@ namespace Services.Schema
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
         public List<int> DocumentSetsIds => DocumentSets.Select(e => e.Id).ToList();
 
-
-
-
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
-
 
         [Field(Nullable = false, NullableOnUpgrade = true)]
         [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
-
         [Field()]
         [FieldMapping(nameof(URI))]
         public string URI { get; set; }
-
-
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }

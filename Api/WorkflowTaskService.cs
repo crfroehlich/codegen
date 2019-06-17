@@ -187,8 +187,6 @@ namespace Services.API
 
         public object Get(WorkflowTask request) => GetEntityWithCache<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, request, GetWorkflowTask);
 
-
-
         private WorkflowTask _AssignValues(WorkflowTask request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -340,7 +338,6 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-
             DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, nameof(WorkflowTask), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -349,7 +346,6 @@ namespace Services.API
 
             return ret;
         }
-
 
         public WorkflowTask Post(WorkflowTask request)
         {
@@ -465,8 +461,6 @@ namespace Services.API
             return ret;
         }
 
-
-
         public List<WorkflowTask> Put(WorkflowTaskBatch request)
         {
             return Patch(request);
@@ -476,7 +470,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
 
         public List<WorkflowTask> Patch(WorkflowTaskBatch request)
         {
@@ -541,7 +534,6 @@ namespace Services.API
             }
             return ret;
         }
-
 
         public void Delete(WorkflowTaskBatch request)
         {
@@ -619,9 +611,6 @@ namespace Services.API
                 Delete(match);
             });
         }
-
-
-
 
         private WorkflowTask GetWorkflowTask(WorkflowTask request)
         {

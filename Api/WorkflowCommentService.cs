@@ -153,8 +153,6 @@ namespace Services.API
 
         public object Get(WorkflowComment request) => GetEntityWithCache<WorkflowComment>(DocConstantModelName.WORKFLOWCOMMENT, request, GetWorkflowComment);
 
-
-
         private WorkflowComment _AssignValues(WorkflowComment request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -312,7 +310,6 @@ namespace Services.API
             return ret;
         }
 
-
         public WorkflowComment Post(WorkflowComment request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
@@ -422,8 +419,6 @@ namespace Services.API
             return ret;
         }
 
-
-
         public List<WorkflowComment> Put(WorkflowCommentBatch request)
         {
             return Patch(request);
@@ -433,7 +428,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
 
         public List<WorkflowComment> Patch(WorkflowCommentBatch request)
         {
@@ -498,7 +492,6 @@ namespace Services.API
             }
             return ret;
         }
-
 
         public void Delete(WorkflowCommentBatch request)
         {
@@ -577,7 +570,6 @@ namespace Services.API
             });
         }
 
-
         public object Get(WorkflowCommentJunction request)
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
@@ -588,7 +580,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         public object Post(WorkflowCommentJunction request)
         {
@@ -611,7 +602,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         private WorkflowComment GetWorkflowComment(WorkflowComment request)
         {

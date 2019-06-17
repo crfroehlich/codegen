@@ -131,8 +131,6 @@ namespace Services.API
 
         public object Get(Characteristic request) => GetEntityWithCache<Characteristic>(DocConstantModelName.CHARACTERISTIC, request, GetCharacteristic);
 
-
-
         private Characteristic _AssignValues(Characteristic request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -266,7 +264,6 @@ namespace Services.API
             return ret;
         }
 
-
         public Characteristic Post(Characteristic request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
@@ -376,8 +373,6 @@ namespace Services.API
             return ret;
         }
 
-
-
         public List<Characteristic> Put(CharacteristicBatch request)
         {
             return Patch(request);
@@ -387,7 +382,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
 
         public List<Characteristic> Patch(CharacteristicBatch request)
         {
@@ -452,7 +446,6 @@ namespace Services.API
             }
             return ret;
         }
-
 
         public void Delete(CharacteristicBatch request)
         {
@@ -531,7 +524,6 @@ namespace Services.API
             });
         }
 
-
         public object Get(CharacteristicJunction request)
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
@@ -542,7 +534,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for characteristic/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         public object Post(CharacteristicJunction request)
         {
@@ -565,7 +556,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for characteristic/{request.Id}/{request.Junction} was not found");
             }
         }
-
 
         private Characteristic GetCharacteristic(Characteristic request)
         {

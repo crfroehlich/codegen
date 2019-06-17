@@ -121,46 +121,37 @@ namespace Services.Schema
         public DocEntityUser Assignee { get; set; }
         public int? AssigneeId { get { return Assignee?.Id; } private set { var noid = value; } }
 
-
         [Field(Length = int.MaxValue)]
         [FieldMapping(nameof(Data))]
         public string Data { get; set; }
-
 
         [Field(Nullable = false)]
         [FieldMapping(nameof(Description))]
         public string Description { get; set; }
 
-
         [Field()]
         [FieldMapping(nameof(DueDate))]
         public DateTime? DueDate { get; set; }
-
 
         [Field(Nullable = false)]
         [FieldMapping(nameof(Reporter))]
         public DocEntityUser Reporter { get; set; }
         public int? ReporterId { get { return Reporter?.Id; } private set { var noid = value; } }
 
-
         [Field(NullableOnUpgrade = true)]
         [FieldMapping(nameof(Status))]
         public DocEntityLookupTable Status { get; set; }
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
-
 
         [Field(Nullable = false, NullableOnUpgrade = true)]
         [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
-
         [Field(Nullable = false)]
         [FieldMapping(nameof(Workflow))]
         public DocEntityWorkflow Workflow { get; set; }
         public int? WorkflowId { get { return Workflow?.Id; } private set { var noid = value; } }
-
-
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
