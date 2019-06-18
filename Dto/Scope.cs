@@ -119,12 +119,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Delete), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Delete { get; set; }
-        [ApiMember(Name = nameof(DeleteIds), Description = "Delete Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DeleteIds { get; set; }
-        [ApiMember(Name = nameof(DeleteCount), Description = "Delete Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DeleteCount { get; set; }
 
 
         [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = false)]
@@ -138,12 +132,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Edit), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Edit { get; set; }
-        [ApiMember(Name = nameof(EditIds), Description = "Edit Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EditIds { get; set; }
-        [ApiMember(Name = nameof(EditCount), Description = "Edit Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EditCount { get; set; }
 
 
         [ApiMember(Name = nameof(Help), Description = "Help", IsRequired = false)]
@@ -160,12 +148,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsGlobal), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsGlobal { get; set; }
-        [ApiMember(Name = nameof(IsGlobalIds), Description = "IsGlobal Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsGlobalIds { get; set; }
-        [ApiMember(Name = nameof(IsGlobalCount), Description = "IsGlobal Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsGlobalCount { get; set; }
 
 
         [ApiMember(Name = nameof(ScopedComments), Description = "Comment", IsRequired = false)]
@@ -224,12 +206,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Type), Description = "ScopeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public ScopeEnm? Type { get; set; }
-        [ApiMember(Name = nameof(TypeIds), Description = "Type Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TypeIds { get; set; }
-        [ApiMember(Name = nameof(TypeCount), Description = "Type Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = false)]
@@ -254,12 +230,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(View), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool View { get; set; }
-        [ApiMember(Name = nameof(ViewIds), Description = "View Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ViewIds { get; set; }
-        [ApiMember(Name = nameof(ViewCount), Description = "View Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ViewCount { get; set; }
 
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]

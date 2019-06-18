@@ -69,23 +69,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsDefault), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsDefault { get; set; }
-        [ApiMember(Name = nameof(IsDefaultIds), Description = "IsDefault Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsDefaultIds { get; set; }
-        [ApiMember(Name = nameof(IsDefaultCount), Description = "IsDefault Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsDefaultCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsDestinationSi), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsDestinationSi { get; set; }
-        [ApiMember(Name = nameof(IsDestinationSiIds), Description = "IsDestinationSi Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsDestinationSiIds { get; set; }
-        [ApiMember(Name = nameof(IsDestinationSiCount), Description = "IsDestinationSi Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsDestinationSiCount { get; set; }
 
 
         [ApiMember(Name = nameof(ModifierTerm), Description = "TermMaster", IsRequired = false)]
@@ -99,12 +87,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Multiplier), Description = "decimal", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public decimal Multiplier { get; set; }
-        [ApiMember(Name = nameof(MultiplierIds), Description = "Multiplier Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> MultiplierIds { get; set; }
-        [ApiMember(Name = nameof(MultiplierCount), Description = "Multiplier Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? MultiplierCount { get; set; }
 
 
         [ApiMember(Name = nameof(Parent), Description = "LookupTable", IsRequired = false)]

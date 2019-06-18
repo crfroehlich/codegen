@@ -66,34 +66,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Data { get; set; }
-        [ApiMember(Name = nameof(DataIds), Description = "Data Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DataIds { get; set; }
-        [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
-        [ApiMember(Name = nameof(DescriptionIds), Description = "Description Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DescriptionIds { get; set; }
-        [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(DueDate), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? DueDate { get; set; }
-        [ApiMember(Name = nameof(DueDateIds), Description = "DueDate Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DueDateIds { get; set; }
-        [ApiMember(Name = nameof(DueDateCount), Description = "DueDate Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DueDateCount { get; set; }
 
 
         [ApiMember(Name = nameof(Reporter), Description = "User", IsRequired = true)]
@@ -108,12 +90,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Type), Description = "TaskTypeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TaskTypeEnm? Type { get; set; }
-        [ApiMember(Name = nameof(TypeIds), Description = "Type Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TypeIds { get; set; }
-        [ApiMember(Name = nameof(TypeCount), Description = "Type Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Workflow), Description = "Workflow", IsRequired = true)]

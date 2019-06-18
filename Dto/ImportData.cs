@@ -73,12 +73,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CompletedOn), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? CompletedOn { get; set; }
-        [ApiMember(Name = nameof(CompletedOnIds), Description = "CompletedOn Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CompletedOnIds { get; set; }
-        [ApiMember(Name = nameof(CompletedOnCount), Description = "CompletedOn Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CompletedOnCount { get; set; }
 
 
         [ApiMember(Name = nameof(DataSets), Description = "DataSet", IsRequired = false)]
@@ -103,45 +97,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ErrorData), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ErrorData { get; set; }
-        [ApiMember(Name = nameof(ErrorDataIds), Description = "ErrorData Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ErrorDataIds { get; set; }
-        [ApiMember(Name = nameof(ErrorDataCount), Description = "ErrorData Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ErrorDataCount { get; set; }
 
 
         [ApiMember(Name = nameof(ExtractUrl), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ExtractUrl { get; set; }
-        [ApiMember(Name = nameof(ExtractUrlIds), Description = "ExtractUrl Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ExtractUrlIds { get; set; }
-        [ApiMember(Name = nameof(ExtractUrlCount), Description = "ExtractUrl Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ExtractUrlCount { get; set; }
 
 
         [ApiMember(Name = nameof(HighPriority), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool HighPriority { get; set; }
-        [ApiMember(Name = nameof(HighPriorityIds), Description = "HighPriority Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> HighPriorityIds { get; set; }
-        [ApiMember(Name = nameof(HighPriorityCount), Description = "HighPriority Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? HighPriorityCount { get; set; }
 
 
         [ApiMember(Name = nameof(ImportFr), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool ImportFr { get; set; }
-        [ApiMember(Name = nameof(ImportFrIds), Description = "ImportFr Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ImportFrIds { get; set; }
-        [ApiMember(Name = nameof(ImportFrCount), Description = "ImportFr Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ImportFrCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Default",@"DocData",@"Extract",@"Import Data"})]
@@ -156,34 +126,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ImportNewName), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool ImportNewName { get; set; }
-        [ApiMember(Name = nameof(ImportNewNameIds), Description = "ImportNewName Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ImportNewNameIds { get; set; }
-        [ApiMember(Name = nameof(ImportNewNameCount), Description = "ImportNewName Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ImportNewNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(ImportTable), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool ImportTable { get; set; }
-        [ApiMember(Name = nameof(ImportTableIds), Description = "ImportTable Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ImportTableIds { get; set; }
-        [ApiMember(Name = nameof(ImportTableCount), Description = "ImportTable Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ImportTableCount { get; set; }
 
 
         [ApiMember(Name = nameof(ImportText), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool ImportText { get; set; }
-        [ApiMember(Name = nameof(ImportTextIds), Description = "ImportText Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ImportTextIds { get; set; }
-        [ApiMember(Name = nameof(ImportTextCount), Description = "ImportText Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ImportTextCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
@@ -198,34 +150,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsLegacy), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsLegacy { get; set; }
-        [ApiMember(Name = nameof(IsLegacyIds), Description = "IsLegacy Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsLegacyIds { get; set; }
-        [ApiMember(Name = nameof(IsLegacyCount), Description = "IsLegacy Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsLegacyCount { get; set; }
 
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Order { get; set; }
-        [ApiMember(Name = nameof(OrderIds), Description = "Order Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OrderIds { get; set; }
-        [ApiMember(Name = nameof(OrderCount), Description = "Order Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(ReferenceId), Description = "int?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReferenceId { get; set; }
-        [ApiMember(Name = nameof(ReferenceIdIds), Description = "ReferenceId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ReferenceIdIds { get; set; }
-        [ApiMember(Name = nameof(ReferenceIdCount), Description = "ReferenceId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ReferenceIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(RequestedBy), Description = "User", IsRequired = false)]
@@ -239,23 +173,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(RequestedOn), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? RequestedOn { get; set; }
-        [ApiMember(Name = nameof(RequestedOnIds), Description = "RequestedOn Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> RequestedOnIds { get; set; }
-        [ApiMember(Name = nameof(RequestedOnCount), Description = "RequestedOn Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? RequestedOnCount { get; set; }
 
 
         [ApiMember(Name = nameof(StartedOn), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? StartedOn { get; set; }
-        [ApiMember(Name = nameof(StartedOnIds), Description = "StartedOn Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StartedOnIds { get; set; }
-        [ApiMember(Name = nameof(StartedOnCount), Description = "StartedOn Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StartedOnCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Already Imported",@"Cancelled",@"Failed",@"No JSON Found",@"Processing",@"Queued",@"Succeeded"})]

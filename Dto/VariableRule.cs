@@ -73,12 +73,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Definition), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Definition { get; set; }
-        [ApiMember(Name = nameof(DefinitionIds), Description = "Definition Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DefinitionIds { get; set; }
-        [ApiMember(Name = nameof(DefinitionCount), Description = "Definition Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DefinitionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Instances), Description = "VariableInstance", IsRequired = false)]
@@ -95,12 +89,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
-        [ApiMember(Name = nameof(NameIds), Description = "Name Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NameIds { get; set; }
-        [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owner), Description = "VariableRule", IsRequired = false)]

@@ -96,23 +96,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DatabaseDeadline), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? DatabaseDeadline { get; set; }
-        [ApiMember(Name = nameof(DatabaseDeadlineIds), Description = "DatabaseDeadline Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DatabaseDeadlineIds { get; set; }
-        [ApiMember(Name = nameof(DatabaseDeadlineCount), Description = "DatabaseDeadline Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DatabaseDeadlineCount { get; set; }
 
 
         [ApiMember(Name = nameof(DatabaseName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string DatabaseName { get; set; }
-        [ApiMember(Name = nameof(DatabaseNameIds), Description = "DatabaseName Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DatabaseNameIds { get; set; }
-        [ApiMember(Name = nameof(DatabaseNameCount), Description = "DatabaseName Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DatabaseNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Dataset), Description = "DataSet", IsRequired = false)]
@@ -126,23 +114,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DeliverableDeadline), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? DeliverableDeadline { get; set; }
-        [ApiMember(Name = nameof(DeliverableDeadlineIds), Description = "DeliverableDeadline Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DeliverableDeadlineIds { get; set; }
-        [ApiMember(Name = nameof(DeliverableDeadlineCount), Description = "DeliverableDeadline Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DeliverableDeadlineCount { get; set; }
 
 
         [ApiMember(Name = nameof(FqId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FqId { get; set; }
-        [ApiMember(Name = nameof(FqIdIds), Description = "FqId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> FqIdIds { get; set; }
-        [ApiMember(Name = nameof(FqIdCount), Description = "FqId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? FqIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(FqWorkflow), Description = "Workflow", IsRequired = false)]
@@ -156,12 +132,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(LegacyPackageId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LegacyPackageId { get; set; }
-        [ApiMember(Name = nameof(LegacyPackageIdIds), Description = "LegacyPackageId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LegacyPackageIdIds { get; set; }
-        [ApiMember(Name = nameof(LegacyPackageIdCount), Description = "LegacyPackageId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LegacyPackageIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Library), Description = "LibrarySet", IsRequired = false)]
@@ -175,67 +145,31 @@ namespace Services.Dto
         [ApiMember(Name = nameof(LibraryPackageId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LibraryPackageId { get; set; }
-        [ApiMember(Name = nameof(LibraryPackageIdIds), Description = "LibraryPackageId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LibraryPackageIdIds { get; set; }
-        [ApiMember(Name = nameof(LibraryPackageIdCount), Description = "LibraryPackageId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LibraryPackageIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(LibraryPackageName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string LibraryPackageName { get; set; }
-        [ApiMember(Name = nameof(LibraryPackageNameIds), Description = "LibraryPackageName Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LibraryPackageNameIds { get; set; }
-        [ApiMember(Name = nameof(LibraryPackageNameCount), Description = "LibraryPackageName Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LibraryPackageNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Number), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Number { get; set; }
-        [ApiMember(Name = nameof(NumberIds), Description = "Number Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NumberIds { get; set; }
-        [ApiMember(Name = nameof(NumberCount), Description = "Number Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NumberCount { get; set; }
 
 
         [ApiMember(Name = nameof(OperationsDeliverable), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OperationsDeliverable { get; set; }
-        [ApiMember(Name = nameof(OperationsDeliverableIds), Description = "OperationsDeliverable Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OperationsDeliverableIds { get; set; }
-        [ApiMember(Name = nameof(OperationsDeliverableCount), Description = "OperationsDeliverable Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OperationsDeliverableCount { get; set; }
 
 
         [ApiMember(Name = nameof(OpportunityId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OpportunityId { get; set; }
-        [ApiMember(Name = nameof(OpportunityIdIds), Description = "OpportunityId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OpportunityIdIds { get; set; }
-        [ApiMember(Name = nameof(OpportunityIdCount), Description = "OpportunityId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OpportunityIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(OpportunityName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OpportunityName { get; set; }
-        [ApiMember(Name = nameof(OpportunityNameIds), Description = "OpportunityName Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OpportunityNameIds { get; set; }
-        [ApiMember(Name = nameof(OpportunityNameCount), Description = "OpportunityName Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OpportunityNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Parent), Description = "Project", IsRequired = false)]
@@ -249,46 +183,22 @@ namespace Services.Dto
         [ApiMember(Name = nameof(PICO), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string PICO { get; set; }
-        [ApiMember(Name = nameof(PICOIds), Description = "PICO Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PICOIds { get; set; }
-        [ApiMember(Name = nameof(PICOCount), Description = "PICO Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PICOCount { get; set; }
 
 
         [ApiMember(Name = nameof(ProjectId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ProjectId { get; set; }
-        [ApiMember(Name = nameof(ProjectIdIds), Description = "ProjectId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ProjectIdIds { get; set; }
-        [ApiMember(Name = nameof(ProjectIdCount), Description = "ProjectId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ProjectIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ProjectName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ProjectName { get; set; }
-        [ApiMember(Name = nameof(ProjectNameIds), Description = "ProjectName Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ProjectNameIds { get; set; }
-        [ApiMember(Name = nameof(ProjectNameCount), Description = "ProjectName Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ProjectNameCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
         [ApiMember(Name = nameof(Status), Description = "ForeignKeyStatusEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public ForeignKeyStatusEnm? Status { get; set; }
-        [ApiMember(Name = nameof(StatusIds), Description = "Status Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StatusIds { get; set; }
-        [ApiMember(Name = nameof(StatusCount), Description = "Status Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(TimeCards), Description = "TimeCard", IsRequired = false)]

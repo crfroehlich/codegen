@@ -61,24 +61,12 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Rating), Description = "RatingEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public RatingEnm? Rating { get; set; }
-        [ApiMember(Name = nameof(RatingIds), Description = "Rating Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> RatingIds { get; set; }
-        [ApiMember(Name = nameof(RatingCount), Description = "Rating Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? RatingCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Abstract with Insufficient Information",@"Animal study",@"Does not meet protocol",@"Duplicate Publication",@"Erroneous Data",@"In vitro study",@"Missing Characteristic(s)",@"Missing Outcome(s)",@"Not a Clinical Study",@"Not English",@"Not a treatment Study",@"Relevant misclassified reference",@"Study fits protocol, to be possibly added later",@"Wrong Comparison",@"Wrong Intervention",@"Wrong Number of Participants",@"Wrong Outcome Stratification",@"Wrong Outcome(s)",@"Wrong Population",@"Wrong Publication Date Cutoff",@"Wrong Setting",@"Wrong Study Design",@"Wrong Timing"})]
         [ApiMember(Name = nameof(ReasonRejected), Description = "ReasonRejectedEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public ReasonRejectedEnm? ReasonRejected { get; set; }
-        [ApiMember(Name = nameof(ReasonRejectedIds), Description = "ReasonRejected Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ReasonRejectedIds { get; set; }
-        [ApiMember(Name = nameof(ReasonRejectedCount), Description = "ReasonRejected Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ReasonRejectedCount { get; set; }
 
 
 

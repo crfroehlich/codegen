@@ -51,34 +51,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Country), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Country { get; set; }
-        [ApiMember(Name = nameof(CountryIds), Description = "Country Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CountryIds { get; set; }
-        [ApiMember(Name = nameof(CountryCount), Description = "Country Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CountryCount { get; set; }
 
 
         [ApiMember(Name = nameof(Language), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Language { get; set; }
-        [ApiMember(Name = nameof(LanguageIds), Description = "Language Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LanguageIds { get; set; }
-        [ApiMember(Name = nameof(LanguageCount), Description = "Language Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LanguageCount { get; set; }
 
 
         [ApiMember(Name = nameof(TimeZone), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TimeZone { get; set; }
-        [ApiMember(Name = nameof(TimeZoneIds), Description = "TimeZone Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TimeZoneIds { get; set; }
-        [ApiMember(Name = nameof(TimeZoneCount), Description = "TimeZone Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TimeZoneCount { get; set; }
 
 
 

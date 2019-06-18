@@ -58,23 +58,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Binding), Description = "Bindings", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Bindings Binding { get; set; }
-        [ApiMember(Name = nameof(BindingIds), Description = "Binding Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> BindingIds { get; set; }
-        [ApiMember(Name = nameof(BindingCount), Description = "Binding Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? BindingCount { get; set; }
 
 
         [ApiMember(Name = nameof(BoundName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string BoundName { get; set; }
-        [ApiMember(Name = nameof(BoundNameIds), Description = "BoundName Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> BoundNameIds { get; set; }
-        [ApiMember(Name = nameof(BoundNameCount), Description = "BoundName Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? BoundNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(LookupTable), Description = "LookupTable", IsRequired = true)]

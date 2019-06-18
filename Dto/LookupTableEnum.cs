@@ -51,34 +51,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsBindable), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsBindable { get; set; }
-        [ApiMember(Name = nameof(IsBindableIds), Description = "IsBindable Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsBindableIds { get; set; }
-        [ApiMember(Name = nameof(IsBindableCount), Description = "IsBindable Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsBindableCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsGlobal), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsGlobal { get; set; }
-        [ApiMember(Name = nameof(IsGlobalIds), Description = "IsGlobal Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsGlobalIds { get; set; }
-        [ApiMember(Name = nameof(IsGlobalCount), Description = "IsGlobal Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsGlobalCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
-        [ApiMember(Name = nameof(NameIds), Description = "Name Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NameIds { get; set; }
-        [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NameCount { get; set; }
 
 
 

@@ -67,34 +67,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
-        [ApiMember(Name = nameof(DescriptionIds), Description = "Description Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DescriptionIds { get; set; }
-        [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Processed), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? Processed { get; set; }
-        [ApiMember(Name = nameof(ProcessedIds), Description = "Processed Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ProcessedIds { get; set; }
-        [ApiMember(Name = nameof(ProcessedCount), Description = "Processed Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ProcessedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Status), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Status { get; set; }
-        [ApiMember(Name = nameof(StatusIds), Description = "Status Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StatusIds { get; set; }
-        [ApiMember(Name = nameof(StatusCount), Description = "Status Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(Teams), Description = "Team", IsRequired = false)]

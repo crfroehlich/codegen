@@ -62,34 +62,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(OwnerId), Description = "int?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get; set; }
-        [ApiMember(Name = nameof(OwnerIdIds), Description = "OwnerId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OwnerIdIds { get; set; }
-        [ApiMember(Name = nameof(OwnerIdCount), Description = "OwnerId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OwnerIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(OwnerType), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OwnerType { get; set; }
-        [ApiMember(Name = nameof(OwnerTypeIds), Description = "OwnerType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OwnerTypeIds { get; set; }
-        [ApiMember(Name = nameof(OwnerTypeCount), Description = "OwnerType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OwnerTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Value), Description = "decimal", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public decimal Value { get; set; }
-        [ApiMember(Name = nameof(ValueIds), Description = "Value Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ValueIds { get; set; }
-        [ApiMember(Name = nameof(ValueCount), Description = "Value Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ValueCount { get; set; }
 
 
 

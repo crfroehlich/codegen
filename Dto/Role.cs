@@ -83,23 +83,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
-        [ApiMember(Name = nameof(DescriptionIds), Description = "Description Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DescriptionIds { get; set; }
-        [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Features), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Features { get; set; }
-        [ApiMember(Name = nameof(FeaturesIds), Description = "Features Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> FeaturesIds { get; set; }
-        [ApiMember(Name = nameof(FeaturesCount), Description = "Features Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? FeaturesCount { get; set; }
 
 
         [ApiMember(Name = nameof(FeatureSets), Description = "FeatureSet", IsRequired = false)]
@@ -116,34 +104,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsInternal), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsInternal { get; set; }
-        [ApiMember(Name = nameof(IsInternalIds), Description = "IsInternal Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsInternalIds { get; set; }
-        [ApiMember(Name = nameof(IsInternalCount), Description = "IsInternal Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsInternalCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsSuperAdmin), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsSuperAdmin { get; private set; }
-        [ApiMember(Name = nameof(IsSuperAdminIds), Description = "IsSuperAdmin Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsSuperAdminIds { get; set; }
-        [ApiMember(Name = nameof(IsSuperAdminCount), Description = "IsSuperAdmin Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsSuperAdminCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
-        [ApiMember(Name = nameof(NameIds), Description = "Name Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NameIds { get; set; }
-        [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Pages), Description = "Page", IsRequired = false)]
@@ -160,12 +130,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Permissions), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Permissions { get; set; }
-        [ApiMember(Name = nameof(PermissionsIds), Description = "Permissions Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PermissionsIds { get; set; }
-        [ApiMember(Name = nameof(PermissionsCount), Description = "Permissions Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PermissionsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]

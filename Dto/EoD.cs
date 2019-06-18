@@ -60,12 +60,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Status), Description = "EoDStatusEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public EoDStatusEnm? Status { get; set; }
-        [ApiMember(Name = nameof(StatusIds), Description = "Status Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StatusIds { get; set; }
-        [ApiMember(Name = nameof(StatusCount), Description = "Status Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StatusCount { get; set; }
 
 
 

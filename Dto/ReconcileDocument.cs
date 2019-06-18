@@ -55,23 +55,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ArticleId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ArticleId { get; set; }
-        [ApiMember(Name = nameof(ArticleIdIds), Description = "ArticleId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ArticleIdIds { get; set; }
-        [ApiMember(Name = nameof(ArticleIdCount), Description = "ArticleId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ArticleIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ArticleLink), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ArticleLink { get; set; }
-        [ApiMember(Name = nameof(ArticleLinkIds), Description = "ArticleLink Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ArticleLinkIds { get; set; }
-        [ApiMember(Name = nameof(ArticleLinkCount), Description = "ArticleLink Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ArticleLinkCount { get; set; }
 
 
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
@@ -85,35 +73,17 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Matches), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Matches { get; set; }
-        [ApiMember(Name = nameof(MatchesIds), Description = "Matches Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> MatchesIds { get; set; }
-        [ApiMember(Name = nameof(MatchesCount), Description = "Matches Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? MatchesCount { get; set; }
 
 
         [ApiMember(Name = nameof(SearchLink), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SearchLink { get; set; }
-        [ApiMember(Name = nameof(SearchLinkIds), Description = "SearchLink Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SearchLinkIds { get; set; }
-        [ApiMember(Name = nameof(SearchLinkCount), Description = "SearchLink Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SearchLinkCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Matched",@"Multiple Matches",@"No Match",@"One Match"})]
         [ApiMember(Name = nameof(Status), Description = "ReconciliationStatusEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public ReconciliationStatusEnm? Status { get; set; }
-        [ApiMember(Name = nameof(StatusIds), Description = "Status Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StatusIds { get; set; }
-        [ApiMember(Name = nameof(StatusCount), Description = "Status Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StatusCount { get; set; }
 
 
 

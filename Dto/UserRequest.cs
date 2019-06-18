@@ -65,12 +65,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Method), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Method { get; set; }
-        [ApiMember(Name = nameof(MethodIds), Description = "Method Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> MethodIds { get; set; }
-        [ApiMember(Name = nameof(MethodCount), Description = "Method Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? MethodCount { get; set; }
 
 
         [ApiMember(Name = nameof(Page), Description = "Page", IsRequired = false)]
@@ -84,23 +78,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Path), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Path { get; set; }
-        [ApiMember(Name = nameof(PathIds), Description = "Path Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PathIds { get; set; }
-        [ApiMember(Name = nameof(PathCount), Description = "Path Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PathCount { get; set; }
 
 
         [ApiMember(Name = nameof(URL), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string URL { get; set; }
-        [ApiMember(Name = nameof(URLIds), Description = "URL Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> URLIds { get; set; }
-        [ApiMember(Name = nameof(URLCount), Description = "URL Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? URLCount { get; set; }
 
 
         [ApiMember(Name = nameof(UserSession), Description = "UserSession", IsRequired = true)]

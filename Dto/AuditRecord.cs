@@ -70,12 +70,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Action), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Action { get; set; }
-        [ApiMember(Name = nameof(ActionIds), Description = "Action Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ActionIds { get; set; }
-        [ApiMember(Name = nameof(ActionCount), Description = "Action Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ActionCount { get; set; }
 
 
         [ApiMember(Name = nameof(BackgroundTask), Description = "BackgroundTask", IsRequired = false)]
@@ -89,34 +83,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ChangedOnDate), Description = "DateTime?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? ChangedOnDate { get; set; }
-        [ApiMember(Name = nameof(ChangedOnDateIds), Description = "ChangedOnDate Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ChangedOnDateIds { get; set; }
-        [ApiMember(Name = nameof(ChangedOnDateCount), Description = "ChangedOnDate Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ChangedOnDateCount { get; set; }
 
 
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Data { get; set; }
-        [ApiMember(Name = nameof(DataIds), Description = "Data Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DataIds { get; set; }
-        [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(DatabaseSessionId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string DatabaseSessionId { get; set; }
-        [ApiMember(Name = nameof(DatabaseSessionIdIds), Description = "DatabaseSessionId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DatabaseSessionIdIds { get; set; }
-        [ApiMember(Name = nameof(DatabaseSessionIdCount), Description = "DatabaseSessionId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DatabaseSessionIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Deltas), Description = "AuditDelta", IsRequired = false)]
@@ -133,34 +109,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(EntityId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EntityId { get; set; }
-        [ApiMember(Name = nameof(EntityIdIds), Description = "EntityId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EntityIdIds { get; set; }
-        [ApiMember(Name = nameof(EntityIdCount), Description = "EntityId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EntityIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(EntityType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string EntityType { get; set; }
-        [ApiMember(Name = nameof(EntityTypeIds), Description = "EntityType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EntityTypeIds { get; set; }
-        [ApiMember(Name = nameof(EntityTypeCount), Description = "EntityType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EntityTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(EntityVersion), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EntityVersion { get; set; }
-        [ApiMember(Name = nameof(EntityVersionIds), Description = "EntityVersion Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EntityVersionIds { get; set; }
-        [ApiMember(Name = nameof(EntityVersionCount), Description = "EntityVersion Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EntityVersionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Events), Description = "Event", IsRequired = false)]
@@ -185,34 +143,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TargetId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TargetId { get; set; }
-        [ApiMember(Name = nameof(TargetIdIds), Description = "TargetId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TargetIdIds { get; set; }
-        [ApiMember(Name = nameof(TargetIdCount), Description = "TargetId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TargetIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(TargetType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TargetType { get; set; }
-        [ApiMember(Name = nameof(TargetTypeIds), Description = "TargetType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TargetTypeIds { get; set; }
-        [ApiMember(Name = nameof(TargetTypeCount), Description = "TargetType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TargetTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(TargetVersion), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TargetVersion { get; set; }
-        [ApiMember(Name = nameof(TargetVersionIds), Description = "TargetVersion Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TargetVersionIds { get; set; }
-        [ApiMember(Name = nameof(TargetVersionCount), Description = "TargetVersion Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TargetVersionCount { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = false)]

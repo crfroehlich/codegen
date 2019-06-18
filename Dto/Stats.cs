@@ -64,45 +64,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ExternalId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ExternalId { get; set; }
-        [ApiMember(Name = nameof(ExternalIdIds), Description = "ExternalId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ExternalIdIds { get; set; }
-        [ApiMember(Name = nameof(ExternalIdCount), Description = "ExternalId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ExternalIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ExternalType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ExternalType { get; set; }
-        [ApiMember(Name = nameof(ExternalTypeIds), Description = "ExternalType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ExternalTypeIds { get; set; }
-        [ApiMember(Name = nameof(ExternalTypeCount), Description = "ExternalType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ExternalTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(ObjectId), Description = "int?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ObjectId { get; set; }
-        [ApiMember(Name = nameof(ObjectIdIds), Description = "ObjectId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ObjectIdIds { get; set; }
-        [ApiMember(Name = nameof(ObjectIdCount), Description = "ObjectId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ObjectIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ObjectType), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ObjectType { get; set; }
-        [ApiMember(Name = nameof(ObjectTypeIds), Description = "ObjectType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ObjectTypeIds { get; set; }
-        [ApiMember(Name = nameof(ObjectTypeCount), Description = "ObjectType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ObjectTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(StudySetStats), Description = "StatsStudySet", IsRequired = false)]

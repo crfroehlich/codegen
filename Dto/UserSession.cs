@@ -61,23 +61,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ClientId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ClientId { get; set; }
-        [ApiMember(Name = nameof(ClientIdIds), Description = "ClientId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ClientIdIds { get; set; }
-        [ApiMember(Name = nameof(ClientIdCount), Description = "ClientId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ClientIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Hits), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Hits { get; set; }
-        [ApiMember(Name = nameof(HitsIds), Description = "Hits Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> HitsIds { get; set; }
-        [ApiMember(Name = nameof(HitsCount), Description = "Hits Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? HitsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Impersonations), Description = "Impersonation", IsRequired = false)]
@@ -94,12 +82,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IpAddress), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string IpAddress { get; set; }
-        [ApiMember(Name = nameof(IpAddressIds), Description = "IpAddress Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IpAddressIds { get; set; }
-        [ApiMember(Name = nameof(IpAddressCount), Description = "IpAddress Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IpAddressCount { get; set; }
 
 
         [ApiMember(Name = nameof(Requests), Description = "UserRequest", IsRequired = false)]
@@ -116,23 +98,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(SessionId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SessionId { get; set; }
-        [ApiMember(Name = nameof(SessionIdIds), Description = "SessionId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SessionIdIds { get; set; }
-        [ApiMember(Name = nameof(SessionIdCount), Description = "SessionId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SessionIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(TemporarySessionId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TemporarySessionId { get; set; }
-        [ApiMember(Name = nameof(TemporarySessionIdIds), Description = "TemporarySessionId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TemporarySessionIdIds { get; set; }
-        [ApiMember(Name = nameof(TemporarySessionIdCount), Description = "TemporarySessionId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TemporarySessionIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]

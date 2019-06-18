@@ -75,45 +75,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
-        [ApiMember(Name = nameof(DescriptionIds), Description = "Description Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DescriptionIds { get; set; }
-        [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Email), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Email { get; set; }
-        [ApiMember(Name = nameof(EmailIds), Description = "Email Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EmailIds { get; set; }
-        [ApiMember(Name = nameof(EmailCount), Description = "Email Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EmailCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsInternal), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsInternal { get; set; }
-        [ApiMember(Name = nameof(IsInternalIds), Description = "IsInternal Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsInternalIds { get; set; }
-        [ApiMember(Name = nameof(IsInternalCount), Description = "IsInternal Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsInternalCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
-        [ApiMember(Name = nameof(NameIds), Description = "Name Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NameIds { get; set; }
-        [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owner), Description = "User", IsRequired = true)]
@@ -138,23 +114,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Settings), Description = "TeamSettings", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public TeamSettings Settings { get; set; }
-        [ApiMember(Name = nameof(SettingsIds), Description = "Settings Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SettingsIds { get; set; }
-        [ApiMember(Name = nameof(SettingsCount), Description = "Settings Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SettingsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Slack), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Slack { get; set; }
-        [ApiMember(Name = nameof(SlackIds), Description = "Slack Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SlackIds { get; set; }
-        [ApiMember(Name = nameof(SlackCount), Description = "Slack Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SlackCount { get; set; }
 
 
         [ApiMember(Name = nameof(Updates), Description = "Update", IsRequired = false)]

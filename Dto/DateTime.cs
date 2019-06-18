@@ -52,45 +52,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DateDay), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DateDay { get; set; }
-        [ApiMember(Name = nameof(DateDayIds), Description = "DateDay Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DateDayIds { get; set; }
-        [ApiMember(Name = nameof(DateDayCount), Description = "DateDay Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DateDayCount { get; set; }
 
 
         [ApiMember(Name = nameof(DateMonth), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DateMonth { get; set; }
-        [ApiMember(Name = nameof(DateMonthIds), Description = "DateMonth Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DateMonthIds { get; set; }
-        [ApiMember(Name = nameof(DateMonthCount), Description = "DateMonth Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DateMonthCount { get; set; }
 
 
         [ApiMember(Name = nameof(DateTime), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? DateTime { get; set; }
-        [ApiMember(Name = nameof(DateTimeIds), Description = "DateTime Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DateTimeIds { get; set; }
-        [ApiMember(Name = nameof(DateTimeCount), Description = "DateTime Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DateTimeCount { get; set; }
 
 
         [ApiMember(Name = nameof(DateYear), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DateYear { get; set; }
-        [ApiMember(Name = nameof(DateYearIds), Description = "DateYear Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DateYearIds { get; set; }
-        [ApiMember(Name = nameof(DateYearCount), Description = "DateYear Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DateYearCount { get; set; }
 
 
 

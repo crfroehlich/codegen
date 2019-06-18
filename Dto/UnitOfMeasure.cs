@@ -55,12 +55,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsSI), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsSI { get; set; }
-        [ApiMember(Name = nameof(IsSIIds), Description = "IsSI Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsSIIds { get; set; }
-        [ApiMember(Name = nameof(IsSICount), Description = "IsSI Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsSICount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]

@@ -54,12 +54,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsAbsolute), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsAbsolute { get; set; }
-        [ApiMember(Name = nameof(IsAbsoluteIds), Description = "IsAbsolute Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsAbsoluteIds { get; set; }
-        [ApiMember(Name = nameof(IsAbsoluteCount), Description = "IsAbsolute Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsAbsoluteCount { get; set; }
 
 
         [ApiMember(Name = nameof(MeanValue), Description = "MeanBase", IsRequired = false)]

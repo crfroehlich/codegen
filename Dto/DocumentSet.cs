@@ -84,12 +84,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Confidential), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Confidential { get; set; }
-        [ApiMember(Name = nameof(ConfidentialIds), Description = "Confidential Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ConfidentialIds { get; set; }
-        [ApiMember(Name = nameof(ConfidentialCount), Description = "Confidential Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ConfidentialCount { get; set; }
 
 
         [ApiMember(Name = nameof(Divisions), Description = "Division", IsRequired = false)]
@@ -139,23 +133,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(LegacyDocumentSetId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? LegacyDocumentSetId { get; set; }
-        [ApiMember(Name = nameof(LegacyDocumentSetIdIds), Description = "LegacyDocumentSetId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LegacyDocumentSetIdIds { get; set; }
-        [ApiMember(Name = nameof(LegacyDocumentSetIdCount), Description = "LegacyDocumentSetId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LegacyDocumentSetIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
-        [ApiMember(Name = nameof(NameIds), Description = "Name Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NameIds { get; set; }
-        [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owner), Description = "DocumentSet", IsRequired = false)]
@@ -188,12 +170,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Settings), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Settings { get; set; }
-        [ApiMember(Name = nameof(SettingsIds), Description = "Settings Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SettingsIds { get; set; }
-        [ApiMember(Name = nameof(SettingsCount), Description = "Settings Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SettingsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Stats), Description = "StatsStudySet", IsRequired = false)]
@@ -211,12 +187,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Type), Description = "DocumentSetTypeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocumentSetTypeEnm? Type { get; set; }
-        [ApiMember(Name = nameof(TypeIds), Description = "Type Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TypeIds { get; set; }
-        [ApiMember(Name = nameof(TypeCount), Description = "Type Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]

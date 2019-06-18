@@ -55,12 +55,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Data { get; set; }
-        [ApiMember(Name = nameof(DataIds), Description = "Data Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DataIds { get; set; }
-        [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = true)]

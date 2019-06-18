@@ -52,23 +52,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Data), Description = "IpData", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public IpData Data { get; set; }
-        [ApiMember(Name = nameof(DataIds), Description = "Data Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DataIds { get; set; }
-        [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(IpAddress), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string IpAddress { get; set; }
-        [ApiMember(Name = nameof(IpAddressIds), Description = "IpAddress Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IpAddressIds { get; set; }
-        [ApiMember(Name = nameof(IpAddressCount), Description = "IpAddress Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IpAddressCount { get; set; }
 
 
         [ApiMember(Name = nameof(Locale), Description = "Locale", IsRequired = true)]

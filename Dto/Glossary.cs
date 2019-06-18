@@ -56,12 +56,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Definition), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Definition { get; set; }
-        [ApiMember(Name = nameof(DefinitionIds), Description = "Definition Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DefinitionIds { get; set; }
-        [ApiMember(Name = nameof(DefinitionCount), Description = "Definition Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DefinitionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]
@@ -75,12 +69,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Icon), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Icon { get; set; }
-        [ApiMember(Name = nameof(IconIds), Description = "Icon Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IconIds { get; set; }
-        [ApiMember(Name = nameof(IconCount), Description = "Icon Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IconCount { get; set; }
 
 
         [ApiMember(Name = nameof(Page), Description = "Page", IsRequired = false)]

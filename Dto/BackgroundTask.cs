@@ -84,45 +84,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
-        [ApiMember(Name = nameof(DescriptionIds), Description = "Description Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DescriptionIds { get; set; }
-        [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Enabled), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Enabled { get; set; }
-        [ApiMember(Name = nameof(EnabledIds), Description = "Enabled Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EnabledIds { get; set; }
-        [ApiMember(Name = nameof(EnabledCount), Description = "Enabled Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EnabledCount { get; set; }
 
 
         [ApiMember(Name = nameof(Frequency), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Frequency { get; set; }
-        [ApiMember(Name = nameof(FrequencyIds), Description = "Frequency Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> FrequencyIds { get; set; }
-        [ApiMember(Name = nameof(FrequencyCount), Description = "Frequency Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? FrequencyCount { get; set; }
 
 
         [ApiMember(Name = nameof(HistoryRetention), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? HistoryRetention { get; set; }
-        [ApiMember(Name = nameof(HistoryRetentionIds), Description = "HistoryRetention Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> HistoryRetentionIds { get; set; }
-        [ApiMember(Name = nameof(HistoryRetentionCount), Description = "HistoryRetention Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? HistoryRetentionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Items), Description = "BackgroundTaskItem", IsRequired = false)]
@@ -139,89 +115,41 @@ namespace Services.Dto
         [ApiMember(Name = nameof(KeepHistory), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool KeepHistory { get; set; }
-        [ApiMember(Name = nameof(KeepHistoryIds), Description = "KeepHistory Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> KeepHistoryIds { get; set; }
-        [ApiMember(Name = nameof(KeepHistoryCount), Description = "KeepHistory Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? KeepHistoryCount { get; set; }
 
 
         [ApiMember(Name = nameof(LastRunVersion), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string LastRunVersion { get; set; }
-        [ApiMember(Name = nameof(LastRunVersionIds), Description = "LastRunVersion Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LastRunVersionIds { get; set; }
-        [ApiMember(Name = nameof(LastRunVersionCount), Description = "LastRunVersion Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LastRunVersionCount { get; set; }
 
 
         [ApiMember(Name = nameof(LogError), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool LogError { get; set; }
-        [ApiMember(Name = nameof(LogErrorIds), Description = "LogError Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LogErrorIds { get; set; }
-        [ApiMember(Name = nameof(LogErrorCount), Description = "LogError Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LogErrorCount { get; set; }
 
 
         [ApiMember(Name = nameof(LogInfo), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool LogInfo { get; set; }
-        [ApiMember(Name = nameof(LogInfoIds), Description = "LogInfo Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LogInfoIds { get; set; }
-        [ApiMember(Name = nameof(LogInfoCount), Description = "LogInfo Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LogInfoCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
-        [ApiMember(Name = nameof(NameIds), Description = "Name Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NameIds { get; set; }
-        [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(RowsToProcessPerIteration), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? RowsToProcessPerIteration { get; set; }
-        [ApiMember(Name = nameof(RowsToProcessPerIterationIds), Description = "RowsToProcessPerIteration Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> RowsToProcessPerIterationIds { get; set; }
-        [ApiMember(Name = nameof(RowsToProcessPerIterationCount), Description = "RowsToProcessPerIteration Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? RowsToProcessPerIterationCount { get; set; }
 
 
         [ApiMember(Name = nameof(RunNow), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool RunNow { get; set; }
-        [ApiMember(Name = nameof(RunNowIds), Description = "RunNow Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> RunNowIds { get; set; }
-        [ApiMember(Name = nameof(RunNowCount), Description = "RunNow Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? RunNowCount { get; set; }
 
 
         [ApiMember(Name = nameof(StartAt), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string StartAt { get; set; }
-        [ApiMember(Name = nameof(StartAtIds), Description = "StartAt Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StartAtIds { get; set; }
-        [ApiMember(Name = nameof(StartAtCount), Description = "StartAt Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StartAtCount { get; set; }
 
 
         [ApiMember(Name = nameof(TaskHistory), Description = "BackgroundTaskHistory", IsRequired = false)]

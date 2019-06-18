@@ -73,12 +73,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Order { get; set; }
-        [ApiMember(Name = nameof(OrderIds), Description = "Order Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OrderIds { get; set; }
-        [ApiMember(Name = nameof(OrderCount), Description = "Order Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owners), Description = "MeanRanges", IsRequired = false)]
@@ -95,23 +89,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Percent), Description = "decimal?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public decimal? Percent { get; set; }
-        [ApiMember(Name = nameof(PercentIds), Description = "Percent Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PercentIds { get; set; }
-        [ApiMember(Name = nameof(PercentCount), Description = "Percent Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PercentCount { get; set; }
 
 
         [ApiMember(Name = nameof(PercentLow), Description = "decimal?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public decimal? PercentLow { get; set; }
-        [ApiMember(Name = nameof(PercentLowIds), Description = "PercentLow Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PercentLowIds { get; set; }
-        [ApiMember(Name = nameof(PercentLowCount), Description = "PercentLow Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PercentLowCount { get; set; }
 
 
         [ApiMember(Name = nameof(Range), Description = "UnitsRange", IsRequired = false)]

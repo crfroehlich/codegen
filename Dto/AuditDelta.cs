@@ -59,12 +59,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Delta), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Delta { get; set; }
-        [ApiMember(Name = nameof(DeltaIds), Description = "Delta Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DeltaIds { get; set; }
-        [ApiMember(Name = nameof(DeltaCount), Description = "Delta Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DeltaCount { get; set; }
 
 
 

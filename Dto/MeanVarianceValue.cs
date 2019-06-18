@@ -74,12 +74,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Order { get; set; }
-        [ApiMember(Name = nameof(OrderIds), Description = "Order Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OrderIds { get; set; }
-        [ApiMember(Name = nameof(OrderCount), Description = "Order Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owners), Description = "MeanVariances", IsRequired = false)]

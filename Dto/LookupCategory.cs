@@ -55,12 +55,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Category), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Category { get; set; }
-        [ApiMember(Name = nameof(CategoryIds), Description = "Category Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CategoryIds { get; set; }
-        [ApiMember(Name = nameof(CategoryCount), Description = "Category Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CategoryCount { get; set; }
 
 
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]

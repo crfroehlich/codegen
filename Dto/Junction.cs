@@ -72,34 +72,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Data { get; set; }
-        [ApiMember(Name = nameof(DataIds), Description = "Data Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DataIds { get; set; }
-        [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(OwnerId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OwnerId { get; set; }
-        [ApiMember(Name = nameof(OwnerIdIds), Description = "OwnerId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OwnerIdIds { get; set; }
-        [ApiMember(Name = nameof(OwnerIdCount), Description = "OwnerId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OwnerIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(OwnerType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OwnerType { get; set; }
-        [ApiMember(Name = nameof(OwnerTypeIds), Description = "OwnerType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OwnerTypeIds { get; set; }
-        [ApiMember(Name = nameof(OwnerTypeCount), Description = "OwnerType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OwnerTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Parent), Description = "Junction", IsRequired = false)]
@@ -113,23 +95,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TargetId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TargetId { get; set; }
-        [ApiMember(Name = nameof(TargetIdIds), Description = "TargetId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TargetIdIds { get; set; }
-        [ApiMember(Name = nameof(TargetIdCount), Description = "TargetId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TargetIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(TargetType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TargetType { get; set; }
-        [ApiMember(Name = nameof(TargetTypeIds), Description = "TargetType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TargetTypeIds { get; set; }
-        [ApiMember(Name = nameof(TargetTypeCount), Description = "TargetType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TargetTypeCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Approval",@"Comment",@"Flagged for Approval",@"Rating"})]

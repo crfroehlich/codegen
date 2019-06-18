@@ -73,12 +73,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CalendarType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string CalendarType { get; set; }
-        [ApiMember(Name = nameof(CalendarTypeIds), Description = "CalendarType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CalendarTypeIds { get; set; }
-        [ApiMember(Name = nameof(CalendarTypeCount), Description = "CalendarType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CalendarTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(FollowUp), Description = "TimePoint", IsRequired = false)]

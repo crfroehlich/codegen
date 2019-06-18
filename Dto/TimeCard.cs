@@ -62,12 +62,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
-        [ApiMember(Name = nameof(DescriptionIds), Description = "Description Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DescriptionIds { get; set; }
-        [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
@@ -81,12 +75,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(End), Description = "DateTime?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? End { get; set; }
-        [ApiMember(Name = nameof(EndIds), Description = "End Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EndIds { get; set; }
-        [ApiMember(Name = nameof(EndCount), Description = "End Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EndCount { get; set; }
 
 
         [ApiMember(Name = nameof(Project), Description = "Project", IsRequired = false)]
@@ -100,23 +88,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ReferenceId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReferenceId { get; set; }
-        [ApiMember(Name = nameof(ReferenceIdIds), Description = "ReferenceId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ReferenceIdIds { get; set; }
-        [ApiMember(Name = nameof(ReferenceIdCount), Description = "ReferenceId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ReferenceIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Start), Description = "DateTime?", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? Start { get; set; }
-        [ApiMember(Name = nameof(StartIds), Description = "Start Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StartIds { get; set; }
-        [ApiMember(Name = nameof(StartCount), Description = "Start Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StartCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Approved",@"Pending",@"Rejected"})]

@@ -64,34 +64,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Multiplier), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Multiplier { get; set; }
-        [ApiMember(Name = nameof(MultiplierIds), Description = "Multiplier Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> MultiplierIds { get; set; }
-        [ApiMember(Name = nameof(MultiplierCount), Description = "Multiplier Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? MultiplierCount { get; set; }
 
 
         [ApiMember(Name = nameof(Number), Description = "decimal?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public decimal? Number { get; set; }
-        [ApiMember(Name = nameof(NumberIds), Description = "Number Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NumberIds { get; set; }
-        [ApiMember(Name = nameof(NumberCount), Description = "Number Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NumberCount { get; set; }
 
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Order { get; set; }
-        [ApiMember(Name = nameof(OrderIds), Description = "Order Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OrderIds { get; set; }
-        [ApiMember(Name = nameof(OrderCount), Description = "Order Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(Unit), Description = "UnitOfMeasure", IsRequired = true)]

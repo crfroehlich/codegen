@@ -62,12 +62,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(BioPortal), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string BioPortal { get; set; }
-        [ApiMember(Name = nameof(BioPortalIds), Description = "BioPortal Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> BioPortalIds { get; set; }
-        [ApiMember(Name = nameof(BioPortalCount), Description = "BioPortal Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? BioPortalCount { get; set; }
 
 
         [ApiMember(Name = nameof(Categories), Description = "TermCategory", IsRequired = false)]
@@ -84,12 +78,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(CUI), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string CUI { get; set; }
-        [ApiMember(Name = nameof(CUIIds), Description = "CUI Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CUIIds { get; set; }
-        [ApiMember(Name = nameof(CUICount), Description = "CUI Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CUICount { get; set; }
 
 
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]
@@ -103,45 +91,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(MedDRA), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string MedDRA { get; set; }
-        [ApiMember(Name = nameof(MedDRAIds), Description = "MedDRA Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> MedDRAIds { get; set; }
-        [ApiMember(Name = nameof(MedDRACount), Description = "MedDRA Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? MedDRACount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
-        [ApiMember(Name = nameof(NameIds), Description = "Name Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NameIds { get; set; }
-        [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(RxNorm), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string RxNorm { get; set; }
-        [ApiMember(Name = nameof(RxNormIds), Description = "RxNorm Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> RxNormIds { get; set; }
-        [ApiMember(Name = nameof(RxNormCount), Description = "RxNorm Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? RxNormCount { get; set; }
 
 
         [ApiMember(Name = nameof(SNOWMED), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SNOWMED { get; set; }
-        [ApiMember(Name = nameof(SNOWMEDIds), Description = "SNOWMED Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SNOWMEDIds { get; set; }
-        [ApiMember(Name = nameof(SNOWMEDCount), Description = "SNOWMED Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SNOWMEDCount { get; set; }
 
 
         [ApiMember(Name = nameof(Synonyms), Description = "TermSynonym", IsRequired = false)]
@@ -158,23 +122,11 @@ namespace Services.Dto
         [ApiMember(Name = nameof(TUI), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TUI { get; set; }
-        [ApiMember(Name = nameof(TUIIds), Description = "TUI Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TUIIds { get; set; }
-        [ApiMember(Name = nameof(TUICount), Description = "TUI Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TUICount { get; set; }
 
 
         [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string URI { get; set; }
-        [ApiMember(Name = nameof(URIIds), Description = "URI Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> URIIds { get; set; }
-        [ApiMember(Name = nameof(URICount), Description = "URI Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? URICount { get; set; }
 
 
 

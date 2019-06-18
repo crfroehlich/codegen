@@ -60,56 +60,26 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Completed), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Completed { get; set; }
-        [ApiMember(Name = nameof(CompletedIds), Description = "Completed Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CompletedIds { get; set; }
-        [ApiMember(Name = nameof(CompletedCount), Description = "Completed Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CompletedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Data { get; set; }
-        [ApiMember(Name = nameof(DataIds), Description = "Data Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DataIds { get; set; }
-        [ApiMember(Name = nameof(DataCount), Description = "Data Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(Ended), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? Ended { get; set; }
-        [ApiMember(Name = nameof(EndedIds), Description = "Ended Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EndedIds { get; set; }
-        [ApiMember(Name = nameof(EndedCount), Description = "Ended Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EndedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Errors), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Errors { get; set; }
-        [ApiMember(Name = nameof(ErrorsIds), Description = "Errors Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ErrorsIds { get; set; }
-        [ApiMember(Name = nameof(ErrorsCount), Description = "Errors Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ErrorsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Failed), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Failed { get; set; }
-        [ApiMember(Name = nameof(FailedIds), Description = "Failed Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> FailedIds { get; set; }
-        [ApiMember(Name = nameof(FailedCount), Description = "Failed Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? FailedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Items), Description = "BackgroundTaskItem", IsRequired = false)]
@@ -126,34 +96,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Logs), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Logs { get; set; }
-        [ApiMember(Name = nameof(LogsIds), Description = "Logs Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LogsIds { get; set; }
-        [ApiMember(Name = nameof(LogsCount), Description = "Logs Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LogsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Succeeded), Description = "bool?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool? Succeeded { get; set; }
-        [ApiMember(Name = nameof(SucceededIds), Description = "Succeeded Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SucceededIds { get; set; }
-        [ApiMember(Name = nameof(SucceededCount), Description = "Succeeded Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SucceededCount { get; set; }
 
 
         [ApiMember(Name = nameof(Summary), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Summary { get; set; }
-        [ApiMember(Name = nameof(SummaryIds), Description = "Summary Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SummaryIds { get; set; }
-        [ApiMember(Name = nameof(SummaryCount), Description = "Summary Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SummaryCount { get; set; }
 
 
         [ApiMember(Name = nameof(Task), Description = "BackgroundTask", IsRequired = true)]

@@ -52,45 +52,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DatabaseState), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string DatabaseState { get; set; }
-        [ApiMember(Name = nameof(DatabaseStateIds), Description = "DatabaseState Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DatabaseStateIds { get; set; }
-        [ApiMember(Name = nameof(DatabaseStateCount), Description = "DatabaseState Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DatabaseStateCount { get; set; }
 
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Description { get; set; }
-        [ApiMember(Name = nameof(DescriptionIds), Description = "Description Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DescriptionIds { get; set; }
-        [ApiMember(Name = nameof(DescriptionCount), Description = "Description Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Release), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Release { get; set; }
-        [ApiMember(Name = nameof(ReleaseIds), Description = "Release Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ReleaseIds { get; set; }
-        [ApiMember(Name = nameof(ReleaseCount), Description = "Release Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ReleaseCount { get; set; }
 
 
         [ApiMember(Name = nameof(VersionName), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string VersionName { get; set; }
-        [ApiMember(Name = nameof(VersionNameIds), Description = "VersionName Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> VersionNameIds { get; set; }
-        [ApiMember(Name = nameof(VersionNameCount), Description = "VersionName Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? VersionNameCount { get; set; }
 
 
 

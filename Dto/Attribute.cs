@@ -85,45 +85,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IsCharacteristic), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsCharacteristic { get; set; }
-        [ApiMember(Name = nameof(IsCharacteristicIds), Description = "IsCharacteristic Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsCharacteristicIds { get; set; }
-        [ApiMember(Name = nameof(IsCharacteristicCount), Description = "IsCharacteristic Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsCharacteristicCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsOutcome), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool IsOutcome { get; set; }
-        [ApiMember(Name = nameof(IsOutcomeIds), Description = "IsOutcome Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsOutcomeIds { get; set; }
-        [ApiMember(Name = nameof(IsOutcomeCount), Description = "IsOutcome Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsOutcomeCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsPositive), Description = "bool?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool? IsPositive { get; set; }
-        [ApiMember(Name = nameof(IsPositiveIds), Description = "IsPositive Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IsPositiveIds { get; set; }
-        [ApiMember(Name = nameof(IsPositiveCount), Description = "IsPositive Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IsPositiveCount { get; set; }
 
 
         [ApiMember(Name = nameof(UniqueKey), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string UniqueKey { get; set; }
-        [ApiMember(Name = nameof(UniqueKeyIds), Description = "UniqueKey Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> UniqueKeyIds { get; set; }
-        [ApiMember(Name = nameof(UniqueKeyCount), Description = "UniqueKey Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? UniqueKeyCount { get; set; }
 
 
 

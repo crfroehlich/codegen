@@ -68,45 +68,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ConfluenceId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ConfluenceId { get; set; }
-        [ApiMember(Name = nameof(ConfluenceIdIds), Description = "ConfluenceId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ConfluenceIdIds { get; set; }
-        [ApiMember(Name = nameof(ConfluenceIdCount), Description = "ConfluenceId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ConfluenceIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
-        [ApiMember(Name = nameof(NameIds), Description = "Name Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> NameIds { get; set; }
-        [ApiMember(Name = nameof(NameCount), Description = "Name Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Reprocess), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Reprocess { get; set; }
-        [ApiMember(Name = nameof(ReprocessIds), Description = "Reprocess Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ReprocessIds { get; set; }
-        [ApiMember(Name = nameof(ReprocessCount), Description = "Reprocess Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ReprocessCount { get; set; }
 
 
         [ApiMember(Name = nameof(Reprocessed), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? Reprocessed { get; set; }
-        [ApiMember(Name = nameof(ReprocessedIds), Description = "Reprocessed Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ReprocessedIds { get; set; }
-        [ApiMember(Name = nameof(ReprocessedCount), Description = "Reprocessed Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ReprocessedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]

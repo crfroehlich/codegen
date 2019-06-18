@@ -98,112 +98,52 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Abstract), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Abstract { get; set; }
-        [ApiMember(Name = nameof(AbstractIds), Description = "Abstract Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> AbstractIds { get; set; }
-        [ApiMember(Name = nameof(AbstractCount), Description = "Abstract Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? AbstractCount { get; set; }
 
 
         [ApiMember(Name = nameof(AccessionID), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string AccessionID { get; set; }
-        [ApiMember(Name = nameof(AccessionIDIds), Description = "AccessionID Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> AccessionIDIds { get; set; }
-        [ApiMember(Name = nameof(AccessionIDCount), Description = "AccessionID Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? AccessionIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(Acronym), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Acronym { get; set; }
-        [ApiMember(Name = nameof(AcronymIds), Description = "Acronym Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> AcronymIds { get; set; }
-        [ApiMember(Name = nameof(AcronymCount), Description = "Acronym Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? AcronymCount { get; set; }
 
 
         [ApiMember(Name = nameof(ArticleId), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ArticleId { get; set; }
-        [ApiMember(Name = nameof(ArticleIdIds), Description = "ArticleId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ArticleIdIds { get; set; }
-        [ApiMember(Name = nameof(ArticleIdCount), Description = "ArticleId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ArticleIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Authors), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Authors { get; set; }
-        [ApiMember(Name = nameof(AuthorsIds), Description = "Authors Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> AuthorsIds { get; set; }
-        [ApiMember(Name = nameof(AuthorsCount), Description = "Authors Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? AuthorsCount { get; set; }
 
 
         [ApiMember(Name = nameof(CochraneID), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string CochraneID { get; set; }
-        [ApiMember(Name = nameof(CochraneIDIds), Description = "CochraneID Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CochraneIDIds { get; set; }
-        [ApiMember(Name = nameof(CochraneIDCount), Description = "CochraneID Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CochraneIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(CorporateAuthor), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string CorporateAuthor { get; set; }
-        [ApiMember(Name = nameof(CorporateAuthorIds), Description = "CorporateAuthor Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CorporateAuthorIds { get; set; }
-        [ApiMember(Name = nameof(CorporateAuthorCount), Description = "CorporateAuthor Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CorporateAuthorCount { get; set; }
 
 
         [ApiMember(Name = nameof(Country), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Country { get; set; }
-        [ApiMember(Name = nameof(CountryIds), Description = "Country Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CountryIds { get; set; }
-        [ApiMember(Name = nameof(CountryCount), Description = "Country Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CountryCount { get; set; }
 
 
         [ApiMember(Name = nameof(CustomData), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string CustomData { get; set; }
-        [ApiMember(Name = nameof(CustomDataIds), Description = "CustomData Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CustomDataIds { get; set; }
-        [ApiMember(Name = nameof(CustomDataCount), Description = "CustomData Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CustomDataCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"ASCO",@"ClinicalTrials.gov",@"Cochrane",@"Embase",@"IOVS",@"Manual Entry",@"MEDLINE",@"Northern Light"})]
         [ApiMember(Name = nameof(DatabaseType), Description = "DatabaseTypeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DatabaseTypeEnm? DatabaseType { get; set; }
-        [ApiMember(Name = nameof(DatabaseTypeIds), Description = "DatabaseType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DatabaseTypeIds { get; set; }
-        [ApiMember(Name = nameof(DatabaseTypeCount), Description = "DatabaseType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DatabaseTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
@@ -221,78 +161,36 @@ namespace Services.Dto
         [ApiMember(Name = nameof(DocumentType), Description = "DocumentTypeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocumentTypeEnm? DocumentType { get; set; }
-        [ApiMember(Name = nameof(DocumentTypeIds), Description = "DocumentType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DocumentTypeIds { get; set; }
-        [ApiMember(Name = nameof(DocumentTypeCount), Description = "DocumentType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DocumentTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(DOI), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string DOI { get; set; }
-        [ApiMember(Name = nameof(DOIIds), Description = "DOI Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DOIIds { get; set; }
-        [ApiMember(Name = nameof(DOICount), Description = "DOI Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DOICount { get; set; }
 
 
         [ApiMember(Name = nameof(EmbaseAccessionNumber), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string EmbaseAccessionNumber { get; set; }
-        [ApiMember(Name = nameof(EmbaseAccessionNumberIds), Description = "EmbaseAccessionNumber Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EmbaseAccessionNumberIds { get; set; }
-        [ApiMember(Name = nameof(EmbaseAccessionNumberCount), Description = "EmbaseAccessionNumber Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EmbaseAccessionNumberCount { get; set; }
 
 
         [ApiMember(Name = nameof(Emtree), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Emtree { get; set; }
-        [ApiMember(Name = nameof(EmtreeIds), Description = "Emtree Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EmtreeIds { get; set; }
-        [ApiMember(Name = nameof(EmtreeCount), Description = "Emtree Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EmtreeCount { get; set; }
 
 
         [ApiMember(Name = nameof(ErrataText), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ErrataText { get; set; }
-        [ApiMember(Name = nameof(ErrataTextIds), Description = "ErrataText Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ErrataTextIds { get; set; }
-        [ApiMember(Name = nameof(ErrataTextCount), Description = "ErrataText Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ErrataTextCount { get; set; }
 
 
         [ApiMember(Name = nameof(FullText), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string FullText { get; set; }
-        [ApiMember(Name = nameof(FullTextIds), Description = "FullText Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> FullTextIds { get; set; }
-        [ApiMember(Name = nameof(FullTextCount), Description = "FullText Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? FullTextCount { get; set; }
 
 
         [ApiMember(Name = nameof(FullTextURL), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string FullTextURL { get; set; }
-        [ApiMember(Name = nameof(FullTextURLIds), Description = "FullTextURL Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> FullTextURLIds { get; set; }
-        [ApiMember(Name = nameof(FullTextURLCount), Description = "FullTextURL Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? FullTextURLCount { get; set; }
 
 
         [ApiMember(Name = nameof(Import), Description = "ImportData", IsRequired = false)]
@@ -307,67 +205,31 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ImportType), Description = "StudyImportTypeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public StudyImportTypeEnm? ImportType { get; set; }
-        [ApiMember(Name = nameof(ImportTypeIds), Description = "ImportType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ImportTypeIds { get; set; }
-        [ApiMember(Name = nameof(ImportTypeCount), Description = "ImportType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ImportTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Institution), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Institution { get; set; }
-        [ApiMember(Name = nameof(InstitutionIds), Description = "Institution Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> InstitutionIds { get; set; }
-        [ApiMember(Name = nameof(InstitutionCount), Description = "Institution Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? InstitutionCount { get; set; }
 
 
         [ApiMember(Name = nameof(ISSN), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string ISSN { get; set; }
-        [ApiMember(Name = nameof(ISSNIds), Description = "ISSN Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ISSNIds { get; set; }
-        [ApiMember(Name = nameof(ISSNCount), Description = "ISSN Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ISSNCount { get; set; }
 
 
         [ApiMember(Name = nameof(Issue), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Issue { get; set; }
-        [ApiMember(Name = nameof(IssueIds), Description = "Issue Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> IssueIds { get; set; }
-        [ApiMember(Name = nameof(IssueCount), Description = "Issue Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? IssueCount { get; set; }
 
 
         [ApiMember(Name = nameof(JournalTitle), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string JournalTitle { get; set; }
-        [ApiMember(Name = nameof(JournalTitleIds), Description = "JournalTitle Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> JournalTitleIds { get; set; }
-        [ApiMember(Name = nameof(JournalTitleCount), Description = "JournalTitle Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? JournalTitleCount { get; set; }
 
 
         [ApiMember(Name = nameof(LegacySync), Description = "DateTime?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DateTime? LegacySync { get; set; }
-        [ApiMember(Name = nameof(LegacySyncIds), Description = "LegacySync Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> LegacySyncIds { get; set; }
-        [ApiMember(Name = nameof(LegacySyncCount), Description = "LegacySync Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? LegacySyncCount { get; set; }
 
 
         [ApiMember(Name = nameof(LookupTables), Description = "LookupTable", IsRequired = false)]
@@ -384,89 +246,41 @@ namespace Services.Dto
         [ApiMember(Name = nameof(MedlineID), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? MedlineID { get; set; }
-        [ApiMember(Name = nameof(MedlineIDIds), Description = "MedlineID Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> MedlineIDIds { get; set; }
-        [ApiMember(Name = nameof(MedlineIDCount), Description = "MedlineID Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? MedlineIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(MeSH), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string MeSH { get; set; }
-        [ApiMember(Name = nameof(MeSHIds), Description = "MeSH Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> MeSHIds { get; set; }
-        [ApiMember(Name = nameof(MeSHCount), Description = "MeSH Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? MeSHCount { get; set; }
 
 
         [ApiMember(Name = nameof(Pages), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Pages { get; set; }
-        [ApiMember(Name = nameof(PagesIds), Description = "Pages Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PagesIds { get; set; }
-        [ApiMember(Name = nameof(PagesCount), Description = "Pages Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PagesCount { get; set; }
 
 
         [ApiMember(Name = nameof(ParentChildStatus), Description = "char?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public char? ParentChildStatus { get; set; }
-        [ApiMember(Name = nameof(ParentChildStatusIds), Description = "ParentChildStatus Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ParentChildStatusIds { get; set; }
-        [ApiMember(Name = nameof(ParentChildStatusCount), Description = "ParentChildStatus Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ParentChildStatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(ParentID), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentID { get; set; }
-        [ApiMember(Name = nameof(ParentIDIds), Description = "ParentID Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ParentIDIds { get; set; }
-        [ApiMember(Name = nameof(ParentIDCount), Description = "ParentID Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ParentIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(PublicationDate), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string PublicationDate { get; set; }
-        [ApiMember(Name = nameof(PublicationDateIds), Description = "PublicationDate Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PublicationDateIds { get; set; }
-        [ApiMember(Name = nameof(PublicationDateCount), Description = "PublicationDate Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PublicationDateCount { get; set; }
 
 
         [ApiMember(Name = nameof(PublicationYear), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? PublicationYear { get; set; }
-        [ApiMember(Name = nameof(PublicationYearIds), Description = "PublicationYear Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PublicationYearIds { get; set; }
-        [ApiMember(Name = nameof(PublicationYearCount), Description = "PublicationYear Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PublicationYearCount { get; set; }
 
 
         [ApiMember(Name = nameof(PubType), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string PubType { get; set; }
-        [ApiMember(Name = nameof(PubTypeIds), Description = "PubType Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PubTypeIds { get; set; }
-        [ApiMember(Name = nameof(PubTypeCount), Description = "PubType Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PubTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Reconciliation), Description = "ReconcileDocument", IsRequired = false)]
@@ -480,89 +294,41 @@ namespace Services.Dto
         [ApiMember(Name = nameof(ReferenceStudy), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ReferenceStudy { get; set; }
-        [ApiMember(Name = nameof(ReferenceStudyIds), Description = "ReferenceStudy Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ReferenceStudyIds { get; set; }
-        [ApiMember(Name = nameof(ReferenceStudyCount), Description = "ReferenceStudy Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ReferenceStudyCount { get; set; }
 
 
         [ApiMember(Name = nameof(SecondarySourceID), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SecondarySourceID { get; set; }
-        [ApiMember(Name = nameof(SecondarySourceIDIds), Description = "SecondarySourceID Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SecondarySourceIDIds { get; set; }
-        [ApiMember(Name = nameof(SecondarySourceIDCount), Description = "SecondarySourceID Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SecondarySourceIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(Source), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Source { get; set; }
-        [ApiMember(Name = nameof(SourceIds), Description = "Source Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SourceIds { get; set; }
-        [ApiMember(Name = nameof(SourceCount), Description = "Source Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SourceCount { get; set; }
 
 
         [ApiMember(Name = nameof(StorageModel), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string StorageModel { get; set; }
-        [ApiMember(Name = nameof(StorageModelIds), Description = "StorageModel Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StorageModelIds { get; set; }
-        [ApiMember(Name = nameof(StorageModelCount), Description = "StorageModel Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StorageModelCount { get; set; }
 
 
         [ApiMember(Name = nameof(SupplementalFiles), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string SupplementalFiles { get; set; }
-        [ApiMember(Name = nameof(SupplementalFilesIds), Description = "SupplementalFiles Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SupplementalFilesIds { get; set; }
-        [ApiMember(Name = nameof(SupplementalFilesCount), Description = "SupplementalFiles Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SupplementalFilesCount { get; set; }
 
 
         [ApiMember(Name = nameof(TaStudyDesign), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TaStudyDesign { get; set; }
-        [ApiMember(Name = nameof(TaStudyDesignIds), Description = "TaStudyDesign Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TaStudyDesignIds { get; set; }
-        [ApiMember(Name = nameof(TaStudyDesignCount), Description = "TaStudyDesign Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TaStudyDesignCount { get; set; }
 
 
         [ApiMember(Name = nameof(Title), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Title { get; set; }
-        [ApiMember(Name = nameof(TitleIds), Description = "Title Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TitleIds { get; set; }
-        [ApiMember(Name = nameof(TitleCount), Description = "Title Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TitleCount { get; set; }
 
 
         [ApiMember(Name = nameof(TrialOutcome), Description = "short?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public short? TrialOutcome { get; set; }
-        [ApiMember(Name = nameof(TrialOutcomeIds), Description = "TrialOutcome Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TrialOutcomeIds { get; set; }
-        [ApiMember(Name = nameof(TrialOutcomeCount), Description = "TrialOutcome Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TrialOutcomeCount { get; set; }
 
 
         [ApiMember(Name = nameof(VariableData), Description = "VariableInstance", IsRequired = false)]
@@ -579,12 +345,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Volume), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Volume { get; set; }
-        [ApiMember(Name = nameof(VolumeIds), Description = "Volume Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> VolumeIds { get; set; }
-        [ApiMember(Name = nameof(VolumeCount), Description = "Volume Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? VolumeCount { get; set; }
 
 
 

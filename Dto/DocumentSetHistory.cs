@@ -62,45 +62,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(EvidencePortalID), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? EvidencePortalID { get; set; }
-        [ApiMember(Name = nameof(EvidencePortalIDIds), Description = "EvidencePortalID Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> EvidencePortalIDIds { get; set; }
-        [ApiMember(Name = nameof(EvidencePortalIDCount), Description = "EvidencePortalID Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? EvidencePortalIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(FqId), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? FqId { get; set; }
-        [ApiMember(Name = nameof(FqIdIds), Description = "FqId Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> FqIdIds { get; set; }
-        [ApiMember(Name = nameof(FqIdCount), Description = "FqId Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? FqIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(StudyCount), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StudyCount { get; set; }
-        [ApiMember(Name = nameof(StudyCountIds), Description = "StudyCount Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StudyCountIds { get; set; }
-        [ApiMember(Name = nameof(StudyCountCount), Description = "StudyCount Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StudyCountCount { get; set; }
 
 
         [ApiMember(Name = nameof(StudyCountFQ), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? StudyCountFQ { get; set; }
-        [ApiMember(Name = nameof(StudyCountFQIds), Description = "StudyCountFQ Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StudyCountFQIds { get; set; }
-        [ApiMember(Name = nameof(StudyCountFQCount), Description = "StudyCountFQ Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StudyCountFQCount { get; set; }
 
 
 

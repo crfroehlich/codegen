@@ -57,12 +57,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Approved), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Approved { get; set; }
-        [ApiMember(Name = nameof(ApprovedIds), Description = "Approved Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ApprovedIds { get; set; }
-        [ApiMember(Name = nameof(ApprovedCount), Description = "Approved Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ApprovedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
@@ -87,12 +81,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Preferred), Description = "bool", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public bool Preferred { get; set; }
-        [ApiMember(Name = nameof(PreferredIds), Description = "Preferred Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> PreferredIds { get; set; }
-        [ApiMember(Name = nameof(PreferredCount), Description = "Preferred Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? PreferredCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scope), Description = "Scope", IsRequired = false)]
@@ -106,12 +94,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Synonym), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Synonym { get; set; }
-        [ApiMember(Name = nameof(SynonymIds), Description = "Synonym Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SynonymIds { get; set; }
-        [ApiMember(Name = nameof(SynonymCount), Description = "Synonym Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SynonymCount { get; set; }
 
 
 

@@ -64,56 +64,26 @@ namespace Services.Dto
         [ApiMember(Name = nameof(BoundTerms), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? BoundTerms { get; set; }
-        [ApiMember(Name = nameof(BoundTermsIds), Description = "BoundTerms Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> BoundTermsIds { get; set; }
-        [ApiMember(Name = nameof(BoundTermsCount), Description = "BoundTerms Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? BoundTermsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Characteristics), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Characteristics { get; set; }
-        [ApiMember(Name = nameof(CharacteristicsIds), Description = "Characteristics Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CharacteristicsIds { get; set; }
-        [ApiMember(Name = nameof(CharacteristicsCount), Description = "Characteristics Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CharacteristicsCount { get; set; }
 
 
         [ApiMember(Name = nameof(DataPoints), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DataPoints { get; set; }
-        [ApiMember(Name = nameof(DataPointsIds), Description = "DataPoints Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DataPointsIds { get; set; }
-        [ApiMember(Name = nameof(DataPointsCount), Description = "DataPoints Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DataPointsCount { get; set; }
 
 
         [ApiMember(Name = nameof(DesignCount), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DesignCount { get; set; }
-        [ApiMember(Name = nameof(DesignCountIds), Description = "DesignCount Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DesignCountIds { get; set; }
-        [ApiMember(Name = nameof(DesignCountCount), Description = "DesignCount Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DesignCountCount { get; set; }
 
 
         [ApiMember(Name = nameof(DesignList), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string DesignList { get; set; }
-        [ApiMember(Name = nameof(DesignListIds), Description = "DesignList Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> DesignListIds { get; set; }
-        [ApiMember(Name = nameof(DesignListCount), Description = "DesignList Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? DesignListCount { get; set; }
 
 
         [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = true)]
@@ -127,34 +97,16 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Interventions), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Interventions { get; set; }
-        [ApiMember(Name = nameof(InterventionsIds), Description = "Interventions Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> InterventionsIds { get; set; }
-        [ApiMember(Name = nameof(InterventionsCount), Description = "Interventions Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? InterventionsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Outcomes), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Outcomes { get; set; }
-        [ApiMember(Name = nameof(OutcomesIds), Description = "Outcomes Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OutcomesIds { get; set; }
-        [ApiMember(Name = nameof(OutcomesCount), Description = "Outcomes Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OutcomesCount { get; set; }
 
 
         [ApiMember(Name = nameof(OutcomesReported), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? OutcomesReported { get; set; }
-        [ApiMember(Name = nameof(OutcomesReportedIds), Description = "OutcomesReported Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OutcomesReportedIds { get; set; }
-        [ApiMember(Name = nameof(OutcomesReportedCount), Description = "OutcomesReported Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OutcomesReportedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Stat), Description = "Stats", IsRequired = true)]
@@ -168,45 +120,21 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Studies), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? Studies { get; set; }
-        [ApiMember(Name = nameof(StudiesIds), Description = "Studies Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> StudiesIds { get; set; }
-        [ApiMember(Name = nameof(StudiesCount), Description = "Studies Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? StudiesCount { get; set; }
 
 
         [ApiMember(Name = nameof(TypeCount), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? TypeCount { get; set; }
-        [ApiMember(Name = nameof(TypeCountIds), Description = "TypeCount Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TypeCountIds { get; set; }
-        [ApiMember(Name = nameof(TypeCountCount), Description = "TypeCount Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TypeCountCount { get; set; }
 
 
         [ApiMember(Name = nameof(TypeList), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string TypeList { get; set; }
-        [ApiMember(Name = nameof(TypeListIds), Description = "TypeList Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TypeListIds { get; set; }
-        [ApiMember(Name = nameof(TypeListCount), Description = "TypeList Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TypeListCount { get; set; }
 
 
         [ApiMember(Name = nameof(UnboundTerms), Description = "int?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? UnboundTerms { get; set; }
-        [ApiMember(Name = nameof(UnboundTermsIds), Description = "UnboundTerms Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> UnboundTermsIds { get; set; }
-        [ApiMember(Name = nameof(UnboundTermsCount), Description = "UnboundTerms Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? UnboundTermsCount { get; set; }
 
 
 

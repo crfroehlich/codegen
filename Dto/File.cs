@@ -57,57 +57,27 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Cost), Description = "decimal?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public decimal? Cost { get; set; }
-        [ApiMember(Name = nameof(CostIds), Description = "Cost Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> CostIds { get; set; }
-        [ApiMember(Name = nameof(CostCount), Description = "Cost Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? CostCount { get; set; }
 
 
         [ApiMember(Name = nameof(FileLabel), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string FileLabel { get; set; }
-        [ApiMember(Name = nameof(FileLabelIds), Description = "FileLabel Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> FileLabelIds { get; set; }
-        [ApiMember(Name = nameof(FileLabelCount), Description = "FileLabel Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? FileLabelCount { get; set; }
 
 
         [ApiMember(Name = nameof(FileName), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string FileName { get; set; }
-        [ApiMember(Name = nameof(FileNameIds), Description = "FileName Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> FileNameIds { get; set; }
-        [ApiMember(Name = nameof(FileNameCount), Description = "FileName Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? FileNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(OriginalFileName), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string OriginalFileName { get; set; }
-        [ApiMember(Name = nameof(OriginalFileNameIds), Description = "OriginalFileName Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> OriginalFileNameIds { get; set; }
-        [ApiMember(Name = nameof(OriginalFileNameCount), Description = "OriginalFileName Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? OriginalFileNameCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Free",@"Restricted"})]
         [ApiMember(Name = nameof(Rights), Description = "FileRightsEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public FileRightsEnm? Rights { get; set; }
-        [ApiMember(Name = nameof(RightsIds), Description = "Rights Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> RightsIds { get; set; }
-        [ApiMember(Name = nameof(RightsCount), Description = "Rights Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? RightsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
@@ -125,24 +95,12 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Source), Description = "FileSourceEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public FileSourceEnm? Source { get; set; }
-        [ApiMember(Name = nameof(SourceIds), Description = "Source Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> SourceIds { get; set; }
-        [ApiMember(Name = nameof(SourceCount), Description = "Source Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? SourceCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Document Set",@"Errata",@"Full Text",@"Protocol",@"Supplemental"})]
         [ApiMember(Name = nameof(Type), Description = "FileTypeEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public FileTypeEnm? Type { get; set; }
-        [ApiMember(Name = nameof(TypeIds), Description = "Type Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> TypeIds { get; set; }
-        [ApiMember(Name = nameof(TypeCount), Description = "Type Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? TypeCount { get; set; }
 
 
 

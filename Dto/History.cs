@@ -95,12 +95,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(URL), Description = "string", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string URL { get; set; }
-        [ApiMember(Name = nameof(URLIds), Description = "URL Ids", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> URLIds { get; set; }
-        [ApiMember(Name = nameof(URLCount), Description = "URL Count", IsRequired = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? URLCount { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
