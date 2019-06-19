@@ -382,6 +382,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Tag, DocEntityTag, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<Tag, DocEntityTag, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
+                    case "owners":
+                        return GetJunctionSearchResult<Tag, DocEntityTag, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Owner", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "scope":
                         return GetJunctionSearchResult<Tag, DocEntityTag, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
                     case "tag":
@@ -401,6 +403,8 @@ namespace Services.API
                         return AddJunction<Tag, DocEntityTag, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return AddJunction<Tag, DocEntityTag, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "owners":
+                        return AddJunction<Tag, DocEntityTag, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Owner", request);
                     case "scope":
                         return AddJunction<Tag, DocEntityTag, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":
@@ -419,6 +423,8 @@ namespace Services.API
                         return RemoveJunction<Tag, DocEntityTag, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return RemoveJunction<Tag, DocEntityTag, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "owners":
+                        return RemoveJunction<Tag, DocEntityTag, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Owner", request);
                     case "scope":
                         return RemoveJunction<Tag, DocEntityTag, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":
