@@ -265,6 +265,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.UPDATE);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Update>(currentUser, nameof(Update), request.Select);
             ret = entity.ToDto();
 

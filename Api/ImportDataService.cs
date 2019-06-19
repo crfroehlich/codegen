@@ -364,6 +364,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.IMPORTDATA);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<ImportData>(currentUser, nameof(ImportData), request.Select);
             ret = entity.ToDto();
 

@@ -270,6 +270,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.TIMECARD);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<TimeCard>(currentUser, nameof(TimeCard), request.Select);
             ret = entity.ToDto();
 

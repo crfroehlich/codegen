@@ -167,6 +167,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.LOOKUPTABLEENUM);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<LookupTableEnum>(currentUser, nameof(LookupTableEnum), request.Select);
             ret = entity.ToDto();
 

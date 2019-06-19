@@ -183,6 +183,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.DATETIME);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<DateTimeDto>(currentUser, nameof(DateTimeDto), request.Select);
             ret = entity.ToDto();
 

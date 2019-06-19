@@ -195,6 +195,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.LOOKUPCATEGORY);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<LookupCategory>(currentUser, nameof(LookupCategory), request.Select);
             ret = entity.ToDto();
 

@@ -183,6 +183,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.COMMENT);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Comment>(currentUser, nameof(Comment), request.Select);
             ret = entity.ToDto();
 

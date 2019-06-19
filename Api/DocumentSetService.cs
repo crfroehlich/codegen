@@ -263,6 +263,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.DOCUMENTSET);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<DocumentSet>(currentUser, nameof(DocumentSet), request.Select);
             ret = entity.ToDto();
 

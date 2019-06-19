@@ -251,6 +251,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.TERMMASTER);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<TermMaster>(currentUser, nameof(TermMaster), request.Select);
             ret = entity.ToDto();
 

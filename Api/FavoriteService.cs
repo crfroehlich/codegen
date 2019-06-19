@@ -169,6 +169,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.FAVORITE);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Favorite>(currentUser, nameof(Favorite), request.Select);
             ret = entity.ToDto();
 

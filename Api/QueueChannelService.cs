@@ -218,6 +218,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.QUEUECHANNEL);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<QueueChannel>(currentUser, nameof(QueueChannel), request.Select);
             ret = entity.ToDto();
 

@@ -203,6 +203,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.DEFAULT);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Default>(currentUser, nameof(Default), request.Select);
             ret = entity.ToDto();
 

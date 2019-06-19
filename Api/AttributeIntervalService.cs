@@ -153,6 +153,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.ATTRIBUTEINTERVAL);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<AttributeInterval>(currentUser, nameof(AttributeInterval), request.Select);
             ret = entity.ToDto();
 

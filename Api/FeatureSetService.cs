@@ -179,6 +179,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.FEATURESET);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<FeatureSet>(currentUser, nameof(FeatureSet), request.Select);
             ret = entity.ToDto();
 

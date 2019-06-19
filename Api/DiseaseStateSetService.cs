@@ -325,6 +325,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.DISEASESTATESET);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<DiseaseStateSet>(currentUser, nameof(DiseaseStateSet), request.Select);
             ret = entity.ToDto();
 

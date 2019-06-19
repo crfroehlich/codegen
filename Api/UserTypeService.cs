@@ -219,6 +219,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.USERTYPE);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<UserType>(currentUser, nameof(UserType), request.Select);
             ret = entity.ToDto();
 

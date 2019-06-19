@@ -210,6 +210,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.LOOKUPTABLEBINDING);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<LookupTableBinding>(currentUser, nameof(LookupTableBinding), request.Select);
             ret = entity.ToDto();
 

@@ -360,6 +360,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.PROJECT);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Project>(currentUser, nameof(Project), request.Select);
             ret = entity.ToDto();
 

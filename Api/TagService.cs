@@ -174,6 +174,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.TAG);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Tag>(currentUser, nameof(Tag), request.Select);
             ret = entity.ToDto();
 

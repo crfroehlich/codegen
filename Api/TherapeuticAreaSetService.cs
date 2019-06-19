@@ -325,6 +325,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.THERAPEUTICAREASET);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<TherapeuticAreaSet>(currentUser, nameof(TherapeuticAreaSet), request.Select);
             ret = entity.ToDto();
 

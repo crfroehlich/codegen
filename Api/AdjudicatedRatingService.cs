@@ -293,6 +293,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.ADJUDICATEDRATING);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<AdjudicatedRating>(currentUser, nameof(AdjudicatedRating), request.Select);
             ret = entity.ToDto();
 

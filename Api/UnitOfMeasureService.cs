@@ -223,6 +223,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.UNITOFMEASURE);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<UnitOfMeasure>(currentUser, nameof(UnitOfMeasure), request.Select);
             ret = entity.ToDto();
 

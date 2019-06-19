@@ -240,6 +240,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.JUNCTION);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Junction>(currentUser, nameof(Junction), request.Select);
             ret = entity.ToDto();
 

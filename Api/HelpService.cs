@@ -226,6 +226,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.HELP);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Help>(currentUser, nameof(Help), request.Select);
             ret = entity.ToDto();
 

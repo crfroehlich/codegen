@@ -290,6 +290,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.BACKGROUNDTASK);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<BackgroundTask>(currentUser, nameof(BackgroundTask), request.Select);
             ret = entity.ToDto();
 

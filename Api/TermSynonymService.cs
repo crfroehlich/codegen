@@ -209,6 +209,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.TERMSYNONYM);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<TermSynonym>(currentUser, nameof(TermSynonym), request.Select);
             ret = entity.ToDto();
 

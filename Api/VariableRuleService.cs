@@ -237,6 +237,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.VARIABLERULE);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<VariableRule>(currentUser, nameof(VariableRule), request.Select);
             ret = entity.ToDto();
 

@@ -169,6 +169,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.AUDITDELTA);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<AuditDelta>(currentUser, nameof(AuditDelta), request.Select);
             ret = entity.ToDto();
 

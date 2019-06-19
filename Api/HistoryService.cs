@@ -251,6 +251,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.HISTORY);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<History>(currentUser, nameof(History), request.Select);
             ret = entity.ToDto();
 

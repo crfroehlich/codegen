@@ -318,6 +318,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.RECONCILEDOCUMENT);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<ReconcileDocument>(currentUser, nameof(ReconcileDocument), request.Select);
             ret = entity.ToDto();
 

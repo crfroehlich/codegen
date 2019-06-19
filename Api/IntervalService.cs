@@ -212,6 +212,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.INTERVAL);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Interval>(currentUser, nameof(Interval), request.Select);
             ret = entity.ToDto();
 

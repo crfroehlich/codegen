@@ -178,6 +178,7 @@ namespace Services.API
                 DocCacheClient.RemoveSearch(DocConstantModelName.LOCALE);
             }
 
+            entity.SaveChanges(permission);
             DocPermissionFactory.SetSelect<Locale>(currentUser, nameof(Locale), request.Select);
             ret = entity.ToDto();
 
