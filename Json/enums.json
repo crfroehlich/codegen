@@ -1553,8 +1553,9 @@
   },
   "WorkflowStatus": {
     "ACCEPTED": "Accepted",
-    "REJECTED": "Rejected",
     "COLLECTED": "Collected",
+    "READY": "Ready",
+    "REJECTED": "Rejected",
     "REQUESTED": "Requested",
     "UNAVAILABLE": "Unavailable"
   },

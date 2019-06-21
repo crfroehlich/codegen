@@ -31,6 +31,8 @@ namespace Services.Enums
         ACCEPTED = 150786181,
         [EnumMember(Value = DocConstantWorkflowStatus.COLLECTED), SCDescript(DocConstantWorkflowStatus.COLLECTED), SSDescript(DocConstantWorkflowStatus.COLLECTED), SCDisplay(Name = DocConstantWorkflowStatus.COLLECTED)]
         COLLECTED = 150786183,
+        [EnumMember(Value = DocConstantWorkflowStatus.READY), SCDescript(DocConstantWorkflowStatus.READY), SSDescript(DocConstantWorkflowStatus.READY), SCDisplay(Name = DocConstantWorkflowStatus.READY)]
+        READY = 156823170,
         [EnumMember(Value = DocConstantWorkflowStatus.REJECTED), SCDescript(DocConstantWorkflowStatus.REJECTED), SSDescript(DocConstantWorkflowStatus.REJECTED), SCDisplay(Name = DocConstantWorkflowStatus.REJECTED)]
         REJECTED = 150786182,
         [EnumMember(Value = DocConstantWorkflowStatus.REQUESTED), SCDescript(DocConstantWorkflowStatus.REQUESTED), SSDescript(DocConstantWorkflowStatus.REQUESTED), SCDisplay(Name = DocConstantWorkflowStatus.REQUESTED)]
@@ -50,6 +52,8 @@ namespace Services.Enums
                     return DocConstantWorkflowStatus.ACCEPTED;
                 case WorkflowStatusEnm.COLLECTED:
                     return DocConstantWorkflowStatus.COLLECTED;
+                case WorkflowStatusEnm.READY:
+                    return DocConstantWorkflowStatus.READY;
                 case WorkflowStatusEnm.REJECTED:
                     return DocConstantWorkflowStatus.REJECTED;
                 case WorkflowStatusEnm.REQUESTED:
@@ -73,6 +77,7 @@ namespace Services.Enums
     {
         public const string ACCEPTED = "Accepted";
         public const string COLLECTED = "Collected";
+        public const string READY = "Ready";
         public const string REJECTED = "Rejected";
         public const string REQUESTED = "Requested";
         public const string UNAVAILABLE = "Unavailable";

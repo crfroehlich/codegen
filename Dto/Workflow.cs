@@ -122,7 +122,7 @@ namespace Services.Dto
         public int? ScopesCount { get; set; }
 
 
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Ready",@"Rejected",@"Requested",@"Unavailable"})]
         [ApiMember(Name = nameof(Status), Description = "WorkflowStatusEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public WorkflowStatusEnm? Status { get; set; }
@@ -292,7 +292,7 @@ namespace Services.Dto
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public List<int> ScopesIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Ready",@"Rejected",@"Requested",@"Unavailable"})]
         public WorkflowStatusEnm? Status { get; set; }
         public List<WorkflowStatusEnm?> Statuss { get; set; }
         public List<int> TasksIds { get; set; }
