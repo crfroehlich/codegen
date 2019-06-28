@@ -135,8 +135,8 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Favorite>(DocConstantModelName.FAVORITE, nameof(Favorite), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityBase.Get(request.Owner.Id) : null;
+            var pScope = DocEntityScope.Get(request.Scope?.Id, true, Execute) ?? DocEntityScope.Get(request.ScopeId, true, Execute);
+            var pOwner = DocEntityBase.Get(request.Owner?.Id, true, Execute) ?? DocEntityBase.Get(request.OwnerId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

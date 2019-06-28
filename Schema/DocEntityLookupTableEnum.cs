@@ -40,9 +40,9 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new LookupTableEnum()));
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityLookupTableEnum Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
+        public new static DocEntityLookupTableEnum Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityLookupTableEnum Get(int? primaryKey, bool noCache, DocQuery query)
+        public new static DocEntityLookupTableEnum Get(int? primaryKey, bool noCache, DocQuery query)
         {
             if(!(primaryKey > 0)) return null;
             return query.SelectAll<DocEntityLookupTableEnum>().FirstOrDefault(e => e.Id == primaryKey.Value);

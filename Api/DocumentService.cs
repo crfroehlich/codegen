@@ -241,6 +241,10 @@ namespace Services.API
                     entities = entities.Where(en => en.Title.Contains(request.Title));
                 if(!DocTools.IsNullOrEmpty(request.Titles))
                     entities = entities.Where(en => en.Title.In(request.Titles));
+                if(true == request.TrialIds?.Any())
+                {
+                    entities = entities.Where(en => en.Trial.Any(r => r.Id.In(request.TrialIds)));
+                }
                 if(request.TrialOutcome.HasValue)
                     entities = entities.Where(en => request.TrialOutcome.Value == en.TrialOutcome);
                 if(true == request.VariableDataIds?.Any())
@@ -311,7 +315,7 @@ namespace Services.API
             var pErrataText = request.ErrataText;
             var pFullText = request.FullText;
             var pFullTextURL = request.FullTextURL;
-            var pImport = (request.Import?.Id > 0) ? DocEntityImportData.Get(request.Import.Id) : null;
+            var pImport = DocEntityImportData.Get(request.Import?.Id, true, Execute) ?? DocEntityImportData.Get(request.ImportId, true, Execute);
             var pImportType = request.ImportType;
             var pInstitution = request.Institution;
             var pISSN = request.ISSN;
@@ -321,13 +325,14 @@ namespace Services.API
             var pLookupTables = GetVariable<Reference>(request, nameof(request.LookupTables), request.LookupTables?.ToList(), request.LookupTablesIds?.ToList());
             var pMedlineID = request.MedlineID;
             var pMeSH = request.MeSH;
+            var pMetadata = (DocTools.IsNullOrEmpty(request.Metadata)) ? null : DocSerialize<DocumentMetadata>.ToString(request.Metadata);
             var pPages = request.Pages;
             var pParentChildStatus = request.ParentChildStatus;
             var pParentID = request.ParentID;
             var pPublicationDate = request.PublicationDate;
             var pPublicationYear = request.PublicationYear;
             var pPubType = request.PubType;
-            var pReconciliation = (request.Reconciliation?.Id > 0) ? DocEntityReconcileDocument.Get(request.Reconciliation.Id) : null;
+            var pReconciliation = DocEntityReconcileDocument.Get(request.Reconciliation?.Id, true, Execute) ?? DocEntityReconcileDocument.Get(request.ReconciliationId, true, Execute);
             var pReferenceStudy = request.ReferenceStudy;
             var pSecondarySourceID = request.SecondarySourceID;
             var pSource = request.Source;
@@ -335,6 +340,7 @@ namespace Services.API
             var pSupplementalFiles = request.SupplementalFiles;
             var pTaStudyDesign = request.TaStudyDesign;
             var pTitle = request.Title;
+            var pTrial = GetVariable<Reference>(request, nameof(request.Trial), request.Trial?.ToList(), request.TrialIds?.ToList());
             var pTrialOutcome = request.TrialOutcome;
             var pVariableData = GetVariable<Reference>(request, nameof(request.VariableData), request.VariableData?.ToList(), request.VariableDataIds?.ToList());
             var pVolume = request.Volume;
@@ -451,6 +457,10 @@ namespace Services.API
             {
                 entity.MeSH = pMeSH;
             }
+            if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pMetadata, permission, nameof(request.Metadata), pMetadata != entity.Metadata))
+            {
+                entity.Metadata = pMetadata;
+            }
             if (AllowPatchValue<Document, string>(request, DocConstantModelName.DOCUMENT, pPages, permission, nameof(request.Pages), pPages != entity.Pages))
             {
                 entity.Pages = pPages;
@@ -524,6 +534,7 @@ namespace Services.API
             var idsToInvalidate = new List<int>();
             idsToInvalidate.AddRange(PatchCollection<Document, DocEntityDocument, Reference, DocEntityDocumentSet>(request, entity, pDocumentSets, permission, nameof(request.DocumentSets)));
             idsToInvalidate.AddRange(PatchCollection<Document, DocEntityDocument, Reference, DocEntityLookupTable>(request, entity, pLookupTables, permission, nameof(request.LookupTables)));
+            idsToInvalidate.AddRange(PatchCollection<Document, DocEntityDocument, Reference, DocEntityTrial>(request, entity, pTrial, permission, nameof(request.Trial)));
             idsToInvalidate.AddRange(PatchCollection<Document, DocEntityDocument, Reference, DocEntityVariableInstance>(request, entity, pVariableData, permission, nameof(request.VariableData)));
             if (idsToInvalidate.Any())
             {
@@ -688,6 +699,7 @@ namespace Services.API
                     var pMeSH = entity.MeSH;
                     if(!DocTools.IsNullOrEmpty(pMeSH))
                         pMeSH += " (Copy)";
+                    var pMetadata = entity.Metadata;
                     var pPages = entity.Pages;
                     if(!DocTools.IsNullOrEmpty(pPages))
                         pPages += " (Copy)";
@@ -716,6 +728,7 @@ namespace Services.API
                     var pTitle = entity.Title;
                     if(!DocTools.IsNullOrEmpty(pTitle))
                         pTitle += " (Copy)";
+                    var pTrial = entity.Trial.ToList();
                     var pTrialOutcome = entity.TrialOutcome;
                     var pVariableData = entity.VariableData.ToList();
                     var pVolume = entity.Volume;
@@ -750,6 +763,7 @@ namespace Services.API
                                 , LegacySync = pLegacySync
                                 , MedlineID = pMedlineID
                                 , MeSH = pMeSH
+                                , Metadata = pMetadata
                                 , Pages = pPages
                                 , ParentChildStatus = pParentChildStatus
                                 , ParentID = pParentID
@@ -775,6 +789,11 @@ namespace Services.API
                             foreach(var item in pLookupTables)
                             {
                                 entity.LookupTables.Add(item);
+                            }
+
+                            foreach(var item in pTrial)
+                            {
+                                entity.Trial.Add(item);
                             }
 
                             foreach(var item in pVariableData)
@@ -964,6 +983,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request, (ss) => HostContext.ResolveService<LookupTableService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                    case "trial":
+                        return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityTrial, Trial, TrialSearch>((int)request.Id, DocConstantModelName.TRIAL, "Trial", request, (ss) => HostContext.ResolveService<TrialService>(Request)?.Get(ss));
                     case "variableinstance":
                         return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request, (ss) => HostContext.ResolveService<VariableInstanceService>(Request)?.Get(ss));
                 default:
@@ -989,6 +1010,8 @@ namespace Services.API
                         return AddJunction<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request);
                     case "tag":
                         return AddJunction<Document, DocEntityDocument, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "trial":
+                        return AddJunction<Document, DocEntityDocument, DocEntityTrial, Trial, TrialSearch>((int)request.Id, DocConstantModelName.TRIAL, "Trial", request);
                     case "variableinstance":
                         return AddJunction<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request);
                 default:
@@ -1013,6 +1036,8 @@ namespace Services.API
                         return RemoveJunction<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request);
                     case "tag":
                         return RemoveJunction<Document, DocEntityDocument, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "trial":
+                        return RemoveJunction<Document, DocEntityDocument, DocEntityTrial, Trial, TrialSearch>((int)request.Id, DocConstantModelName.TRIAL, "Trial", request);
                     case "variableinstance":
                         return RemoveJunction<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request);
                 default:

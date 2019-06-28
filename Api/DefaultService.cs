@@ -159,10 +159,10 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Default>(DocConstantModelName.DEFAULT, nameof(Default), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pDiseaseState = (request.DiseaseState?.Id > 0) ? DocEntityDiseaseStateSet.Get(request.DiseaseState.Id) : null;
-            var pRole = (request.Role?.Id > 0) ? DocEntityRole.Get(request.Role.Id) : null;
-            var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
-            var pTherapeuticArea = (request.TherapeuticArea?.Id > 0) ? DocEntityTherapeuticAreaSet.Get(request.TherapeuticArea.Id) : null;
+            var pDiseaseState = DocEntityDiseaseStateSet.Get(request.DiseaseState?.Id, true, Execute) ?? DocEntityDiseaseStateSet.Get(request.DiseaseStateId, true, Execute);
+            var pRole = DocEntityRole.Get(request.Role?.Id, true, Execute) ?? DocEntityRole.Get(request.RoleId, true, Execute);
+            var pScope = DocEntityScope.Get(request.Scope?.Id, true, Execute) ?? DocEntityScope.Get(request.ScopeId, true, Execute);
+            var pTherapeuticArea = DocEntityTherapeuticAreaSet.Get(request.TherapeuticArea?.Id, true, Execute) ?? DocEntityTherapeuticAreaSet.Get(request.TherapeuticAreaId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

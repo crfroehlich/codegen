@@ -40,9 +40,9 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Document()));
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityDocument Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
+        public new static DocEntityDocument Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityDocument Get(int? primaryKey, bool noCache, DocQuery query)
+        public new static DocEntityDocument Get(int? primaryKey, bool noCache, DocQuery query)
         {
             if(!(primaryKey > 0)) return null;
             return query.SelectAll<DocEntityDocument>().FirstOrDefault(e => e.Id == primaryKey.Value);
@@ -210,6 +210,23 @@ namespace Services.Schema
         public string MeSH { get; set; }
 
 
+        [Field(Length = int.MaxValue)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public byte[] MetadataCompressed { get; set; }
+
+        private string _Metadata;
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public string Metadata
+        {
+            get => _Metadata ?? (_Metadata = DocZip.Unzip(MetadataCompressed));
+            set
+            {
+                _Metadata = value;
+                MetadataCompressed = DocZip.Zip(_Metadata);
+            }
+        }
+
+
         [Field]
         public string Pages { get; set; }
 
@@ -280,6 +297,15 @@ namespace Services.Schema
 
         [Field]
         public string Title { get; set; }
+
+
+        [Field]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public DocEntitySet<DocEntityTrial> Trial { get; private set; }
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public List<int> TrialIds => Trial.Select(e => e.Id).ToList();
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public int? TrialCount { get { return Trial.Count(); } private set { var noid = value; } }
 
 
         [Field]

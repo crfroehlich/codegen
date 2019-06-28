@@ -82,6 +82,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityTherapeuticAreaSet, bool>> TherapeuticAreaSetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTimeCard, bool>> TimeCardIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTimePoint, bool>> TimePointIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityTrial, bool>> TrialIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityUnitConversionRules, bool>> UnitConversionRulesIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityUnitOfMeasure, bool>> UnitOfMeasureIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityUnits, bool>> UnitsIgnoreArchived() => d => d.Archived == false;

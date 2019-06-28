@@ -148,8 +148,8 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pData = request.Data;
-            var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
-            var pRule = (request.Rule?.Id > 0) ? DocEntityVariableRule.Get(request.Rule.Id) : null;
+            var pDocument = DocEntityDocument.Get(request.Document?.Id, true, Execute) ?? DocEntityDocument.Get(request.DocumentId, true, Execute);
+            var pRule = DocEntityVariableRule.Get(request.Rule?.Id, true, Execute) ?? DocEntityVariableRule.Get(request.RuleId, true, Execute);
             var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;

@@ -166,7 +166,7 @@ namespace Services.API
             var pBinding = (DocTools.IsNullOrEmpty(request.Binding)) ? null : DocSerialize<Bindings>.ToString(request.Binding);
             var pBoundName = request.BoundName;
             DocEntityLookupTable pLookupTable = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.LookupTable?.Name, request.LookupTable?.Id);
-            var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
+            var pScope = DocEntityScope.Get(request.Scope?.Id, true, Execute) ?? DocEntityScope.Get(request.ScopeId, true, Execute);
             var pSynonyms = GetVariable<Reference>(request, nameof(request.Synonyms), request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
             var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
             var pArchived = true == request.Archived;

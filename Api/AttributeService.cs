@@ -196,7 +196,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             DocEntityLookupTable pAttributeName = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.AttributeName?.Name, request.AttributeName?.Id);
             DocEntityLookupTable pAttributeType = GetLookup(DocConstantLookupTable.ATTRIBUTETYPE, request.AttributeType?.Name, request.AttributeType?.Id);
-            var pInterval = (request.Interval?.Id > 0) ? DocEntityAttributeInterval.Get(request.Interval.Id) : null;
+            var pInterval = DocEntityAttributeInterval.Get(request.Interval?.Id, true, Execute) ?? DocEntityAttributeInterval.Get(request.IntervalId, true, Execute);
             var pIsCharacteristic = request.IsCharacteristic;
             var pIsOutcome = request.IsOutcome;
             var pIsPositive = request.IsPositive;

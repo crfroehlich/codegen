@@ -263,7 +263,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pClientDepartment = request.ClientDepartment;
-            var pDivision = (request.Division?.Id > 0) ? DocEntityDivision.Get(request.Division.Id) : null;
+            var pDivision = DocEntityDivision.Get(request.Division?.Id, true, Execute) ?? DocEntityDivision.Get(request.DivisionId, true, Execute);
             var pDocumentSets = GetVariable<Reference>(request, nameof(request.DocumentSets), request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
             var pEmail = request.Email;
             var pExpireDate = request.ExpireDate;
@@ -278,7 +278,7 @@ namespace Services.API
             var pLastLogin = request.LastLogin;
             var pLastName = request.LastName;
             var pLegacyUsername = request.LegacyUsername;
-            var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.Get(request.Locale.Id) : null;
+            var pLocale = DocEntityLocale.Get(request.Locale?.Id, true, Execute) ?? DocEntityLocale.Get(request.LocaleId, true, Execute);
             var pLoginCount = request.LoginCount;
             var pName = request.Name;
             var pRoles = GetVariable<Role>(request, nameof(request.Roles), request.Roles?.ToList(), request.RolesIds?.ToList());
@@ -291,7 +291,7 @@ namespace Services.API
             var pTeams = GetVariable<Reference>(request, nameof(request.Teams), request.Teams?.ToList(), request.TeamsIds?.ToList());
             var pTimeCards = GetVariable<Reference>(request, nameof(request.TimeCards), request.TimeCards?.ToList(), request.TimeCardsIds?.ToList());
             var pUpdates = GetVariable<Reference>(request, nameof(request.Updates), request.Updates?.ToList(), request.UpdatesIds?.ToList());
-            var pUserType = (request.UserType?.Id > 0) ? DocEntityUserType.Get(request.UserType.Id) : null;
+            var pUserType = DocEntityUserType.Get(request.UserType?.Id, true, Execute) ?? DocEntityUserType.Get(request.UserTypeId, true, Execute);
             var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;

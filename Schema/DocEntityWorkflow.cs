@@ -40,9 +40,9 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Workflow()));
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityWorkflow Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
+        public new static DocEntityWorkflow Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityWorkflow Get(int? primaryKey, bool noCache, DocQuery query)
+        public new static DocEntityWorkflow Get(int? primaryKey, bool noCache, DocQuery query)
         {
             if(!(primaryKey > 0)) return null;
             return query.SelectAll<DocEntityWorkflow>().FirstOrDefault(e => e.Id == primaryKey.Value);
@@ -106,6 +106,13 @@ namespace Services.Schema
         public List<int> DocumentsIds => Documents.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? DocumentsCount { get { return Documents.Count(); } private set { var noid = value; } }
+
+
+        [Field(NullableOnUpgrade = true)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public DocEntityDocumentSet DocumentSet { get; set; }
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]

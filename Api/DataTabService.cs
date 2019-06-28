@@ -145,7 +145,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<DataTab>(DocConstantModelName.DATATAB, nameof(DataTab), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pClass = (request.Class?.Id > 0) ? DocEntityDataClass.Get(request.Class.Id) : null;
+            var pClass = DocEntityDataClass.Get(request.Class?.Id, true, Execute) ?? DocEntityDataClass.Get(request.ClassId, true, Execute);
             var pDescription = request.Description;
             var pName = request.Name;
             var pOrder = request.Order;

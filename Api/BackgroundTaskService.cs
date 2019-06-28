@@ -193,8 +193,8 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, nameof(BackgroundTask), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pApp = (request.App?.Id > 0) ? DocEntityApp.Get(request.App.Id) : null;
-            var pChannel = (request.Channel?.Id > 0) ? DocEntityQueueChannel.Get(request.Channel.Id) : null;
+            var pApp = DocEntityApp.Get(request.App?.Id, true, Execute) ?? DocEntityApp.Get(request.AppId, true, Execute);
+            var pChannel = DocEntityQueueChannel.Get(request.Channel?.Id, true, Execute) ?? DocEntityQueueChannel.Get(request.ChannelId, true, Execute);
             var pDescription = request.Description;
             var pEnabled = request.Enabled;
             var pFrequency = request.Frequency;

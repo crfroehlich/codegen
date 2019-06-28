@@ -176,7 +176,7 @@ namespace Services.API
             var pEmail = request.Email;
             var pIsInternal = request.IsInternal;
             var pName = request.Name;
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityUser.Get(request.Owner.Id) : null;
+            var pOwner = DocEntityUser.Get(request.Owner?.Id, true, Execute) ?? DocEntityUser.Get(request.OwnerId, true, Execute);
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSettings = (DocTools.IsNullOrEmpty(request.Settings)) ? null : DocSerialize<TeamSettings>.ToString(request.Settings);
             var pSlack = request.Slack;

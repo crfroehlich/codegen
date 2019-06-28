@@ -187,14 +187,14 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<History>(DocConstantModelName.HISTORY, nameof(History), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pApp = (request.App?.Id > 0) ? DocEntityApp.Get(request.App.Id) : null;
-            var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.Get(request.DocumentSet.Id) : null;
-            var pImpersonation = (request.Impersonation?.Id > 0) ? DocEntityImpersonation.Get(request.Impersonation.Id) : null;
-            var pPage = (request.Page?.Id > 0) ? DocEntityPage.Get(request.Page.Id) : null;
+            var pApp = DocEntityApp.Get(request.App?.Id, true, Execute) ?? DocEntityApp.Get(request.AppId, true, Execute);
+            var pDocumentSet = DocEntityDocumentSet.Get(request.DocumentSet?.Id, true, Execute) ?? DocEntityDocumentSet.Get(request.DocumentSetId, true, Execute);
+            var pImpersonation = DocEntityImpersonation.Get(request.Impersonation?.Id, true, Execute) ?? DocEntityImpersonation.Get(request.ImpersonationId, true, Execute);
+            var pPage = DocEntityPage.Get(request.Page?.Id, true, Execute) ?? DocEntityPage.Get(request.PageId, true, Execute);
             var pURL = request.URL;
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
-            var pUserSession = (request.UserSession?.Id > 0) ? DocEntityUserSession.Get(request.UserSession.Id) : null;
-            var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
+            var pUser = DocEntityUser.Get(request.User?.Id, true, Execute) ?? DocEntityUser.Get(request.UserId, true, Execute);
+            var pUserSession = DocEntityUserSession.Get(request.UserSession?.Id, true, Execute) ?? DocEntityUserSession.Get(request.UserSessionId, true, Execute);
+            var pWorkflow = DocEntityWorkflow.Get(request.Workflow?.Id, true, Execute) ?? DocEntityWorkflow.Get(request.WorkflowId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

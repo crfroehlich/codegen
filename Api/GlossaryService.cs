@@ -166,8 +166,8 @@ namespace Services.API
             var pDefinition = request.Definition;
             var pEnum = DocEntityLookupTableEnum.Get(request.Enum);
             var pIcon = request.Icon;
-            var pPage = (request.Page?.Id > 0) ? DocEntityPage.Get(request.Page.Id) : null;
-            var pTerm = (request.Term?.Id > 0) ? DocEntityTermMaster.Get(request.Term.Id) : null;
+            var pPage = DocEntityPage.Get(request.Page?.Id, true, Execute) ?? DocEntityPage.Get(request.PageId, true, Execute);
+            var pTerm = DocEntityTermMaster.Get(request.Term?.Id, true, Execute) ?? DocEntityTermMaster.Get(request.TermId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

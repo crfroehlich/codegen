@@ -26,111 +26,81 @@ using Xtensive.Orm;
 
 namespace Services.Schema
 {
-    [TableMapping(DocConstantModelName.JUNCTION)]
-    public partial class DocEntityJunction : DocEntityBase
+    [TableMapping(DocConstantModelName.TRIAL)]
+    public partial class DocEntityTrial : DocEntityBase
     {
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        private const string JUNCTION_CACHE = "JunctionCache";
+        private const string TRIAL_CACHE = "TrialCache";
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public  const ModelNameEnm CLASS_NAME = ModelNameEnm.JUNCTION;
+        public  const ModelNameEnm CLASS_NAME = ModelNameEnm.TRIAL;
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocEntityJunction(Session session) : base(session) {}
+        public DocEntityTrial(Session session) : base(session) {}
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocEntityJunction() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityTrial() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Junction()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Trial()));
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public new static DocEntityJunction Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
+        public new static DocEntityTrial Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public new static DocEntityJunction Get(int? primaryKey, bool noCache, DocQuery query)
+        public new static DocEntityTrial Get(int? primaryKey, bool noCache, DocQuery query)
         {
             if(!(primaryKey > 0)) return null;
-            return query.SelectAll<DocEntityJunction>().FirstOrDefault(e => e.Id == primaryKey.Value);
+            return query.SelectAll<DocEntityTrial>().FirstOrDefault(e => e.Id == primaryKey.Value);
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public new static DocEntityJunction Get(int? primaryKey)
+        public new static DocEntityTrial Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
-            var ret = DocEntityThreadCache<DocEntityJunction>.GetFromCache(primaryKey, JUNCTION_CACHE);
+            var ret = DocEntityThreadCache<DocEntityTrial>.GetFromCache(primaryKey, TRIAL_CACHE);
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityJunction>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
+                ret = query.SelectAll<DocEntityTrial>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityJunction>.UpdateCache(ret.Id, ret, JUNCTION_CACHE);
-                    DocEntityThreadCache<DocEntityJunction>.UpdateCache(ret.Hash, ret, JUNCTION_CACHE);
+                    DocEntityThreadCache<DocEntityTrial>.UpdateCache(ret.Id, ret, TRIAL_CACHE);
+                    DocEntityThreadCache<DocEntityTrial>.UpdateCache(ret.Hash, ret, TRIAL_CACHE);
                 }
             }
             return ret;
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityJunction Get(Guid hash)
+        public static DocEntityTrial Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
-            var ret = DocEntityThreadCache<DocEntityJunction>.GetFromCache(hash, JUNCTION_CACHE);
+            var ret = DocEntityThreadCache<DocEntityTrial>.GetFromCache(hash, TRIAL_CACHE);
             
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityJunction>().Where(e => e.Hash == hash).FirstOrDefault();
+                ret = query.SelectAll<DocEntityTrial>().Where(e => e.Hash == hash).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityJunction>.UpdateCache(ret.Id, ret, JUNCTION_CACHE);
-                    DocEntityThreadCache<DocEntityJunction>.UpdateCache(ret.Hash, ret, JUNCTION_CACHE);
+                    DocEntityThreadCache<DocEntityTrial>.UpdateCache(ret.Id, ret, TRIAL_CACHE);
+                    DocEntityThreadCache<DocEntityTrial>.UpdateCache(ret.Hash, ret, TRIAL_CACHE);
                 }
             }
             return ret;
         }
 
         [Field]
-        [Association(PairTo = nameof(DocEntityJunction.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association(PairTo = nameof(DocEntityDocument.Trial), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocEntitySet<DocEntityJunction> Children { get; private set; }
+        public DocEntitySet<DocEntityDocument> Documents { get; private set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<int> ChildrenIds => Children.Select(e => e.Id).ToList();
+        public List<int> DocumentsIds => Documents.Select(e => e.Id).ToList();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
+        public int? DocumentsCount { get { return Documents.Count(); } private set { var noid = value; } }
 
 
-        [Field(Length = int.MaxValue)]
-        public string Data { get; set; }
-
-
-        [Field]
-        public int? OwnerId { get; set; }
-
-
-        [Field]
-        public string OwnerType { get; set; }
+        [Field(Nullable = false, Length = 400)]
+        public string Name { get; set; }
 
 
         [Field]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocEntityJunction Parent { get; set; }
+        public DocEntityTrial Parent { get; set; }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
-
-
-        [Field]
-        public int? TargetId { get; set; }
-
-
-        [Field]
-        public string TargetType { get; set; }
-
-
-        [Field(Nullable = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocEntityLookupTable Type { get; set; }
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? Type_Id { get { return Type?.Id; } private set { var noid = value; } }
-
-
-        [Field(Nullable = false)]
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public DocEntityUser User { get; set; }
-        [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
 
@@ -163,7 +133,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public const string CACHE_KEY_PREFIX = "FindJunctions";
+        public const string CACHE_KEY_PREFIX = "FindTrials";
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -172,14 +142,7 @@ namespace Services.Schema
         protected override void OnRemoving()
         {
             base.OnRemoving();
-            try
-            {
-                Children.Clear(); //foreach thing in Children en.Remove();
-            }
-            catch(Exception ex)
-            {
-                throw new DocException("Failed to delete Junction in Children delete", ex);
-            }
+
             FlushCache();
         }
 
@@ -191,7 +154,7 @@ namespace Services.Schema
         {
             if (false == ValidationMessage.IsValid)
             {
-                throw new HttpError(HttpStatusCode.Conflict, $"Junction requires: {ValidationMessage.Message}.");
+                throw new HttpError(HttpStatusCode.Conflict, $"Trial requires: {ValidationMessage.Message}.");
             }
 
             base.OnValidate();
@@ -200,8 +163,7 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public override IDocEntity SaveChanges(bool ignoreCache, DocConstantPermission permission)
         {
-            OwnerType = OwnerType?.TrimAndPruneSpaces();
-            TargetType = TargetType?.TrimAndPruneSpaces();
+            Name = Name?.TrimAndPruneSpaces();
             return base.SaveChanges(ignoreCache, permission);
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
@@ -214,7 +176,7 @@ namespace Services.Schema
         public override void FlushCache()
         {
             base.FlushCache();
-
+            DocCacheClient.RemoveById(Id);
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public DocValidationMessage ValidationMessage
@@ -224,23 +186,10 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(Type))
+                if(DocTools.IsNullOrEmpty(Name))
                 {
                     isValid = false;
-                    message += " Type is a required property.";
-                }
-                else
-                {
-                    if(Type.Enum?.Name != "JunctionType")
-                    {
-                        isValid = false;
-                        message += " Type is a " + Type.Enum.Name + ", but must be a JunctionType.";
-                    }
-                }
-                if(DocTools.IsNullOrEmpty(User))
-                {
-                    isValid = false;
-                    message += " User is a required property.";
+                    message += " Name is a required property.";
                 }
 
                 var ret = new DocValidationMessage(message, isValid);
@@ -248,9 +197,9 @@ namespace Services.Schema
             }
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public Junction ToDto() => Mapper.Map<DocEntityJunction, Junction>(this);
+        public Trial ToDto() => Mapper.Map<DocEntityTrial, Trial>(this);
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static explicit operator Junction(DocEntityJunction en) => en?.ToDto();
+        public static explicit operator Trial(DocEntityTrial en) => en?.ToDto();
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public override IDto ToIDto() => ToDto();

@@ -167,6 +167,8 @@ namespace Services.Enums
         TIMECARD = 17319,
         [EnumMember(Value = DocConstantModelName.TIMEPOINT), SCDescript(DocConstantModelName.TIMEPOINT), SSDescript(DocConstantModelName.TIMEPOINT), SCDisplay(Name = DocConstantModelName.TIMEPOINT)]
         TIMEPOINT = 15078,
+        [EnumMember(Value = DocConstantModelName.TRIAL), SCDescript(DocConstantModelName.TRIAL), SSDescript(DocConstantModelName.TRIAL), SCDisplay(Name = DocConstantModelName.TRIAL)]
+        TRIAL = 21385,
         [EnumMember(Value = DocConstantModelName.UNITCONVERSIONRULES), SCDescript(DocConstantModelName.UNITCONVERSIONRULES), SSDescript(DocConstantModelName.UNITCONVERSIONRULES), SCDisplay(Name = DocConstantModelName.UNITCONVERSIONRULES)]
         UNITCONVERSIONRULES = 149,
         [EnumMember(Value = DocConstantModelName.UNITOFMEASURE), SCDescript(DocConstantModelName.UNITOFMEASURE), SSDescript(DocConstantModelName.UNITOFMEASURE), SCDisplay(Name = DocConstantModelName.UNITOFMEASURE)]
@@ -342,6 +344,8 @@ namespace Services.Enums
                     return DocConstantModelName.TIMECARD;
                 case ModelNameEnm.TIMEPOINT:
                     return DocConstantModelName.TIMEPOINT;
+                case ModelNameEnm.TRIAL:
+                    return DocConstantModelName.TRIAL;
                 case ModelNameEnm.UNITCONVERSIONRULES:
                     return DocConstantModelName.UNITCONVERSIONRULES;
                 case ModelNameEnm.UNITOFMEASURE:
@@ -453,6 +457,7 @@ namespace Services.Enums
         public const string THERAPEUTICAREASET = "TherapeuticAreaSet";
         public const string TIMECARD = "TimeCard";
         public const string TIMEPOINT = "TimePoint";
+        public const string TRIAL = "Trial";
         public const string UNITCONVERSIONRULES = "UnitConversionRules";
         public const string UNITOFMEASURE = "UnitOfMeasure";
         public const string UNITS = "Units";

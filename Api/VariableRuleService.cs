@@ -187,7 +187,7 @@ namespace Services.API
             var pDefinition = request.Definition;
             var pInstances = GetVariable<Reference>(request, nameof(request.Instances), request.Instances?.ToList(), request.InstancesIds?.ToList());
             var pName = request.Name;
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityVariableRule.Get(request.Owner.Id) : null;
+            var pOwner = DocEntityVariableRule.Get(request.Owner?.Id, true, Execute) ?? DocEntityVariableRule.Get(request.OwnerId, true, Execute);
             DocEntityLookupTable pRule = GetLookup(DocConstantLookupTable.VARIABLERULE, request.Rule?.Name, request.Rule?.Id);
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.VARIABLETYPE, request.Type?.Name, request.Type?.Id);

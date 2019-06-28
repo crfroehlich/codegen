@@ -40,9 +40,9 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DocumentSetHistory()));
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityDocumentSetHistory Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
+        public new static DocEntityDocumentSetHistory Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityDocumentSetHistory Get(int? primaryKey, bool noCache, DocQuery query)
+        public new static DocEntityDocumentSetHistory Get(int? primaryKey, bool noCache, DocQuery query)
         {
             if(!(primaryKey > 0)) return null;
             return query.SelectAll<DocEntityDocumentSetHistory>().FirstOrDefault(e => e.Id == primaryKey.Value);

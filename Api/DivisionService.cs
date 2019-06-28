@@ -163,11 +163,11 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Division>(DocConstantModelName.DIVISION, nameof(Division), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pClient = (request.Client?.Id > 0) ? DocEntityClient.Get(request.Client.Id) : null;
-            var pDefaultLocale = (request.DefaultLocale?.Id > 0) ? DocEntityLocale.Get(request.DefaultLocale.Id) : null;
+            var pClient = DocEntityClient.Get(request.Client?.Id, true, Execute) ?? DocEntityClient.Get(request.ClientId, true, Execute);
+            var pDefaultLocale = DocEntityLocale.Get(request.DefaultLocale?.Id, true, Execute) ?? DocEntityLocale.Get(request.DefaultLocaleId, true, Execute);
             var pDocumentSets = GetVariable<Reference>(request, nameof(request.DocumentSets), request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
             var pName = request.Name;
-            var pRole = (request.Role?.Id > 0) ? DocEntityRole.Get(request.Role.Id) : null;
+            var pRole = DocEntityRole.Get(request.Role?.Id, true, Execute) ?? DocEntityRole.Get(request.RoleId, true, Execute);
             var pSettings = (DocTools.IsNullOrEmpty(request.Settings)) ? null : DocSerialize<DivisionSettings>.ToString(request.Settings);
             var pUsers = GetVariable<Reference>(request, nameof(request.Users), request.Users?.ToList(), request.UsersIds?.ToList());
             var pArchived = true == request.Archived;

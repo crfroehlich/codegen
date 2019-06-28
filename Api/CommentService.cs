@@ -145,8 +145,8 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pText = request.Text;
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityBase.Get(request.Owner.Id) : null;
+            var pUser = DocEntityUser.Get(request.User?.Id, true, Execute) ?? DocEntityUser.Get(request.UserId, true, Execute);
+            var pOwner = DocEntityBase.Get(request.Owner?.Id, true, Execute) ?? DocEntityBase.Get(request.OwnerId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

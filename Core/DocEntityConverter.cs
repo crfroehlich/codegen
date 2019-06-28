@@ -297,6 +297,10 @@ namespace Services.Core
                     var enTimePoint = entity as DocEntityTimePoint;
                     ret = enTimePoint.ToDto() as TDto;
                     break;
+                case DocConstantModelName.TRIAL:
+                    var enTrial = entity as DocEntityTrial;
+                    ret = enTrial.ToDto() as TDto;
+                    break;
                 case DocConstantModelName.UNITCONVERSIONRULES:
                     var enUnitConversionRules = entity as DocEntityUnitConversionRules;
                     ret = enUnitConversionRules.ToDto() as TDto;

@@ -41,7 +41,7 @@ namespace Services.Dto
         public WorkflowBase(int? id) : this(DocConvert.ToInt(id)) {}
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public WorkflowBase(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, WorkflowStatusEnm? pStatus, List<Reference> pTasks, int? pTasksCount, WorkflowEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+        public WorkflowBase(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, Reference pDocumentSet, int? pDocumentSetId, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, WorkflowStatusEnm? pStatus, List<Reference> pTasks, int? pTasksCount, WorkflowEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
         {
             Bindings = pBindings;
             BindingsCount = pBindingsCount;
@@ -49,6 +49,8 @@ namespace Services.Dto
             Description = pDescription;
             Documents = pDocuments;
             DocumentsCount = pDocumentsCount;
+            DocumentSet = pDocumentSet;
+            DocumentSetId = pDocumentSetId;
             Name = pName;
             Owner = pOwner;
             OwnerId = pOwnerId;
@@ -98,6 +100,14 @@ namespace Services.Dto
         public int? DocumentsCount { get; set; }
 
 
+        [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = false)]
+[GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public Reference DocumentSet { get; set; }
+        [ApiMember(Name = nameof(DocumentSetId), Description = "Primary Key of DocumentSet", IsRequired = false)]
+        [GeneratedCodeAttribute("T4", "1.0.0.0")]
+        public int? DocumentSetId { get; set; }
+
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public string Name { get; set; }
@@ -122,7 +132,7 @@ namespace Services.Dto
         public int? ScopesCount { get; set; }
 
 
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Ready",@"Rejected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Processing",@"Ready",@"Rejected",@"Requested",@"Unavailable"})]
         [ApiMember(Name = nameof(Status), Description = "WorkflowStatusEnm?", IsRequired = false)]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public WorkflowStatusEnm? Status { get; set; }
@@ -177,7 +187,7 @@ namespace Services.Dto
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public void Deconstruct(out List<Reference> pBindings, out int? pBindingsCount, out string pData, out string pDescription, out List<Reference> pDocuments, out int? pDocumentsCount, out string pName, out Reference pOwner, out int? pOwnerId, out List<Reference> pScopes, out int? pScopesCount, out WorkflowStatusEnm? pStatus, out List<Reference> pTasks, out int? pTasksCount, out WorkflowEnm? pType, out Reference pUser, out int? pUserId, out List<Reference> pVariables, out int? pVariablesCount, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+        public void Deconstruct(out List<Reference> pBindings, out int? pBindingsCount, out string pData, out string pDescription, out List<Reference> pDocuments, out int? pDocumentsCount, out Reference pDocumentSet, out int? pDocumentSetId, out string pName, out Reference pOwner, out int? pOwnerId, out List<Reference> pScopes, out int? pScopesCount, out WorkflowStatusEnm? pStatus, out List<Reference> pTasks, out int? pTasksCount, out WorkflowEnm? pType, out Reference pUser, out int? pUserId, out List<Reference> pVariables, out int? pVariablesCount, out List<Reference> pWorkflows, out int? pWorkflowsCount)
         {
             pBindings = Bindings;
             pBindingsCount = BindingsCount;
@@ -185,6 +195,8 @@ namespace Services.Dto
             pDescription = Description;
             pDocuments = Documents;
             pDocumentsCount = DocumentsCount;
+            pDocumentSet = DocumentSet;
+            pDocumentSetId = DocumentSetId;
             pName = Name;
             pOwner = Owner;
             pOwnerId = OwnerId;
@@ -204,8 +216,8 @@ namespace Services.Dto
 
         //Not ready until C# v8.?
         //[GeneratedCodeAttribute("T4", "1.0.0.0")]
-        //public WorkflowBase With(int? pId = Id, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, string pData = Data, string pDescription = Description, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, WorkflowStatusEnm? pStatus = Status, List<Reference> pTasks = Tasks, int? pTasksCount = TasksCount, WorkflowEnm? pType = Type, Reference pUser = User, int? pUserId = UserId, List<Reference> pVariables = Variables, int? pVariablesCount = VariablesCount, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
-        //	new WorkflowBase(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pStatus, pTasks, pTasksCount, pType, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount);
+        //public WorkflowBase With(int? pId = Id, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, string pData = Data, string pDescription = Description, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, Reference pDocumentSet = DocumentSet, int? pDocumentSetId = DocumentSetId, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, WorkflowStatusEnm? pStatus = Status, List<Reference> pTasks = Tasks, int? pTasksCount = TasksCount, WorkflowEnm? pType = Type, Reference pUser = User, int? pUserId = UserId, List<Reference> pVariables = Variables, int? pVariablesCount = VariablesCount, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+        //	new WorkflowBase(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pDocumentSet, pDocumentSetId, pName, pOwner, pOwnerId, pScopes, pScopesCount, pStatus, pTasks, pTasksCount, pType, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount);
 
     }
 
@@ -222,14 +234,14 @@ namespace Services.Dto
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public Workflow(int id) : base(id) {}
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public Workflow(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, WorkflowStatusEnm? pStatus, List<Reference> pTasks, int? pTasksCount, WorkflowEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) :
-            base(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pStatus, pTasks, pTasksCount, pType, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount) { }
+        public Workflow(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, Reference pDocumentSet, int? pDocumentSetId, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, WorkflowStatusEnm? pStatus, List<Reference> pTasks, int? pTasksCount, WorkflowEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) :
+            base(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pDocumentSet, pDocumentSetId, pName, pOwner, pOwnerId, pScopes, pScopesCount, pStatus, pTasks, pTasksCount, pType, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount) { }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public static List<string> Fields => DocTools.Fields<Workflow>();
 
         private List<string> _Select;
         [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Bindings),nameof(BindingsCount),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Documents),nameof(DocumentsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Status),nameof(Tasks),nameof(TasksCount),nameof(Type),nameof(Updated),nameof(User),nameof(UserId),nameof(Variables),nameof(VariablesCount),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Bindings),nameof(BindingsCount),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSet),nameof(DocumentSetId),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Status),nameof(Tasks),nameof(TasksCount),nameof(Type),nameof(Updated),nameof(User),nameof(UserId),nameof(Variables),nameof(VariablesCount),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         public override List<string> Select
         {
@@ -287,12 +299,14 @@ namespace Services.Dto
         public string Description { get; set; }
         public List<string> Descriptions { get; set; }
         public List<int> DocumentsIds { get; set; }
+        public Reference DocumentSet { get; set; }
+        public List<int> DocumentSetIds { get; set; }
         public string Name { get; set; }
         public List<string> Names { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public List<int> ScopesIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Ready",@"Rejected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Processing",@"Ready",@"Rejected",@"Requested",@"Unavailable"})]
         public WorkflowStatusEnm? Status { get; set; }
         public List<WorkflowStatusEnm?> Statuss { get; set; }
         public List<int> TasksIds { get; set; }
@@ -341,6 +355,7 @@ namespace Services.Dto
         public bool doData { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Data))); }
         public bool doDescription { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Description))); }
         public bool doDocuments { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Documents))); }
+        public bool doDocumentSet { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Workflow.DocumentSet))); }
         public bool doName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Name))); }
         public bool doOwner { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Owner))); }
         public bool doScopes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Scopes))); }

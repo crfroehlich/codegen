@@ -179,11 +179,11 @@ namespace Services.API
             var pData = request.Data;
             var pOwnerId = request.OwnerId;
             var pOwnerType = request.OwnerType;
-            var pParent = (request.Parent?.Id > 0) ? DocEntityJunction.Get(request.Parent.Id) : null;
+            var pParent = DocEntityJunction.Get(request.Parent?.Id, true, Execute) ?? DocEntityJunction.Get(request.ParentId, true, Execute);
             var pTargetId = request.TargetId;
             var pTargetType = request.TargetType;
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.JUNCTIONTYPE, request.Type?.Name, request.Type?.Id);
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
+            var pUser = DocEntityUser.Get(request.User?.Id, true, Execute) ?? DocEntityUser.Get(request.UserId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

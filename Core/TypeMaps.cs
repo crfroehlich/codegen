@@ -35,6 +35,7 @@ namespace Services.Schema
     {
         public static List<TypeMap> Maps { get; } = new List<TypeMap>
         {
+            new TypeMap() { SchemaName = typeof(DocEntityTrial).FullName, TypeId = 21385, TableName = DocConstantModelName.TRIAL, ClassName = "Trial", DtoName = nameof(Trial), Class = ModelNameEnm.TRIAL },
             new TypeMap() { SchemaName = typeof(DocEntityFile).FullName, TypeId = 21285, TableName = DocConstantModelName.FILE, ClassName = "File", DtoName = nameof(File), Class = ModelNameEnm.FILE },
             new TypeMap() { SchemaName = typeof(DocEntityReconcileDocument).FullName, TypeId = 21185, TableName = DocConstantModelName.RECONCILEDOCUMENT, ClassName = "ReconcileDocument", DtoName = nameof(ReconcileDocument), Class = ModelNameEnm.RECONCILEDOCUMENT },
             new TypeMap() { SchemaName = typeof(DocEntityServePortalSet).FullName, TypeId = 21085, TableName = DocConstantModelName.SERVEPORTALSET, ClassName = "ServePortalSet", DtoName = nameof(ServePortalSet), Class = ModelNameEnm.SERVEPORTALSET },

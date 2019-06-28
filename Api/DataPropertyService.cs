@@ -311,7 +311,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pAutoCreateMissing = request.AutoCreateMissing;
             var pChildren = GetVariable<Reference>(request, nameof(request.Children), request.Children?.ToList(), request.ChildrenIds?.ToList());
-            var pClass = (request.Class?.Id > 0) ? DocEntityDataClass.Get(request.Class.Id) : null;
+            var pClass = DocEntityDataClass.Get(request.Class?.Id, true, Execute) ?? DocEntityDataClass.Get(request.ClassId, true, Execute);
             var pDescription = request.Description;
             var pDisplayName = request.DisplayName;
             var pIsAllowAddInForm = request.IsAllowAddInForm;
@@ -337,15 +337,15 @@ namespace Services.API
             var pLookupTableEnum = DocEntityLookupTableEnum.Get(request.LookupTableEnum);
             var pName = request.Name;
             var pOrder = request.Order;
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityDataProperty.Get(request.Owner.Id) : null;
+            var pOwner = DocEntityDataProperty.Get(request.Owner?.Id, true, Execute) ?? DocEntityDataProperty.Get(request.OwnerId, true, Execute);
             var pPrecision = request.Precision;
             var pRelationshipOnOwnerRemove = request.RelationshipOnOwnerRemove;
             var pRelationshipOnTargetRemove = request.RelationshipOnTargetRemove;
-            var pRelationshipPairTo = (request.RelationshipPairTo?.Id > 0) ? DocEntityDataProperty.Get(request.RelationshipPairTo.Id) : null;
+            var pRelationshipPairTo = DocEntityDataProperty.Get(request.RelationshipPairTo?.Id, true, Execute) ?? DocEntityDataProperty.Get(request.RelationshipPairToId, true, Execute);
             var pScale = request.Scale;
             var pSetDefaultValue = request.SetDefaultValue;
-            var pTab = (request.Tab?.Id > 0) ? DocEntityDataTab.Get(request.Tab.Id) : null;
-            var pTarget = (request.Target?.Id > 0) ? DocEntityDataClass.Get(request.Target.Id) : null;
+            var pTab = DocEntityDataTab.Get(request.Tab?.Id, true, Execute) ?? DocEntityDataTab.Get(request.TabId, true, Execute);
+            var pTarget = DocEntityDataClass.Get(request.Target?.Id, true, Execute) ?? DocEntityDataClass.Get(request.TargetId, true, Execute);
             var pTargetAlias = request.TargetAlias;
             var pType = request.Type;
             var pUIType = request.UIType;

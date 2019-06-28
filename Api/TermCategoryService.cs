@@ -164,8 +164,8 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             DocEntityLookupTable pName = GetLookup(DocConstantLookupTable.TERMCATEGORY, request.Name?.Name, request.Name?.Id);
-            var pParentCategory = (request.ParentCategory?.Id > 0) ? DocEntityTermCategory.Get(request.ParentCategory.Id) : null;
-            var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
+            var pParentCategory = DocEntityTermCategory.Get(request.ParentCategory?.Id, true, Execute) ?? DocEntityTermCategory.Get(request.ParentCategoryId, true, Execute);
+            var pScope = DocEntityScope.Get(request.Scope?.Id, true, Execute) ?? DocEntityScope.Get(request.ScopeId, true, Execute);
             var pTerms = GetVariable<Reference>(request, nameof(request.Terms), request.Terms?.ToList(), request.TermsIds?.ToList());
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;

@@ -141,7 +141,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pData = (DocTools.IsNullOrEmpty(request.Data)) ? null : DocSerialize<IpData>.ToString(request.Data);
             var pIpAddress = request.IpAddress;
-            var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.Get(request.Locale.Id) : null;
+            var pLocale = DocEntityLocale.Get(request.Locale?.Id, true, Execute) ?? DocEntityLocale.Get(request.LocaleId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

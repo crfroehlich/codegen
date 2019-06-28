@@ -234,22 +234,22 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pChildren = GetVariable<Reference>(request, nameof(request.Children), request.Children?.ToList(), request.ChildrenIds?.ToList());
-            var pClient = (request.Client?.Id > 0) ? DocEntityClient.Get(request.Client.Id) : null;
+            var pClient = DocEntityClient.Get(request.Client?.Id, true, Execute) ?? DocEntityClient.Get(request.ClientId, true, Execute);
             var pDatabaseDeadline = request.DatabaseDeadline;
             var pDatabaseName = request.DatabaseName;
-            var pDataset = (request.Dataset?.Id > 0) ? DocEntityDataSet.Get(request.Dataset.Id) : null;
+            var pDataset = DocEntityDataSet.Get(request.Dataset?.Id, true, Execute) ?? DocEntityDataSet.Get(request.DatasetId, true, Execute);
             var pDeliverableDeadline = request.DeliverableDeadline;
             var pFqId = request.FqId;
-            var pFqWorkflow = (request.FqWorkflow?.Id > 0) ? DocEntityWorkflow.Get(request.FqWorkflow.Id) : null;
+            var pFqWorkflow = DocEntityWorkflow.Get(request.FqWorkflow?.Id, true, Execute) ?? DocEntityWorkflow.Get(request.FqWorkflowId, true, Execute);
             var pLegacyPackageId = request.LegacyPackageId;
-            var pLibrary = (request.Library?.Id > 0) ? DocEntityLibrarySet.Get(request.Library.Id) : null;
+            var pLibrary = DocEntityLibrarySet.Get(request.Library?.Id, true, Execute) ?? DocEntityLibrarySet.Get(request.LibraryId, true, Execute);
             var pLibraryPackageId = request.LibraryPackageId;
             var pLibraryPackageName = request.LibraryPackageName;
             var pNumber = request.Number;
             var pOperationsDeliverable = request.OperationsDeliverable;
             var pOpportunityId = request.OpportunityId;
             var pOpportunityName = request.OpportunityName;
-            var pParent = (request.Parent?.Id > 0) ? DocEntityProject.Get(request.Parent.Id) : null;
+            var pParent = DocEntityProject.Get(request.Parent?.Id, true, Execute) ?? DocEntityProject.Get(request.ParentId, true, Execute);
             var pPICO = request.PICO;
             var pProjectId = request.ProjectId;
             var pProjectName = request.ProjectName;

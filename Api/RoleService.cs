@@ -167,7 +167,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Role>(DocConstantModelName.ROLE, nameof(Role), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pAdminTeam = (request.AdminTeam?.Id > 0) ? DocEntityTeam.Get(request.AdminTeam.Id) : null;
+            var pAdminTeam = DocEntityTeam.Get(request.AdminTeam?.Id, true, Execute) ?? DocEntityTeam.Get(request.AdminTeamId, true, Execute);
             var pApps = GetVariable<Reference>(request, nameof(request.Apps), request.Apps?.ToList(), request.AppsIds?.ToList());
             var pDescription = request.Description;
             var pFeatures = request.Features;

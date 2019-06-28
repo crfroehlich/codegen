@@ -372,11 +372,11 @@ namespace Services.API
             var pOriginalInterventions = request.OriginalInterventions;
             var pOriginalOutcomes = request.OriginalOutcomes;
             var pOutcomes = GetVariable<Reference>(request, nameof(request.Outcomes), request.Outcomes?.ToList(), request.OutcomesIds?.ToList());
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityDocumentSet.Get(request.Owner.Id) : null;
+            var pOwner = DocEntityDocumentSet.Get(request.Owner?.Id, true, Execute) ?? DocEntityDocumentSet.Get(request.OwnerId, true, Execute);
             var pParticipants = request.Participants;
-            var pPrismaWorkflow = (request.PrismaWorkflow?.Id > 0) ? DocEntityWorkflow.Get(request.PrismaWorkflow.Id) : null;
+            var pPrismaWorkflow = DocEntityWorkflow.Get(request.PrismaWorkflow?.Id, true, Execute) ?? DocEntityWorkflow.Get(request.PrismaWorkflowId, true, Execute);
             var pProjects = GetVariable<Reference>(request, nameof(request.Projects), request.Projects?.ToList(), request.ProjectsIds?.ToList());
-            var pProjectTeam = (request.ProjectTeam?.Id > 0) ? DocEntityTeam.Get(request.ProjectTeam.Id) : null;
+            var pProjectTeam = DocEntityTeam.Get(request.ProjectTeam?.Id, true, Execute) ?? DocEntityTeam.Get(request.ProjectTeamId, true, Execute);
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSettings = request.Settings;
             var pShowEtw = request.ShowEtw;

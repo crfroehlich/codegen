@@ -195,8 +195,8 @@ namespace Services.API
             var pRead = request.Read;
             var pSlackSent = request.SlackSent;
             var pSubject = request.Subject;
-            var pTeam = (request.Team?.Id > 0) ? DocEntityTeam.Get(request.Team.Id) : null;
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
+            var pTeam = DocEntityTeam.Get(request.Team?.Id, true, Execute) ?? DocEntityTeam.Get(request.TeamId, true, Execute);
+            var pUser = DocEntityUser.Get(request.User?.Id, true, Execute) ?? DocEntityUser.Get(request.UserId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

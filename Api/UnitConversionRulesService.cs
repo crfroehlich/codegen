@@ -185,14 +185,14 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, nameof(UnitConversionRules), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pDestinationUnit = (request.DestinationUnit?.Id > 0) ? DocEntityUnitOfMeasure.Get(request.DestinationUnit.Id) : null;
+            var pDestinationUnit = DocEntityUnitOfMeasure.Get(request.DestinationUnit?.Id, true, Execute) ?? DocEntityUnitOfMeasure.Get(request.DestinationUnitId, true, Execute);
             var pIsDefault = request.IsDefault;
             var pIsDestinationSi = request.IsDestinationSi;
-            var pModifierTerm = (request.ModifierTerm?.Id > 0) ? DocEntityTermMaster.Get(request.ModifierTerm.Id) : null;
+            var pModifierTerm = DocEntityTermMaster.Get(request.ModifierTerm?.Id, true, Execute) ?? DocEntityTermMaster.Get(request.ModifierTermId, true, Execute);
             var pMultiplier = request.Multiplier;
             DocEntityLookupTable pParent = GetLookup(DocConstantLookupTable.UNITCONVERSIONRULEPARENT, request.Parent?.Name, request.Parent?.Id);
-            var pRootTerm = (request.RootTerm?.Id > 0) ? DocEntityTermMaster.Get(request.RootTerm.Id) : null;
-            var pSourceUnit = (request.SourceUnit?.Id > 0) ? DocEntityUnitOfMeasure.Get(request.SourceUnit.Id) : null;
+            var pRootTerm = DocEntityTermMaster.Get(request.RootTerm?.Id, true, Execute) ?? DocEntityTermMaster.Get(request.RootTermId, true, Execute);
+            var pSourceUnit = DocEntityUnitOfMeasure.Get(request.SourceUnit?.Id, true, Execute) ?? DocEntityUnitOfMeasure.Get(request.SourceUnitId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

@@ -367,10 +367,10 @@ namespace Services.API
             var pOriginalOutcomes = request.OriginalOutcomes;
             var pOriginalSearch = request.OriginalSearch;
             var pOutcomes = GetVariable<Reference>(request, nameof(request.Outcomes), request.Outcomes?.ToList(), request.OutcomesIds?.ToList());
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityDocumentSet.Get(request.Owner.Id) : null;
+            var pOwner = DocEntityDocumentSet.Get(request.Owner?.Id, true, Execute) ?? DocEntityDocumentSet.Get(request.OwnerId, true, Execute);
             var pParticipants = request.Participants;
             var pProjects = GetVariable<Reference>(request, nameof(request.Projects), request.Projects?.ToList(), request.ProjectsIds?.ToList());
-            var pProjectTeam = (request.ProjectTeam?.Id > 0) ? DocEntityTeam.Get(request.ProjectTeam.Id) : null;
+            var pProjectTeam = DocEntityTeam.Get(request.ProjectTeam?.Id, true, Execute) ?? DocEntityTeam.Get(request.ProjectTeamId, true, Execute);
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSearchEnd = request.SearchEnd;
             var pSearchStart = request.SearchStart;

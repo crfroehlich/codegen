@@ -223,12 +223,12 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Scope>(DocConstantModelName.SCOPE, nameof(Scope), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pApp = (request.App?.Id > 0) ? DocEntityApp.Get(request.App.Id) : null;
+            var pApp = DocEntityApp.Get(request.App?.Id, true, Execute) ?? DocEntityApp.Get(request.AppId, true, Execute);
             var pBindings = GetVariable<Reference>(request, nameof(request.Bindings), request.Bindings?.ToList(), request.BindingsIds?.ToList());
             var pBroadcasts = GetVariable<Reference>(request, nameof(request.Broadcasts), request.Broadcasts?.ToList(), request.BroadcastsIds?.ToList());
-            var pClient = (request.Client?.Id > 0) ? DocEntityClient.Get(request.Client.Id) : null;
+            var pClient = DocEntityClient.Get(request.Client?.Id, true, Execute) ?? DocEntityClient.Get(request.ClientId, true, Execute);
             var pDelete = request.Delete;
-            var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.Get(request.DocumentSet.Id) : null;
+            var pDocumentSet = DocEntityDocumentSet.Get(request.DocumentSet?.Id, true, Execute) ?? DocEntityDocumentSet.Get(request.DocumentSetId, true, Execute);
             var pEdit = request.Edit;
             var pHelp = GetVariable<Reference>(request, nameof(request.Help), request.Help?.ToList(), request.HelpIds?.ToList());
             var pIsGlobal = request.IsGlobal;
@@ -236,9 +236,9 @@ namespace Services.API
             var pScopedFiles = GetVariable<Reference>(request, nameof(request.ScopedFiles), request.ScopedFiles?.ToList(), request.ScopedFilesIds?.ToList());
             var pScopedTags = GetVariable<Reference>(request, nameof(request.ScopedTags), request.ScopedTags?.ToList(), request.ScopedTagsIds?.ToList());
             var pSynonyms = GetVariable<Reference>(request, nameof(request.Synonyms), request.Synonyms?.ToList(), request.SynonymsIds?.ToList());
-            var pTeam = (request.Team?.Id > 0) ? DocEntityTeam.Get(request.Team.Id) : null;
+            var pTeam = DocEntityTeam.Get(request.Team?.Id, true, Execute) ?? DocEntityTeam.Get(request.TeamId, true, Execute);
             var pType = request.Type;
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
+            var pUser = DocEntityUser.Get(request.User?.Id, true, Execute) ?? DocEntityUser.Get(request.UserId, true, Execute);
             var pVariableRules = GetVariable<Reference>(request, nameof(request.VariableRules), request.VariableRules?.ToList(), request.VariableRulesIds?.ToList());
             var pView = request.View;
             var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());

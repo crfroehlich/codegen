@@ -99,6 +99,7 @@ namespace Services.Core
             cfg.AddProfile<TherapeuticAreaSetMapper>();
             cfg.AddProfile<TimeCardMapper>();
             cfg.AddProfile<TimePointMapper>();
+            cfg.AddProfile<TrialMapper>();
             cfg.AddProfile<UnitConversionRulesMapper>();
             cfg.AddProfile<UnitOfMeasureMapper>();
             cfg.AddProfile<UnitValueMapper>();

@@ -713,6 +713,7 @@
     "THERAPEUTICAREASET": "TherapeuticAreaSet",
     "TIMECARD": "TimeCard",
     "TIMEPOINT": "TimePoint",
+    "TRIAL": "Trial",
     "UNITCONVERSIONRULES": "UnitConversionRules",
     "UNITOFMEASURE": "UnitOfMeasure",
     "UNITS": "Units",
@@ -1554,6 +1555,7 @@
   "WorkflowStatus": {
     "ACCEPTED": "Accepted",
     "COLLECTED": "Collected",
+    "PROCESSING": "Processing",
     "READY": "Ready",
     "REJECTED": "Rejected",
     "REQUESTED": "Requested",

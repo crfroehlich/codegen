@@ -135,7 +135,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<AuditDelta>(DocConstantModelName.AUDITDELTA, nameof(AuditDelta), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pAudit = (request.Audit?.Id > 0) ? DocEntityAuditRecord.Get(request.Audit.Id) : null;
+            var pAudit = DocEntityAuditRecord.Get(request.Audit?.Id, true, Execute) ?? DocEntityAuditRecord.Get(request.AuditId, true, Execute);
             var pDelta = request.Delta;
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;

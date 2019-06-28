@@ -97,6 +97,14 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Documents.Any(r => r.Id.In(request.DocumentsIds)));
                 }
+                if(!DocTools.IsNullOrEmpty(request.DocumentSet) && !DocTools.IsNullOrEmpty(request.DocumentSet.Id))
+                {
+                    entities = entities.Where(en => en.DocumentSet.Id == request.DocumentSet.Id );
+                }
+                if(true == request.DocumentSetIds?.Any())
+                {
+                    entities = entities.Where(en => en.DocumentSet.Id.In(request.DocumentSetIds));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(!DocTools.IsNullOrEmpty(request.Names))
@@ -187,13 +195,14 @@ namespace Services.API
             var pData = request.Data;
             var pDescription = request.Description;
             var pDocuments = GetVariable<Reference>(request, nameof(request.Documents), request.Documents?.ToList(), request.DocumentsIds?.ToList());
+            var pDocumentSet = DocEntityDocumentSet.Get(request.DocumentSet?.Id, true, Execute) ?? DocEntityDocumentSet.Get(request.DocumentSetId, true, Execute);
             var pName = request.Name;
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityWorkflow.Get(request.Owner.Id) : null;
+            var pOwner = DocEntityWorkflow.Get(request.Owner?.Id, true, Execute) ?? DocEntityWorkflow.Get(request.OwnerId, true, Execute);
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pStatus = request.Status;
             var pTasks = GetVariable<Reference>(request, nameof(request.Tasks), request.Tasks?.ToList(), request.TasksIds?.ToList());
             var pType = request.Type;
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
+            var pUser = DocEntityUser.Get(request.User?.Id, true, Execute) ?? DocEntityUser.Get(request.UserId, true, Execute);
             var pVariables = GetVariable<Reference>(request, nameof(request.Variables), request.Variables?.ToList(), request.VariablesIds?.ToList());
             var pWorkflows = GetVariable<Reference>(request, nameof(request.Workflows), request.Workflows?.ToList(), request.WorkflowsIds?.ToList());
             var pArchived = true == request.Archived;
@@ -212,6 +221,10 @@ namespace Services.API
             if (AllowPatchValue<Workflow, string>(request, DocConstantModelName.WORKFLOW, pDescription, permission, nameof(request.Description), pDescription != entity.Description))
             {
                 entity.Description = pDescription;
+            }
+            if (AllowPatchValue<Workflow, DocEntityDocumentSet>(request, DocConstantModelName.WORKFLOW, pDocumentSet, permission, nameof(request.DocumentSet), pDocumentSet != entity.DocumentSet))
+            {
+                entity.DocumentSet = pDocumentSet;
             }
             if (AllowPatchValue<Workflow, string>(request, DocConstantModelName.WORKFLOW, pName, permission, nameof(request.Name), pName != entity.Name))
             {
@@ -351,6 +364,7 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
                     var pDocuments = entity.Documents.ToList();
+                    var pDocumentSet = entity.DocumentSet;
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
@@ -367,6 +381,7 @@ namespace Services.API
                         Hash = Guid.NewGuid()
                                 , Data = pData
                                 , Description = pDescription
+                                , DocumentSet = pDocumentSet
                                 , Name = pName
                                 , Owner = pOwner
                                 , Status = pStatus

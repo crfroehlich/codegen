@@ -29,21 +29,21 @@ using Xtensive.Orm;
 
 namespace Services.API
 {
-    public partial class LookupCategoryService : DocServiceBase
+    public partial class TrialService : DocServiceBase
     {
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        private IQueryable<DocEntityLookupCategory> _ExecSearch(LookupCategorySearch request, DocQuery query)
+        private IQueryable<DocEntityTrial> _ExecSearch(TrialSearch request, DocQuery query)
         {
-            request = InitSearch<LookupCategory, LookupCategorySearch>(request);
-            IQueryable<DocEntityLookupCategory> entities = null;
+            request = InitSearch<Trial, TrialSearch>(request);
+            IQueryable<DocEntityTrial> entities = null;
             query.Run( session => 
             {
-                entities = query.SelectAll<DocEntityLookupCategory>();
+                entities = query.SelectAll<DocEntityTrial>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
-                    var fts = new LookupCategoryFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityLookupCategory,LookupCategoryFullTextSearch>(fts, entities);
+                    var fts = new TrialFullTextSearch(request);
+                    entities = GetFullTextSearch<DocEntityTrial,TrialFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -73,7 +73,7 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.LOOKUPCATEGORY, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.TRIAL, nameof(Reference.Archived), DocConstantPermission.VIEW))
                 {
                     entities = entities.Where(en => en.Archived.In(request.Archived));
                 }
@@ -85,36 +85,24 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-                if(!DocTools.IsNullOrEmpty(request.Category))
-                    entities = entities.Where(en => en.Category.Contains(request.Category));
-                if(!DocTools.IsNullOrEmpty(request.Categorys))
-                    entities = entities.Where(en => en.Category.In(request.Categorys));
-                if(!DocTools.IsNullOrEmpty(request.Enum) && !DocTools.IsNullOrEmpty(request.Enum.Id))
+                if(true == request.DocumentsIds?.Any())
                 {
-                    entities = entities.Where(en => en.Enum.Id == request.Enum.Id );
+                    entities = entities.Where(en => en.Documents.Any(r => r.Id.In(request.DocumentsIds)));
                 }
-                if(true == request.EnumIds?.Any())
+                if(!DocTools.IsNullOrEmpty(request.Name))
+                    entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Names))
+                    entities = entities.Where(en => en.Name.In(request.Names));
+                if(!DocTools.IsNullOrEmpty(request.Parent) && !DocTools.IsNullOrEmpty(request.Parent.Id))
                 {
-                    entities = entities.Where(en => en.Enum.Id.In(request.EnumIds));
+                    entities = entities.Where(en => en.Parent.Id == request.Parent.Id );
                 }
-                if(true == request.EnumNames?.Any())
+                if(true == request.ParentIds?.Any())
                 {
-                    entities = entities.Where(en => en.Enum.Name.In(request.EnumNames));
-                }
-                if(true == request.LookupsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Lookups.Any(r => r.Id.In(request.LookupsIds)));
-                }
-                if(!DocTools.IsNullOrEmpty(request.ParentCategory) && !DocTools.IsNullOrEmpty(request.ParentCategory.Id))
-                {
-                    entities = entities.Where(en => en.ParentCategory.Id == request.ParentCategory.Id );
-                }
-                if(true == request.ParentCategoryIds?.Any())
-                {
-                    entities = entities.Where(en => en.ParentCategory.Id.In(request.ParentCategoryIds));
+                    entities = entities.Where(en => en.Parent.Id.In(request.ParentIds));
                 }
 
-                entities = ApplyFilters<DocEntityLookupCategory,LookupCategorySearch>(request, entities);
+                entities = ApplyFilters<DocEntityTrial,TrialSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -128,98 +116,93 @@ namespace Services.API
             return entities;
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public object Post(LookupCategorySearch request) => Get(request);
+        public object Post(TrialSearch request) => Get(request);
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public object Get(LookupCategorySearch request) => GetSearchResultWithCache<LookupCategory,DocEntityLookupCategory,LookupCategorySearch>(DocConstantModelName.LOOKUPCATEGORY, request, _ExecSearch);
+        public object Get(TrialSearch request) => GetSearchResultWithCache<Trial,DocEntityTrial,TrialSearch>(DocConstantModelName.TRIAL, request, _ExecSearch);
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public object Get(LookupCategory request) => GetEntityWithCache<LookupCategory>(DocConstantModelName.LOOKUPCATEGORY, request, GetLookupCategory);
+        public object Get(Trial request) => GetEntityWithCache<Trial>(DocConstantModelName.TRIAL, request, GetTrial);
 
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        private LookupCategory _AssignValues(LookupCategory request, DocConstantPermission permission, Session session)
+        private Trial _AssignValues(Trial request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
-            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupCategory"))
+            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Trial"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
             request.Select = request.Select ?? new List<string>();
 
-            LookupCategory ret = null;
-            request = _InitAssignValues<LookupCategory>(request, permission, session);
+            Trial ret = null;
+            request = _InitAssignValues<Trial>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
-            var cacheKey = GetApiCacheKey<LookupCategory>(DocConstantModelName.LOOKUPCATEGORY, nameof(LookupCategory), request);
+            var cacheKey = GetApiCacheKey<Trial>(DocConstantModelName.TRIAL, nameof(Trial), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pCategory = request.Category;
-            var pEnum = DocEntityLookupTableEnum.Get(request.Enum);
-            var pLookups = GetVariable<Reference>(request, nameof(request.Lookups), request.Lookups?.ToList(), request.LookupsIds?.ToList());
-            var pParentCategory = DocEntityLookupCategory.Get(request.ParentCategory?.Id, true, Execute) ?? DocEntityLookupCategory.Get(request.ParentCategoryId, true, Execute);
+            var pDocuments = GetVariable<Reference>(request, nameof(request.Documents), request.Documents?.ToList(), request.DocumentsIds?.ToList());
+            var pName = request.Name;
+            var pParent = DocEntityTrial.Get(request.Parent?.Id, true, Execute) ?? DocEntityTrial.Get(request.ParentId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 
-            var entity = InitEntity<DocEntityLookupCategory,LookupCategory>(request, permission, session);
+            var entity = InitEntity<DocEntityTrial,Trial>(request, permission, session);
 
-            if (AllowPatchValue<LookupCategory, bool>(request, DocConstantModelName.LOOKUPCATEGORY, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
+            if (AllowPatchValue<Trial, bool>(request, DocConstantModelName.TRIAL, pArchived, permission, nameof(request.Archived), pArchived != entity.Archived))
             {
                 entity.Archived = pArchived;
             }
-            if (AllowPatchValue<LookupCategory, string>(request, DocConstantModelName.LOOKUPCATEGORY, pCategory, permission, nameof(request.Category), pCategory != entity.Category))
+            if (AllowPatchValue<Trial, string>(request, DocConstantModelName.TRIAL, pName, permission, nameof(request.Name), pName != entity.Name))
             {
-                entity.Category = pCategory;
+                entity.Name = pName;
             }
-            if (AllowPatchValue<LookupCategory, DocEntityLookupTableEnum>(request, DocConstantModelName.LOOKUPCATEGORY, pEnum, permission, nameof(request.Enum), pEnum != entity.Enum))
+            if (AllowPatchValue<Trial, DocEntityTrial>(request, DocConstantModelName.TRIAL, pParent, permission, nameof(request.Parent), pParent != entity.Parent))
             {
-                entity.Enum = pEnum;
+                entity.Parent = pParent;
             }
-            if (AllowPatchValue<LookupCategory, DocEntityLookupCategory>(request, DocConstantModelName.LOOKUPCATEGORY, pParentCategory, permission, nameof(request.ParentCategory), pParentCategory != entity.ParentCategory))
-            {
-                entity.ParentCategory = pParentCategory;
-            }
-            if (request.Locked && AllowPatchValue<LookupCategory, bool>(request, DocConstantModelName.LOOKUPCATEGORY, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
+            if (request.Locked && AllowPatchValue<Trial, bool>(request, DocConstantModelName.TRIAL, pArchived, permission, nameof(request.Locked), pLocked != entity.Locked))
             {
                 entity.Archived = pArchived;
             }
             entity.SaveChanges(permission);
 
             var idsToInvalidate = new List<int>();
-            idsToInvalidate.AddRange(PatchCollection<LookupCategory, DocEntityLookupCategory, Reference, DocEntityLookupTable>(request, entity, pLookups, permission, nameof(request.Lookups)));
+            idsToInvalidate.AddRange(PatchCollection<Trial, DocEntityTrial, Reference, DocEntityDocument>(request, entity, pDocuments, permission, nameof(request.Documents)));
             if (idsToInvalidate.Any())
             {
                 idsToInvalidate.Add(entity.Id);
                 DocCacheClient.RemoveByEntityIds(idsToInvalidate);
-                DocCacheClient.RemoveSearch(DocConstantModelName.LOOKUPCATEGORY);
+                DocCacheClient.RemoveSearch(DocConstantModelName.TRIAL);
             }
 
             entity.SaveChanges(permission);
-            DocPermissionFactory.SetSelect<LookupCategory>(currentUser, nameof(LookupCategory), request.Select);
+            DocPermissionFactory.SetSelect<Trial>(currentUser, nameof(Trial), request.Select);
             ret = entity.ToDto();
 
-            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.LOOKUPCATEGORY);
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPCATEGORY, cacheExpires);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.TRIAL);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TRIAL, cacheExpires);
 
             return ret;
         }
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public LookupCategory Post(LookupCategory request)
+        public Trial Post(Trial request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             request.Select = request.Select ?? new List<string>();
 
-            LookupCategory ret = null;
+            Trial ret = null;
 
             using(Execute)
             {
                 Execute.Run(ssn =>
                 {
-                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupCategory")) 
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Trial")) 
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
@@ -228,11 +211,11 @@ namespace Services.API
             return ret;
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<LookupCategory> Post(LookupCategoryBatch request)
+        public List<Trial> Post(TrialBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<LookupCategory>();
+            var ret = new List<Trial>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -240,7 +223,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as LookupCategory;
+                    var obj = Post(dto) as Trial;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -275,34 +258,32 @@ namespace Services.API
             return ret;
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public LookupCategory Post(LookupCategoryCopy request)
+        public Trial Post(TrialCopy request)
         {
-            LookupCategory ret = null;
+            Trial ret = null;
             using(Execute)
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityLookupCategory.Get(request?.Id);
+                    var entity = DocEntityTrial.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                    var pCategory = entity.Category;
-                    if(!DocTools.IsNullOrEmpty(pCategory))
-                        pCategory += " (Copy)";
-                    var pEnum = entity.Enum;
-                    var pLookups = entity.Lookups.ToList();
-                    var pParentCategory = entity.ParentCategory;
-                    var copy = new DocEntityLookupCategory(ssn)
+                    var pDocuments = entity.Documents.ToList();
+                    var pName = entity.Name;
+                    if(!DocTools.IsNullOrEmpty(pName))
+                        pName += " (Copy)";
+                    var pParent = entity.Parent;
+                    var copy = new DocEntityTrial(ssn)
                     {
                         Hash = Guid.NewGuid()
-                                , Category = pCategory
-                                , Enum = pEnum
-                                , ParentCategory = pParentCategory
+                                , Name = pName
+                                , Parent = pParent
                     };
-                            foreach(var item in pLookups)
+                            foreach(var item in pDocuments)
                             {
-                                entity.Lookups.Add(item);
+                                entity.Documents.Add(item);
                             }
 
                     copy.SaveChanges(DocConstantPermission.ADD);
@@ -314,23 +295,23 @@ namespace Services.API
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<LookupCategory> Put(LookupCategoryBatch request)
+        public List<Trial> Put(TrialBatch request)
         {
             return Patch(request);
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public LookupCategory Put(LookupCategory request)
+        public Trial Put(Trial request)
         {
             return Patch(request);
         }
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public List<LookupCategory> Patch(LookupCategoryBatch request)
+        public List<Trial> Patch(TrialBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<LookupCategory>();
+            var ret = new List<Trial>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -338,7 +319,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as LookupCategory;
+                    var obj = Patch(dto) as Trial;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -373,13 +354,13 @@ namespace Services.API
             return ret;
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public LookupCategory Patch(LookupCategory request)
+        public Trial Patch(Trial request)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the LookupCategory to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Trial to patch.");
             
             request.Select = request.Select ?? new List<string>();
             
-            LookupCategory ret = null;
+            Trial ret = null;
             using(Execute)
             {
                 Execute.Run(ssn =>
@@ -392,7 +373,7 @@ namespace Services.API
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public void Delete(LookupCategoryBatch request)
+        public void Delete(TrialBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
@@ -436,7 +417,7 @@ namespace Services.API
             }
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public void Delete(LookupCategory request)
+        public void Delete(Trial request)
         {
             using(Execute)
             {
@@ -444,8 +425,8 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityLookupCategory.Get(request?.Id);
-                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No LookupCategory could be found for Id {request?.Id}.");
+                    var en = DocEntityTrial.Get(request?.Id);
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Trial could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
                     if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
@@ -453,15 +434,15 @@ namespace Services.API
                 
                     en.Remove();
 
-                    DocCacheClient.RemoveSearch(DocConstantModelName.LOOKUPCATEGORY);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.TRIAL);
                     DocCacheClient.RemoveById(request.Id);
                 });
             }
         }
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public void Delete(LookupCategorySearch request)
+        public void Delete(TrialSearch request)
         {
-            var matches = Get(request) as List<LookupCategory>;
+            var matches = Get(request) as List<Trial>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
             matches.ForEach(match =>
             {
@@ -471,77 +452,77 @@ namespace Services.API
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public object Get(LookupCategoryJunction request)
+        public object Get(TrialJunction request)
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
                     case "comment":
-                        return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
+                        return GetJunctionSearchResult<Trial, DocEntityTrial, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
+                    case "document":
+                        return GetJunctionSearchResult<Trial, DocEntityTrial, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
                     case "favorite":
-                        return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
-                    case "lookuptable":
-                        return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request, (ss) => HostContext.ResolveService<LookupTableService>(Request)?.Get(ss));
+                        return GetJunctionSearchResult<Trial, DocEntityTrial, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
-                        return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                        return GetJunctionSearchResult<Trial, DocEntityTrial, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
-                    throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for trial/{request.Id}/{request.Junction} was not found");
             }
         }
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public object Post(LookupCategoryJunction request)
+        public object Post(TrialJunction request)
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
                     case "comment":
-                        return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                        return AddJunction<Trial, DocEntityTrial, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "document":
+                        return AddJunction<Trial, DocEntityTrial, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
-                        return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                    case "lookuptable":
-                        return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);
+                        return AddJunction<Trial, DocEntityTrial, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
-                        return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                        return AddJunction<Trial, DocEntityTrial, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
-                    throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for trial/{request.Id}/{request.Junction} was not found");
             }
         }
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public object Delete(LookupCategoryJunction request)
+        public object Delete(TrialJunction request)
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
                     case "comment":
-                        return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                        return RemoveJunction<Trial, DocEntityTrial, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "document":
+                        return RemoveJunction<Trial, DocEntityTrial, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
-                        return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                    case "lookuptable":
-                        return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);
+                        return RemoveJunction<Trial, DocEntityTrial, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
-                        return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                        return RemoveJunction<Trial, DocEntityTrial, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
-                    throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for trial/{request.Id}/{request.Junction} was not found");
             }
         }
 
 
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        private LookupCategory GetLookupCategory(LookupCategory request)
+        private Trial GetTrial(Trial request)
         {
             var id = request?.Id;
-            LookupCategory ret = null;
+            Trial ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetSelect<LookupCategory>(currentUser, "LookupCategory", request.Select);
+            DocPermissionFactory.SetSelect<Trial>(currentUser, "Trial", request.Select);
 
-            DocEntityLookupCategory entity = null;
+            DocEntityTrial entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityLookupCategory.Get(id.Value);
+                entity = DocEntityTrial.Get(id.Value);
             }
             if(null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No LookupCategory found for Id {id.Value}");
+                throw new HttpError(HttpStatusCode.NotFound, $"No Trial found for Id {id.Value}");
 
             if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.VIEW))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");

@@ -259,8 +259,8 @@ namespace Services.API
             var pHistories = GetVariable<Reference>(request, nameof(request.Histories), request.Histories?.ToList(), request.HistoriesIds?.ToList());
             var pLegacyDocumentSetId = request.LegacyDocumentSetId;
             var pName = request.Name;
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityDocumentSet.Get(request.Owner.Id) : null;
-            var pProjectTeam = (request.ProjectTeam?.Id > 0) ? DocEntityTeam.Get(request.ProjectTeam.Id) : null;
+            var pOwner = DocEntityDocumentSet.Get(request.Owner?.Id, true, Execute) ?? DocEntityDocumentSet.Get(request.OwnerId, true, Execute);
+            var pProjectTeam = DocEntityTeam.Get(request.ProjectTeam?.Id, true, Execute) ?? DocEntityTeam.Get(request.ProjectTeamId, true, Execute);
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSettings = request.Settings;
             var pStats = GetVariable<Reference>(request, nameof(request.Stats), request.Stats?.ToList(), request.StatsIds?.ToList());

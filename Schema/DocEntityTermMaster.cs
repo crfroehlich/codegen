@@ -40,9 +40,9 @@ namespace Services.Schema
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new TermMaster()));
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityTermMaster Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
+        public new static DocEntityTermMaster Get(Reference reference) => (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         [GeneratedCodeAttribute("T4", "1.0.0.0")]
-        public static DocEntityTermMaster Get(int? primaryKey, bool noCache, DocQuery query)
+        public new static DocEntityTermMaster Get(int? primaryKey, bool noCache, DocQuery query)
         {
             if(!(primaryKey > 0)) return null;
             return query.SelectAll<DocEntityTermMaster>().FirstOrDefault(e => e.Id == primaryKey.Value);

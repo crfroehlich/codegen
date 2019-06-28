@@ -202,13 +202,13 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pDescription = request.Description;
-            var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
+            var pDocument = DocEntityDocument.Get(request.Document?.Id, true, Execute) ?? DocEntityDocument.Get(request.DocumentId, true, Execute);
             var pEnd = request.End;
-            var pProject = (request.Project?.Id > 0) ? DocEntityProject.Get(request.Project.Id) : null;
+            var pProject = DocEntityProject.Get(request.Project?.Id, true, Execute) ?? DocEntityProject.Get(request.ProjectId, true, Execute);
             var pReferenceId = request.ReferenceId;
             var pStart = request.Start;
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.TIMECARDSTATUS, request.Status?.Name, request.Status?.Id);
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
+            var pUser = DocEntityUser.Get(request.User?.Id, true, Execute) ?? DocEntityUser.Get(request.UserId, true, Execute);
             DocEntityLookupTable pWorkType = GetLookup(DocConstantLookupTable.WORKTYPE, request.WorkType?.Name, request.WorkType?.Id);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;

@@ -160,7 +160,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pAutoDelete = request.AutoDelete;
-            var pBackgroundTask = (request.BackgroundTask?.Id > 0) ? DocEntityBackgroundTask.Get(request.BackgroundTask.Id) : null;
+            var pBackgroundTask = DocEntityBackgroundTask.Get(request.BackgroundTask?.Id, true, Execute) ?? DocEntityBackgroundTask.Get(request.BackgroundTaskId, true, Execute);
             var pDescription = request.Description;
             var pDurable = request.Durable;
             var pEnabled = request.Enabled;

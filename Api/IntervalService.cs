@@ -163,11 +163,11 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Interval>(DocConstantModelName.INTERVAL, nameof(Interval), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pCalendarDateEnd = (request.CalendarDateEnd?.Id > 0) ? DocEntityDateTime.Get(request.CalendarDateEnd.Id) : null;
-            var pCalendarDateStart = (request.CalendarDateStart?.Id > 0) ? DocEntityDateTime.Get(request.CalendarDateStart.Id) : null;
+            var pCalendarDateEnd = DocEntityDateTime.Get(request.CalendarDateEnd?.Id, true, Execute) ?? DocEntityDateTime.Get(request.CalendarDateEndId, true, Execute);
+            var pCalendarDateStart = DocEntityDateTime.Get(request.CalendarDateStart?.Id, true, Execute) ?? DocEntityDateTime.Get(request.CalendarDateStartId, true, Execute);
             var pCalendarType = request.CalendarType;
-            var pFollowUp = (request.FollowUp?.Id > 0) ? DocEntityTimePoint.Get(request.FollowUp.Id) : null;
-            var pTimeOfDay = (request.TimeOfDay?.Id > 0) ? DocEntityTimePoint.Get(request.TimeOfDay.Id) : null;
+            var pFollowUp = DocEntityTimePoint.Get(request.FollowUp?.Id, true, Execute) ?? DocEntityTimePoint.Get(request.FollowUpId, true, Execute);
+            var pTimeOfDay = DocEntityTimePoint.Get(request.TimeOfDay?.Id, true, Execute) ?? DocEntityTimePoint.Get(request.TimeOfDayId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

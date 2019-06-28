@@ -165,13 +165,13 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Task>(DocConstantModelName.TASK, nameof(Task), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pAssignee = (request.Assignee?.Id > 0) ? DocEntityUser.Get(request.Assignee.Id) : null;
+            var pAssignee = DocEntityUser.Get(request.Assignee?.Id, true, Execute) ?? DocEntityUser.Get(request.AssigneeId, true, Execute);
             var pData = request.Data;
             var pDescription = request.Description;
             var pDueDate = request.DueDate;
-            var pReporter = (request.Reporter?.Id > 0) ? DocEntityUser.Get(request.Reporter.Id) : null;
+            var pReporter = DocEntityUser.Get(request.Reporter?.Id, true, Execute) ?? DocEntityUser.Get(request.ReporterId, true, Execute);
             var pType = request.Type;
-            var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
+            var pWorkflow = DocEntityWorkflow.Get(request.Workflow?.Id, true, Execute) ?? DocEntityWorkflow.Get(request.WorkflowId, true, Execute);
             var pArchived = true == request.Archived;
             var pLocked = request.Locked;
 

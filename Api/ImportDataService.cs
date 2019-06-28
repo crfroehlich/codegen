@@ -251,7 +251,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pCompletedOn = request.CompletedOn;
             var pDataSets = GetVariable<Reference>(request, nameof(request.DataSets), request.DataSets?.ToList(), request.DataSetsIds?.ToList());
-            var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
+            var pDocument = DocEntityDocument.Get(request.Document?.Id, true, Execute) ?? DocEntityDocument.Get(request.DocumentId, true, Execute);
             var pErrorData = request.ErrorData;
             var pExtractUrl = request.ExtractUrl;
             var pHighPriority = request.HighPriority;
@@ -264,7 +264,7 @@ namespace Services.API
             var pIsLegacy = request.IsLegacy;
             var pOrder = request.Order;
             var pReferenceId = request.ReferenceId;
-            var pRequestedBy = (request.RequestedBy?.Id > 0) ? DocEntityUser.Get(request.RequestedBy.Id) : null;
+            var pRequestedBy = DocEntityUser.Get(request.RequestedBy?.Id, true, Execute) ?? DocEntityUser.Get(request.RequestedById, true, Execute);
             var pRequestedOn = request.RequestedOn;
             var pStartedOn = request.StartedOn;
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.IMPORTSTATUS, request.Status?.Name, request.Status?.Id);

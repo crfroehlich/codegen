@@ -167,12 +167,12 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Client>(DocConstantModelName.CLIENT, nameof(Client), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pDefaultLocale = (request.DefaultLocale?.Id > 0) ? DocEntityLocale.Get(request.DefaultLocale.Id) : null;
+            var pDefaultLocale = DocEntityLocale.Get(request.DefaultLocale?.Id, true, Execute) ?? DocEntityLocale.Get(request.DefaultLocaleId, true, Execute);
             var pDivisions = GetVariable<Reference>(request, nameof(request.Divisions), request.Divisions?.ToList(), request.DivisionsIds?.ToList());
             var pDocumentSets = GetVariable<Reference>(request, nameof(request.DocumentSets), request.DocumentSets?.ToList(), request.DocumentSetsIds?.ToList());
             var pName = request.Name;
             var pProjects = GetVariable<Reference>(request, nameof(request.Projects), request.Projects?.ToList(), request.ProjectsIds?.ToList());
-            var pRole = (request.Role?.Id > 0) ? DocEntityRole.Get(request.Role.Id) : null;
+            var pRole = DocEntityRole.Get(request.Role?.Id, true, Execute) ?? DocEntityRole.Get(request.RoleId, true, Execute);
             var pSalesforceAccountId = request.SalesforceAccountId;
             var pScopes = GetVariable<Reference>(request, nameof(request.Scopes), request.Scopes?.ToList(), request.ScopesIds?.ToList());
             var pSettings = (DocTools.IsNullOrEmpty(request.Settings)) ? null : DocSerialize<ClientSettings>.ToString(request.Settings);

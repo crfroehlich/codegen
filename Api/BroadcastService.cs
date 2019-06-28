@@ -189,7 +189,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Broadcast>(DocConstantModelName.BROADCAST, nameof(Broadcast), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pApp = (request.App?.Id > 0) ? DocEntityApp.Get(request.App.Id) : null;
+            var pApp = DocEntityApp.Get(request.App?.Id, true, Execute) ?? DocEntityApp.Get(request.AppId, true, Execute);
             var pConfluenceId = request.ConfluenceId;
             var pName = request.Name;
             var pReprocess = request.Reprocess;
